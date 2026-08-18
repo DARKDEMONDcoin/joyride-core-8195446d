@@ -144,6 +144,7 @@ const AnimatedInput = ({
   const [lastSelectedAgent, setLastSelectedAgent] = useState<AgentDef | null>(null);
   const [focused, setFocused] = useState(false);
   const [listening, setListening] = useState(false);
+  const [integrationsOpen, setIntegrationsOpen] = useState(false);
   const isActive = focused || !!value;
 
 
