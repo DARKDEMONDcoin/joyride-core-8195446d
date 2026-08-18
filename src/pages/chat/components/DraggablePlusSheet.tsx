@@ -22,13 +22,8 @@ interface DraggablePlusSheetProps {
 const SNAP = { type: "spring" as const, stiffness: 460, damping: 44, mass: 0.9 };
 const SOFT = { type: "spring" as const, stiffness: 300, damping: 34, mass: 0.9 };
 
-/** Rubber-band resistance beyond a snap point (iOS scroll-bounce curve). */
-const rubber = (overshoot: number, dimension: number) =>
-  (1 - 1 / ((overshoot * 0.55) / dimension + 1)) * dimension;
-
 /** px/ms thresholds. */
 const FLICK = 0.55;
-const STRONG_FLICK = 1.1;
 
 /**
  * Bottom sheet with two snap points (collapsed / expanded) and one dismiss
@@ -40,8 +35,9 @@ const STRONG_FLICK = 1.1;
  *    sheet either drags or the content scrolls for the rest of that gesture.
  *  - Dragging down is only allowed when the content is at scrollTop 0, so a
  *    mid-list drag never yanks the sheet.
- *  - Dragging up expands while collapsed; while expanded it scrolls the list,
- *    except for a strong upward flick at the very top, which dismisses.
+ *  - Dragging up expands while collapsed; while expanded it scrolls the list.
+ *  - Dragging down from the grip collapses first, then dismisses. This keeps
+ *    dismissal out of the content scroller and avoids pointer-cancel races.
  *  - Settling is velocity-projected: a flick decides the direction, distance
  *    only matters for slow drags.
  */
@@ -74,10 +70,10 @@ export const DraggablePlusSheet = ({
   }, []);
 
   const close = useCallback(
-    (direction: "down" | "up" = "down", velocity = 0) => {
+    (velocity = 0) => {
       if (closingRef.current) return;
       closingRef.current = true;
-      animate(y, direction === "up" ? -height : height, {
+      animate(y, height, {
         ...SNAP,
         velocity,
         onComplete: onClose,
@@ -101,6 +97,7 @@ export const DraggablePlusSheet = ({
     decided: false,
     dragging: false,
     startedExpanded: false,
+    fromGrip: false,
     startY: 0,
     baseY: 0,
     lastY: 0,
@@ -121,6 +118,7 @@ export const DraggablePlusSheet = ({
         decided: false,
         dragging: false,
         startedExpanded: expandedRef.current,
+        fromGrip: e.target instanceof Element && Boolean(e.target.closest("[data-sheet-grip]")),
         startY: e.clientY,
         baseY: y.get(),
         lastY: e.clientY,
@@ -148,10 +146,9 @@ export const DraggablePlusSheet = ({
         if (Math.abs(dy) < 6) return;
         s.decided = true;
         const down = dy > 0;
-        // Down: drag only from the top of the list. Up: dismiss the compact
-        // sheet, or dismiss an expanded sheet only when its list is at top.
-        // Otherwise the expanded list keeps its native scrolling.
-        s.dragging = down ? atTop() : !expandedRef.current || atTop();
+        // The compact sheet is one draggable surface. Once expanded, only the
+        // grip moves the sheet; the content always keeps native scrolling.
+        s.dragging = !s.startedExpanded || (s.fromGrip && down);
         if (s.dragging) {
           try {
             el.setPointerCapture(e.pointerId);
@@ -164,11 +161,9 @@ export const DraggablePlusSheet = ({
       if (!s.dragging) return;
       e.preventDefault();
 
-      let next = s.baseY + dy;
-      // Above the expanded snap point the sheet keeps following the finger
-      // (upward dismiss), with a light rubber-band for the first few px.
-      if (next < 0 && !expandedRef.current) next = -rubber(-next, height);
-      y.set(next);
+      // Never let the sheet travel above its expanded snap point. Upward
+      // motion from compact follows the finger until it reaches y=0.
+      y.set(Math.max(0, s.baseY + dy));
     };
 
     const settle = (e: PointerEvent) => {
@@ -183,51 +178,31 @@ export const DraggablePlusSheet = ({
 
       const v = s.velocity; // px/ms, + is downward
       const upFlick = -v;
-      const travel = e.clientY - s.startY;
-
-      // Strong upward flick from the very top of an expanded sheet dismisses
-      // it, reversing the opening animation.
-      if (!s.dragging) {
-        if (expandedRef.current && atTop() && upFlick > STRONG_FLICK)
-          close("up", v * 1000);
-        return;
-      }
-
-      // An upward gesture from the compact snap is a close gesture, not an
-      // expand gesture. Using gesture travel rather than the absolute sheet Y
-      // makes it responsive even when collapsedY is large.
-      if (!s.startedExpanded && travel < 0) {
-        if (upFlick > FLICK || travel < -56) close("up", Math.min(v, -0.18) * 1000);
-        else snapTo("collapsed", v * 1000);
-        return;
-      }
+      if (!s.dragging) return;
 
       const current = y.get();
       // Project where the sheet lands with the current momentum (~120ms).
       const projected = current + v * 120;
       const dismissLine = collapsedY + Math.max(96, (height - collapsedY) * 0.4);
 
-      // Pulled above the expanded snap point: dismiss upward on a flick or
-      // once it has travelled far enough, otherwise settle back to expanded.
-      if (current < 0 || projected < 0) {
-        if (upFlick > FLICK || projected < -72) close("up", v * 1000);
-        else snapTo("expanded", v * 1000);
-        return;
-      }
-
       if (v > FLICK || projected > dismissLine) {
-        close("down", v * 1000);
+        // From expanded, the first downward gesture returns to compact. From
+        // compact, the same gesture dismisses the sheet.
+        if (s.startedExpanded && collapsedY > 0) snapTo("collapsed", v * 1000);
+        else close(v * 1000);
         return;
       }
       if (upFlick > FLICK) {
-        close("up", v * 1000);
+        snapTo("expanded", v * 1000);
         return;
       }
       if (collapsedY <= 0) {
         snapTo("expanded", v * 1000);
         return;
       }
-      snapTo(projected < collapsedY / 2 ? "expanded" : "collapsed", v * 1000);
+      const midpoint = collapsedY / 2;
+      if (s.startedExpanded) snapTo(projected > midpoint ? "collapsed" : "expanded", v * 1000);
+      else snapTo(projected < midpoint ? "expanded" : "collapsed", v * 1000);
     };
 
     el.addEventListener("pointerdown", onDown, { passive: true });
@@ -263,7 +238,7 @@ export const DraggablePlusSheet = ({
       }}
       className="mobile-plus-glass-menu md:hidden fixed left-0 right-0 bottom-0 z-overlay flex flex-col rounded-t-[28px] outline-none will-change-transform"
     >
-      <div className="shrink-0 pt-2.5 pb-1.5">
+      <div data-sheet-grip className="shrink-0 cursor-grab touch-none pt-2.5 pb-3 active:cursor-grabbing">
         <motion.div
           animate={{ width: expanded ? 44 : 38, opacity: expanded ? 0.28 : 0.38 }}
           transition={SOFT}
