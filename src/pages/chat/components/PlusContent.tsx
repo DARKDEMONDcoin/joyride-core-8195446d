@@ -128,135 +128,167 @@ const PlusMain = (p: PlusContentProps) => {
     { id: "file", label: "إرفاق ملف", Icon: FileUp, onClick: closeThen(() => p.fileInputRef.current?.click()) },
   ];
 
-  type RowItem = { id: string; label: string; Icon: any; badge?: string; onClick: () => void };
+  type RowItem = { id: string; label: string; Icon: any; badge?: string; active?: boolean; onClick: () => void };
 
-  const sections: RowItem[][] = [
-    [
-      { id: "local", label: "إضافة ملفات محلية", Icon: FileUp, onClick: closeThen(() => p.fileInputRef.current?.click()) },
-      { id: "tasks", label: "المهام المجدولة", Icon: ListChecks, onClick: closeThen(() => p.navigate("/settings/tasks")) },
-      { id: "skills", label: "المهارات", Icon: Puzzle, onClick: closeThen(() => p.navigate("/settings/skills")) },
-      { id: "integrations", label: "التكاملات", Icon: Plug, onClick: closeThen(() => p.navigate("/chat?integrations=1")) },
-      { id: "search", label: p.searchEnabled ? "البحث في الويب (مفعّل)" : "البحث في الويب", Icon: Globe, onClick: closeThen(() => p.handleSearchToggle()) },
-    ],
-    [
-      { id: "image", label: "إنشاء صورة", Icon: ImagePlus, onClick: closeThen(() => p.onModeChange?.("images")) },
-      { id: "image-edit", label: "تعديل الصورة", Icon: Wand2, onClick: closeThen(() => p.onModeChange?.("images")) },
-      { id: "audio", label: "إنشاء صوت", Icon: AudioLines, onClick: closeThen(() => p.onModeChange?.("music")) },
-      { id: "video", label: "إنشاء فيديو", Icon: VideoIcon, onClick: closeThen(() => p.onModeChange?.("video")) },
-    ],
-    [
-      { id: "slides", label: "إنشاء شرائح عرض", Icon: Presentation, onClick: closeThen(() => p.onModeChange?.("slides")) },
-      { id: "website", label: "إنشاء موقع إلكتروني", Icon: Code2, badge: "New", onClick: closeThen(() => p.onWebsiteStart?.()) },
-      { id: "code", label: "كتابة وتطوير الكود", Icon: Smartphone, onClick: closeThen(() => p.onModeChange?.("code")) },
-    ],
-    [
-      { id: "research", label: "Wide Research", Icon: ScanSearch, onClick: closeThen(() => p.onModeChange?.("deep-research")) },
-      { id: "learning", label: "وضع التعلّم", Icon: Lightbulb, onClick: closeThen(() => p.onModeChange?.("learning")) },
-      { id: "shopping", label: "التسوّق", Icon: ShoppingBag, onClick: closeThen(() => p.onModeChange?.("shopping")) },
-    ],
-    [
-      { id: "operator", label: "ربط جهاز الكمبيوتر الخاص بي", Icon: Monitor, onClick: closeThen(() => p.onModeChange?.("operator")) },
-    ],
+  const sections: { title?: string; items: RowItem[] }[] = [
+    {
+      title: "الأدوات",
+      items: [
+        { id: "search", label: "البحث في الويب", Icon: Globe, active: p.searchEnabled, onClick: closeThen(() => p.handleSearchToggle()) },
+        { id: "tasks", label: "المهام المجدولة", Icon: ListChecks, onClick: closeThen(() => p.navigate("/settings/tasks")) },
+        { id: "skills", label: "المهارات", Icon: Puzzle, onClick: closeThen(() => p.navigate("/settings/skills")) },
+        { id: "integrations", label: "التكاملات", Icon: Plug, onClick: closeThen(() => p.navigate("/chat?integrations=1")) },
+      ],
+    },
+    {
+      title: "الإنشاء",
+      items: [
+        { id: "image", label: "إنشاء صورة", Icon: ImagePlus, onClick: closeThen(() => p.onModeChange?.("images")) },
+        { id: "image-edit", label: "تعديل الصورة", Icon: Wand2, onClick: closeThen(() => p.onModeChange?.("images")) },
+        { id: "audio", label: "إنشاء صوت", Icon: AudioLines, onClick: closeThen(() => p.onModeChange?.("music")) },
+        { id: "video", label: "إنشاء فيديو", Icon: VideoIcon, onClick: closeThen(() => p.onModeChange?.("video")) },
+        { id: "slides", label: "إنشاء شرائح عرض", Icon: Presentation, onClick: closeThen(() => p.onModeChange?.("slides")) },
+      ],
+    },
+    {
+      title: "البناء",
+      items: [
+        { id: "website", label: "إنشاء موقع إلكتروني", Icon: Code2, badge: "جديد", onClick: closeThen(() => p.onWebsiteStart?.()) },
+        { id: "code", label: "كتابة وتطوير الكود", Icon: Smartphone, onClick: closeThen(() => p.onModeChange?.("code")) },
+        { id: "operator", label: "ربط جهاز الكمبيوتر", Icon: Monitor, onClick: closeThen(() => p.onModeChange?.("operator")) },
+      ],
+    },
+    {
+      title: "أوضاع",
+      items: [
+        { id: "research", label: "بحث موسّع", Icon: ScanSearch, onClick: closeThen(() => p.onModeChange?.("deep-research")) },
+        { id: "learning", label: "وضع التعلّم", Icon: Lightbulb, onClick: closeThen(() => p.onModeChange?.("learning")) },
+        { id: "shopping", label: "التسوّق", Icon: ShoppingBag, onClick: closeThen(() => p.onModeChange?.("shopping")) },
+      ],
+    },
   ];
 
   const SheetRow = ({ item }: { item: RowItem }) => (
     <motion.button
       data-no-neo
       type="button"
-      whileTap={{ scale: 0.99 }}
+      whileTap={{ scale: 0.975 }}
       transition={iosSpring}
       onClick={item.onClick}
-      className="plus-row w-full flex items-center gap-4 px-2 h-[52px] text-start border-0 bg-transparent"
+      className="plus-row w-full flex items-center gap-3.5 px-3 h-[50px] text-start border-0 bg-transparent rounded-[14px]"
     >
-      <item.Icon className="shrink-0 w-[22px] h-[22px]" strokeWidth={1.6} style={{ color: "hsl(var(--foreground) / 0.9)" }} />
-      <span className="flex-1 min-w-0 truncate text-[16px] font-normal" style={{ color: "hsl(var(--foreground) / 0.95)" }}>
+      <item.Icon
+        className="shrink-0 w-[21px] h-[21px]"
+        strokeWidth={1.7}
+        style={{ color: item.active ? "hsl(var(--primary))" : "hsl(var(--foreground) / 0.75)" }}
+      />
+      <span
+        className="flex-1 min-w-0 truncate text-[15.5px] font-normal"
+        style={{ color: "hsl(var(--foreground) / 0.95)" }}
+      >
         {item.label}
       </span>
       {item.badge && (
         <span
-          className="shrink-0 rounded-lg px-2 py-[3px] text-[12px] font-semibold"
-          style={{ background: "hsl(var(--primary) / 0.2)", color: "hsl(var(--primary))" }}
+          className="shrink-0 rounded-full px-2 py-[2px] text-[11px] font-semibold"
+          style={{ background: "hsl(var(--primary) / 0.18)", color: "hsl(var(--primary))" }}
         >
           {item.badge}
         </span>
       )}
+      {item.active && <Check className="shrink-0 w-[18px] h-[18px]" style={{ color: "hsl(var(--primary))" }} />}
     </motion.button>
   );
 
   return (
     <motion.div key="main" {...fadeProps(-8)} className="flex flex-col">
-      {/* MOBILE — Manus-style sheet */}
-      <div className="md:hidden flex flex-col pb-4" style={{ fontFamily: mobileFont }} dir="rtl">
+      {/* MOBILE — bottom sheet */}
+      <motion.div
+        className="md:hidden flex flex-col pb-4"
+        style={{ fontFamily: mobileFont }}
+        dir="rtl"
+        initial="hidden"
+        animate="show"
+        variants={{ hidden: {}, show: { transition: { staggerChildren: 0.022, delayChildren: 0.02 } } }}
+      >
         <style>{`
-          .kimi-tile { background: hsl(0 0% 100% / 0.06); border: 0; }
-          .kimi-tile:active { background: hsl(0 0% 100% / 0.11); }
-          .plus-row:active { background: hsl(0 0% 100% / 0.05); border-radius: 14px; }
+          .kimi-tile { background: hsl(0 0% 100% / 0.055); border: 0; }
+          .kimi-tile:active { background: hsl(0 0% 100% / 0.1); }
+          .plus-row:active { background: hsl(0 0% 100% / 0.06); }
         `}</style>
 
-        {/* Sticky header */}
+        {/* Header */}
         <div
-          className="sticky top-0 z-10 flex items-center gap-3 px-1 pb-3"
+          className="sticky top-0 z-10 flex items-center gap-2 px-1 pb-3 pt-0.5"
           style={{ background: "var(--chat-claude-composer, #101312)" }}
         >
-          <button
-            type="button"
-            onClick={() => p.setPlusMenuOpen(false)}
-            className="w-8 h-8 flex items-center justify-center bg-transparent border-0"
-            aria-label="إغلاق"
-          >
-            <X className="w-[22px] h-[22px]" style={{ color: "hsl(var(--foreground) / 0.55)" }} />
-          </button>
-          <span className="flex-1 text-center text-[17px] font-semibold" style={{ color: "hsl(var(--foreground))" }}>
+          <span className="flex-1 text-[16.5px] font-semibold" style={{ color: "hsl(var(--foreground))" }}>
             إضافة إلى المحادثة
           </span>
           <button
             type="button"
-            onClick={() => {
-              p.imageInputRef.current?.click();
-              p.setPlusMenuOpen(false);
-            }}
-            className="text-[15px] font-medium bg-transparent border-0 px-1"
-            style={{ color: "hsl(var(--primary))" }}
+            onClick={() => p.setPlusMenuOpen(false)}
+            className="w-8 h-8 flex items-center justify-center bg-transparent border-0 rounded-full"
+            aria-label="إغلاق"
           >
-            كل الصور
+            <X className="w-[20px] h-[20px]" style={{ color: "hsl(var(--foreground) / 0.5)" }} />
           </button>
         </div>
 
         {/* Media tiles strip */}
-        <div className="flex gap-3 px-1 pb-4">
+        <motion.div
+          className="flex gap-2.5 px-1 pb-4"
+          variants={{ hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0, transition: iosSpring } }}
+        >
           {tiles.map((t) => (
             <motion.button
               key={t.id}
               data-no-neo
               type="button"
-              whileTap={{ scale: 0.96 }}
+              whileTap={{ scale: 0.95 }}
               transition={iosSpring}
               onClick={t.onClick}
               className="kimi-tile flex flex-1 flex-col items-center justify-center gap-2 rounded-[18px]"
-              style={{ height: 92 }}
+              style={{ height: 86 }}
             >
-              <t.Icon className="w-[26px] h-[26px]" strokeWidth={1.6} style={{ color: "hsl(var(--foreground) / 0.85)" }} />
+              <t.Icon className="w-[24px] h-[24px]" strokeWidth={1.6} style={{ color: "hsl(var(--foreground) / 0.85)" }} />
               <span className="text-[12.5px] font-medium leading-none" style={{ color: "hsl(var(--foreground) / 0.8)" }}>
                 {t.label}
               </span>
             </motion.button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Grouped rows */}
-        <div className="px-1">
+        <div className="px-1 flex flex-col gap-3">
           {sections.map((section, si) => (
-            <div key={si}>
-              {section.map((it) => (
-                <SheetRow key={it.id} item={it} />
-              ))}
-              {si < sections.length - 1 && (
-                <div className="h-px my-2" style={{ background: "hsl(var(--foreground) / 0.09)" }} />
+            <motion.div
+              key={si}
+              variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0, transition: iosSpring } }}
+            >
+              {section.title && (
+                <div
+                  className="px-3 pb-1 text-[11.5px] font-semibold tracking-wide"
+                  style={{ color: "hsl(var(--foreground) / 0.42)" }}
+                >
+                  {section.title}
+                </div>
               )}
-            </div>
+              <div className="rounded-[18px] overflow-hidden" style={{ background: "hsl(0 0% 100% / 0.035)" }}>
+                {section.items.map((it, idx) => (
+                  <div key={it.id}>
+                    {idx > 0 && (
+                      <div className="h-px mr-[50px]" style={{ background: "hsl(var(--foreground) / 0.07)" }} />
+                    )}
+                    <SheetRow item={it} />
+                  </div>
+                ))}
+              </div>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
+
 
 
 
