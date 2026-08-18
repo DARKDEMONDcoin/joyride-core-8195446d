@@ -333,7 +333,7 @@ export default function ComposerModelMenu({
                           onOpenChange(false);
                         }}
                         style={{ background: "transparent", border: 0, boxShadow: "none" }}
-                        className="flex w-full items-start gap-2 rounded-[14px] px-2.5 py-2 text-right transition-colors active:bg-white/[0.06]"
+                        className="flex w-full items-start gap-2 rounded-[14px] px-2.5 py-2 text-right transition-colors tier-row"
                       >
                         <span className="min-w-0 flex-1">
                           <span className="flex items-center gap-1.5">
