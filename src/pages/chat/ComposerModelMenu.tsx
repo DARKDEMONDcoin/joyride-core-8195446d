@@ -919,7 +919,7 @@ export default function ComposerModelMenu({
 
 function MediaModelTools({ mode }: { mode: "images" | "video" }) {
   return (
-    <div className="mb-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-1">
+    <div className="mb-3 rounded-2xl bg-white/[0.02] p-1">
       <Suspense fallback={null}>
         {mode === "video" ? (
           <VideoToolsBar />
