@@ -20,7 +20,7 @@ import IntegrationsSheet from "@/components/chat/IntegrationsSheet";
 import ComposerVoiceWave from "@/components/chat/ComposerVoiceWave";
 import { isSendKey } from "@/lib/composerKey";
 import { parseSlashCommand } from "@/lib/slashCommands";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { t as uiT, useUserLang } from "@/lib/authI18n";
 
 interface SmartQuestion {
@@ -145,6 +145,12 @@ const AnimatedInput = ({
   const [focused, setFocused] = useState(false);
   const [listening, setListening] = useState(false);
   const [integrationsOpen, setIntegrationsOpen] = useState(false);
+  const composerLocation = useLocation();
+  useEffect(() => {
+    if (new URLSearchParams(composerLocation.search).get("integrations") === "1") {
+      setIntegrationsOpen(true);
+    }
+  }, [composerLocation.search]);
   const isActive = focused || !!value;
 
 

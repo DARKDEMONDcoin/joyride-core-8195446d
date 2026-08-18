@@ -33,8 +33,6 @@ registerRoute(/^\/referrals\/resources$/, () => import("@/pages/billing/Referral
 registerRoute(/^\/pricing$/, () => import("@/pages/marketing/PricingPage"));
 
 // -- Integrations ----------------------------------------------------------
-registerRoute(/^\/integrations$/, () => import("@/pages/integrations/IntegrationsPage"));
-registerRoute(/^\/integrations\/[^/]+$/, () => import("@/pages/integrations/IntegrationDetailPage"));
 
 // -- Landings / promos -----------------------------------------------------
 
