@@ -88,6 +88,12 @@ export const DraggablePlusSheet = ({
       close();
       return;
     }
+    // Swipe up (past the expanded snap point) closes the sheet the same way
+    // it opened - reversing the entry animation.
+    if (expandedRef.current && (info.offset.y < -56 || info.velocity.y < -650)) {
+      close();
+      return;
+    }
     if (collapsed <= 0) {
       snapTo("expanded");
       return;
