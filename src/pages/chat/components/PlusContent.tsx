@@ -133,8 +133,7 @@ const PlusMain = (p: PlusContentProps) => {
   const sections: RowItem[][] = [
     [
       { id: "local", label: "إضافة ملفات محلية", Icon: FileUp, onClick: closeThen(() => p.fileInputRef.current?.click()) },
-      { id: "recent-files", label: "الملفات الأخيرة", Icon: FileText, onClick: closeThen(() => p.navigate("/settings/files")) },
-      { id: "tasks", label: "المهام الأخيرة", Icon: ListChecks, onClick: closeThen(() => p.navigate("/settings/tasks")) },
+      { id: "tasks", label: "المهام المجدولة", Icon: ListChecks, onClick: closeThen(() => p.navigate("/settings/tasks")) },
       { id: "skills", label: "المهارات", Icon: Puzzle, onClick: closeThen(() => p.navigate("/settings/skills")) },
       { id: "integrations", label: "التكاملات", Icon: Plug, onClick: closeThen(() => p.navigate("/chat?integrations=1")) },
       { id: "search", label: p.searchEnabled ? "البحث في الويب (مفعّل)" : "البحث في الويب", Icon: Globe, onClick: closeThen(() => p.handleSearchToggle()) },
