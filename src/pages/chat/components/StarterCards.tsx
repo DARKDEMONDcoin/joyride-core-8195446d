@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import researchImg from "@/assets/starter-research.jpg";
-import imageImg from "@/assets/starter-image.jpg";
-import slidesImg from "@/assets/starter-slides.jpg";
-import codeImg from "@/assets/starter-code.jpg";
+import researchImg from "@/assets/svc-research.png";
+import imageImg from "@/assets/svc-image.png";
+import videoImg from "@/assets/svc-video.png";
+import slidesImg from "@/assets/svc-slides.png";
+import codeImg from "@/assets/svc-code.png";
+import webImg from "@/assets/svc-web.png";
+import docsImg from "@/assets/svc-docs.png";
+import agentImg from "@/assets/svc-agent.png";
+import integrationsImg from "@/assets/svc-integrations.png";
 
 export interface StarterCardsProps {
   /** Fills the composer with the card prompt. */
@@ -11,13 +16,13 @@ export interface StarterCardsProps {
   className?: string;
 }
 
-/** Real capabilities of the app — no filler. */
+/** Every real service the app offers — no filler. */
 const CARDS = [
   {
     id: "research",
     img: researchImg,
-    title: "بحث عميق بمصادر",
-    desc: "تقرير منظّم مع مراجع موثوقة.",
+    title: "بحث عميق",
+    desc: "تقرير منظّم مع مصادر موثوقة.",
     prompt: "اعمل بحث عميق ومنظم مع مصادر عن: ",
   },
   {
@@ -28,24 +33,59 @@ const CARDS = [
     prompt: "ولّد لي صورة عالية الجودة لـ: ",
   },
   {
+    id: "video",
+    img: videoImg,
+    title: "توليد الفيديو",
+    desc: "مقاطع قصيرة من فكرة مكتوبة.",
+    prompt: "ولّد لي فيديو قصير عن: ",
+  },
+  {
     id: "slides",
     img: slidesImg,
-    title: "عرض تقديمي جاهز",
+    title: "عرض تقديمي",
     desc: "شرائح متكاملة بتصميم نظيف.",
     prompt: "اعمل لي عرض تقديمي متكامل عن: ",
   },
   {
     id: "code",
     img: codeImg,
-    title: "اكتب ونفّذ كود",
+    title: "كتابة وتنفيذ كود",
     desc: "مشروع كامل مع معاينة مباشرة.",
     prompt: "اكتب لي كود لمشروع: ",
+  },
+  {
+    id: "web",
+    img: webImg,
+    title: "بناء موقع",
+    desc: "صفحة أو موقع كامل جاهز للنشر.",
+    prompt: "ابنِ لي موقع ويب عن: ",
+  },
+  {
+    id: "docs",
+    img: docsImg,
+    title: "تحليل المستندات",
+    desc: "ارفع PDF أو ملف واسأل عنه.",
+    prompt: "حلّل لي هذا المستند واستخرج أهم النقاط: ",
+  },
+  {
+    id: "agent",
+    img: agentImg,
+    title: "وكيل ذكي",
+    desc: "ينفّذ مهام متعددة الخطوات نيابة عنك.",
+    prompt: "نفّذ كوكيل ذكي المهمة التالية خطوة بخطوة: ",
+  },
+  {
+    id: "integrations",
+    img: integrationsImg,
+    title: "التكاملات",
+    desc: "اربط تطبيقاتك ونفّذ منها مباشرة.",
+    prompt: "استخدم التكاملات المربوطة عندي عشان: ",
   },
 ];
 
 /**
  * Manus-style starter carousel shown above the composer before the first
- * message. Horizontally scrollable image cards; dismissible for the session.
+ * message. Transparent artwork, horizontal scroll, dismissible per session.
  */
 export function StarterCards({ onPick, className = "" }: StarterCardsProps) {
   const [dismissed, setDismissed] = useState(false);
@@ -65,24 +105,24 @@ export function StarterCards({ onPick, className = "" }: StarterCardsProps) {
         </button>
       </div>
 
-      <div className="flex gap-3 overflow-x-auto px-2 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x">
+      <div className="flex gap-2.5 overflow-x-auto px-2 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x">
         {CARDS.map((c) => (
           <button
             key={c.id}
             type="button"
             onClick={() => onPick(c.prompt)}
-            className="snap-start shrink-0 w-[268px] flex items-center gap-3 rounded-[18px] border-0 bg-[color:var(--chat-claude-composer,#1c1c1c)] hover:brightness-110 active:scale-[0.99] transition-all p-2.5 text-start"
+            className="snap-start shrink-0 w-[252px] flex items-center gap-2.5 rounded-[18px] border-0 bg-[color:var(--chat-claude-composer,#262627)] hover:brightness-110 active:scale-[0.99] transition-all p-2.5 text-start"
           >
             <img
               src={c.img}
               alt=""
               loading="lazy"
               decoding="async"
-              width={816}
-              height={816}
-              className="w-[54px] h-[54px] rounded-[13px] object-cover shrink-0"
+              width={512}
+              height={512}
+              className="w-[46px] h-[46px] object-contain shrink-0"
             />
-            <span className="min-w-0 flex flex-col gap-1">
+            <span className="min-w-0 flex flex-col gap-0.5">
               <span className="text-[14px] font-semibold leading-tight text-foreground truncate">
                 {c.title}
               </span>
