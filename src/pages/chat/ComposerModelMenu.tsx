@@ -566,7 +566,7 @@ export default function ComposerModelMenu({
                           {loading ? "Loading models…" : "No models available."}
                         </p>
                       ) : (
-                        <div className="flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.03] overflow-hidden">
+                        <div className="flex flex-col rounded-2xl bg-white/[0.02] overflow-hidden">
                           {visibleImageOptions.map((model) => {
                             const choice = asMediaChoice(model, "images");
                             const active = mode === "images" && mediaModel?.slug === choice.slug;
