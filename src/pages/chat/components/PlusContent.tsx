@@ -22,6 +22,17 @@ import {
   FileText,
   Plug,
   Code2,
+  ListChecks,
+  Puzzle,
+  ImagePlus,
+  Wand2,
+  AudioLines,
+  Smartphone,
+  ScanSearch,
+  ShoppingBag,
+  Monitor,
+  X,
+
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -104,75 +115,48 @@ const fadeProps = (x: number) => ({
 const mobileFont = "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif";
 
 const PlusMain = (p: PlusContentProps) => {
-  // ── Mobile: Kimi-style bottom sheet ─────────────────────────────
-  // Top: horizontal scrollable tiles (Camera / Photos / Local file / …)
-  // Middle: grouped list rows (Integrations, Skills)
-  // Bottom: single Web-search row with auto/toggle indicator.
+  type Tile = { id: string; label: string; Icon: any; onClick: () => void };
 
-  type Tile = {
-    id: string;
-    label: string;
-    Icon: any;
-    onClick: () => void;
-  };
-
-  const tiles: Tile[] = [
-    {
-      id: "file",
-      label: "إرفاق ملف",
-      Icon: FileUp,
-      onClick: () => {
-        p.fileInputRef.current?.click();
-        p.setPlusMenuOpen(false);
-      },
-    },
-    {
-      id: "photos",
-      label: "الصور",
-      Icon: ImageIcon,
-      onClick: () => {
-        p.imageInputRef.current?.click();
-        p.setPlusMenuOpen(false);
-      },
-    },
-  ];
-
-
-  type RowItem = {
-    id: string;
-    label: string;
-    Icon: any;
-    badge?: string;
-    onClick: () => void;
-  };
-
-  const go = (fn: () => void) => () => {
+  const closeThen = (fn: () => void) => () => {
     p.setPlusMenuOpen(false);
     fn();
   };
 
+  const tiles: Tile[] = [
+    { id: "camera", label: "الكاميرا", Icon: Camera, onClick: closeThen(() => p.cameraInputRef.current?.click()) },
+    { id: "photos", label: "الصور", Icon: ImageIcon, onClick: closeThen(() => p.imageInputRef.current?.click()) },
+    { id: "file", label: "إرفاق ملف", Icon: FileUp, onClick: closeThen(() => p.fileInputRef.current?.click()) },
+  ];
+
+  type RowItem = { id: string; label: string; Icon: any; badge?: string; onClick: () => void };
+
   const sections: RowItem[][] = [
     [
-      { id: "skills", label: "المهارات", Icon: Lightbulb, onClick: go(() => p.navigate("/settings/skills")) },
-      { id: "integrations", label: "التكاملات", Icon: Plug, onClick: go(() => p.navigate("/chat?integrations=1")) },
-      { id: "search", label: p.searchEnabled ? "البحث في الويب (مفعّل)" : "البحث في الويب", Icon: Globe, onClick: go(() => p.handleSearchToggle()) },
+      { id: "local", label: "إضافة ملفات محلية", Icon: FileUp, onClick: closeThen(() => p.fileInputRef.current?.click()) },
+      { id: "recent-files", label: "الملفات الأخيرة", Icon: FileText, onClick: closeThen(() => p.navigate("/files")) },
+      { id: "tasks", label: "المهام الأخيرة", Icon: ListChecks, onClick: closeThen(() => p.navigate("/tasks")) },
+      { id: "skills", label: "المهارات", Icon: Puzzle, onClick: closeThen(() => p.navigate("/settings/skills")) },
+      { id: "integrations", label: "التكاملات", Icon: Plug, onClick: closeThen(() => p.navigate("/chat?integrations=1")) },
+      { id: "search", label: p.searchEnabled ? "البحث في الويب (مفعّل)" : "البحث في الويب", Icon: Globe, onClick: closeThen(() => p.handleSearchToggle()) },
     ],
     [
-      { id: "image", label: "إنشاء صورة", Icon: ImageIcon, onClick: go(() => p.onModeChange?.("images")) },
-      { id: "image-edit", label: "تعديل الصورة", Icon: Wrench, onClick: go(() => p.onModeChange?.("images")) },
-      { id: "music", label: "إنشاء صوت", Icon: Music2, onClick: go(() => p.onModeChange?.("music")) },
-      { id: "video", label: "إنشاء فيديو", Icon: VideoIcon, onClick: go(() => p.onModeChange?.("video")) },
+      { id: "image", label: "إنشاء صورة", Icon: ImagePlus, onClick: closeThen(() => p.onModeChange?.("images")) },
+      { id: "image-edit", label: "تعديل الصورة", Icon: Wand2, onClick: closeThen(() => p.onModeChange?.("images")) },
+      { id: "audio", label: "إنشاء صوت", Icon: AudioLines, onClick: closeThen(() => p.onModeChange?.("music")) },
+      { id: "video", label: "إنشاء فيديو", Icon: VideoIcon, onClick: closeThen(() => p.onModeChange?.("video")) },
     ],
     [
-      { id: "slides", label: "إنشاء شرائح عرض", Icon: Presentation, onClick: go(() => p.onModeChange?.("slides")) },
-      { id: "website", label: "إنشاء موقع إلكتروني", Icon: Code2, badge: "New", onClick: go(() => p.onWebsiteStart?.()) },
-      { id: "code", label: "كتابة وتطوير الكود", Icon: FileText, onClick: go(() => p.onModeChange?.("code")) },
+      { id: "slides", label: "إنشاء شرائح عرض", Icon: Presentation, onClick: closeThen(() => p.onModeChange?.("slides")) },
+      { id: "website", label: "إنشاء موقع إلكتروني", Icon: Code2, badge: "New", onClick: closeThen(() => p.onWebsiteStart?.()) },
+      { id: "code", label: "كتابة وتطوير الكود", Icon: Smartphone, onClick: closeThen(() => p.onModeChange?.("code")) },
     ],
     [
-      { id: "research", label: "بحث معمّق (Wide Research)", Icon: Microscope, onClick: go(() => p.onModeChange?.("deep-research")) },
-      { id: "learning", label: "وضع التعلّم", Icon: Lightbulb, onClick: go(() => p.onModeChange?.("learning")) },
-      { id: "shopping", label: "التسوّق", Icon: Globe, onClick: go(() => p.onModeChange?.("shopping")) },
-      { id: "operator", label: "ربط جهاز الكمبيوتر", Icon: Timer, onClick: go(() => p.onModeChange?.("operator")) },
+      { id: "research", label: "Wide Research", Icon: ScanSearch, onClick: closeThen(() => p.onModeChange?.("deep-research")) },
+      { id: "learning", label: "وضع التعلّم", Icon: Lightbulb, onClick: closeThen(() => p.onModeChange?.("learning")) },
+      { id: "shopping", label: "التسوّق", Icon: ShoppingBag, onClick: closeThen(() => p.onModeChange?.("shopping")) },
+    ],
+    [
+      { id: "operator", label: "ربط جهاز الكمبيوتر الخاص بي", Icon: Monitor, onClick: closeThen(() => p.onModeChange?.("operator")) },
     ],
   ];
 
@@ -180,19 +164,19 @@ const PlusMain = (p: PlusContentProps) => {
     <motion.button
       data-no-neo
       type="button"
-      whileTap={{ scale: 0.985 }}
+      whileTap={{ scale: 0.99 }}
       transition={iosSpring}
       onClick={item.onClick}
-      className="plus-row w-full flex items-center gap-3.5 px-1 py-[13px] text-start border-0 bg-transparent"
+      className="plus-row w-full flex items-center gap-4 px-2 h-[52px] text-start border-0 bg-transparent"
     >
-      <item.Icon className="shrink-0 w-[21px] h-[21px]" strokeWidth={1.7} style={{ color: "hsl(var(--foreground) / 0.85)" }} />
-      <span className="flex-1 min-w-0 truncate text-[15px] font-medium" style={{ color: "hsl(var(--foreground) / 0.92)" }}>
+      <item.Icon className="shrink-0 w-[22px] h-[22px]" strokeWidth={1.6} style={{ color: "hsl(var(--foreground) / 0.9)" }} />
+      <span className="flex-1 min-w-0 truncate text-[16px] font-normal" style={{ color: "hsl(var(--foreground) / 0.95)" }}>
         {item.label}
       </span>
       {item.badge && (
         <span
-          className="shrink-0 rounded-md px-2 py-[2px] text-[11px] font-semibold"
-          style={{ background: "hsl(var(--primary) / 0.18)", color: "hsl(var(--primary))" }}
+          className="shrink-0 rounded-lg px-2 py-[3px] text-[12px] font-semibold"
+          style={{ background: "hsl(var(--primary) / 0.2)", color: "hsl(var(--primary))" }}
         >
           {item.badge}
         </span>
@@ -202,23 +186,45 @@ const PlusMain = (p: PlusContentProps) => {
 
   return (
     <motion.div key="main" {...fadeProps(-8)} className="flex flex-col">
-      {/* MOBILE — scrollable Manus-style sheet */}
-      <div
-        className="md:hidden flex flex-col pt-1 pb-4 gap-3"
-        style={{ fontFamily: mobileFont }}
-        dir="rtl"
-      >
+      {/* MOBILE — Manus-style sheet */}
+      <div className="md:hidden flex flex-col pb-4" style={{ fontFamily: mobileFont }} dir="rtl">
         <style>{`
-          .kimi-tile {
-            background: hsl(0 0% 100% / 0.05);
-            border: 0;
-          }
-          .kimi-tile:active { background: hsl(var(--primary) / 0.12); }
+          .kimi-tile { background: hsl(0 0% 100% / 0.06); border: 0; }
+          .kimi-tile:active { background: hsl(0 0% 100% / 0.11); }
           .plus-row:active { background: hsl(0 0% 100% / 0.05); border-radius: 14px; }
         `}</style>
 
-        {/* Top: images + files (unchanged) */}
-        <div className="grid grid-cols-2 gap-3 px-3">
+        {/* Sticky header */}
+        <div
+          className="sticky top-0 z-10 flex items-center gap-3 px-1 pb-3"
+          style={{ background: "var(--chat-claude-composer, #101312)" }}
+        >
+          <button
+            type="button"
+            onClick={() => p.setPlusMenuOpen(false)}
+            className="w-8 h-8 flex items-center justify-center bg-transparent border-0"
+            aria-label="إغلاق"
+          >
+            <X className="w-[22px] h-[22px]" style={{ color: "hsl(var(--foreground) / 0.55)" }} />
+          </button>
+          <span className="flex-1 text-center text-[17px] font-semibold" style={{ color: "hsl(var(--foreground))" }}>
+            إضافة إلى المحادثة
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              p.imageInputRef.current?.click();
+              p.setPlusMenuOpen(false);
+            }}
+            className="text-[15px] font-medium bg-transparent border-0 px-1"
+            style={{ color: "hsl(var(--primary))" }}
+          >
+            كل الصور
+          </button>
+        </div>
+
+        {/* Media tiles strip */}
+        <div className="flex gap-3 px-1 pb-4">
           {tiles.map((t) => (
             <motion.button
               key={t.id}
@@ -227,38 +233,32 @@ const PlusMain = (p: PlusContentProps) => {
               whileTap={{ scale: 0.96 }}
               transition={iosSpring}
               onClick={t.onClick}
-              className="kimi-tile flex flex-col items-center justify-center gap-2 rounded-[22px] w-full"
-              style={{ height: 96 }}
+              className="kimi-tile flex flex-1 flex-col items-center justify-center gap-2 rounded-[18px]"
+              style={{ height: 92 }}
             >
-              <t.Icon
-                className="w-[26px] h-[26px]"
-                strokeWidth={1.7}
-                style={{ color: "hsl(var(--foreground) / 0.9)" }}
-              />
-              <span
-                className="text-[13px] font-medium leading-none"
-                style={{ color: "hsl(var(--foreground) / 0.88)" }}
-              >
+              <t.Icon className="w-[26px] h-[26px]" strokeWidth={1.6} style={{ color: "hsl(var(--foreground) / 0.85)" }} />
+              <span className="text-[12.5px] font-medium leading-none" style={{ color: "hsl(var(--foreground) / 0.8)" }}>
                 {t.label}
               </span>
             </motion.button>
           ))}
         </div>
 
-        {/* Scrollable grouped rows */}
-        <div className="px-4">
+        {/* Grouped rows */}
+        <div className="px-1">
           {sections.map((section, si) => (
             <div key={si}>
               {section.map((it) => (
                 <SheetRow key={it.id} item={it} />
               ))}
               {si < sections.length - 1 && (
-                <div className="h-px my-1.5" style={{ background: "hsl(var(--foreground) / 0.08)" }} />
+                <div className="h-px my-2" style={{ background: "hsl(var(--foreground) / 0.09)" }} />
               )}
             </div>
           ))}
         </div>
       </div>
+
 
 
 
