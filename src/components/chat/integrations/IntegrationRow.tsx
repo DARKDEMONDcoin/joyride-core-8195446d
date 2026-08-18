@@ -1,21 +1,40 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Check, ChevronLeft, Loader2 } from "lucide-react";
 import type { Integration } from "@/lib/integrationsData";
 
-export function IntegrationLogo({ item, size = 44 }: { item: Integration; size?: number }) {
-  const [broken, setBroken] = useState(false);
+/** Ordered logo sources: Simple Icons (brand slug) → Clearbit → Google favicon. */
+function logoSources(item: Integration): string[] {
+  const out: string[] = [];
+  const slug = (item.pipedreamSlug || item.app || item.id)
+    .toLowerCase()
+    .replace(/[_\s]+/g, "")
+    .replace(/[^a-z0-9-]/g, "");
+  if (slug) out.push(`https://cdn.simpleicons.org/${slug}`);
+  if (item.domain) {
+    out.push(`https://logo.clearbit.com/${item.domain}`);
+    out.push(`https://www.google.com/s2/favicons?domain=${item.domain}&sz=128`);
+  }
+  return out;
+}
+
+export function IntegrationLogo({ item, size = 40 }: { item: Integration; size?: number }) {
+  const sources = useMemo(() => logoSources(item), [item]);
+  const [idx, setIdx] = useState(0);
+  const src = sources[idx];
+
   return (
     <span
-      className="inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[12px] bg-white/[0.07]"
-      style={{ width: size, height: size }}
+      className="inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[11px]"
+      style={{ width: size, height: size, background: "rgba(255,255,255,0.06)" }}
     >
-      {item.domain && !broken ? (
+      {src ? (
         <img
-          src={`https://logo.clearbit.com/${item.domain}`}
+          src={src}
           alt={item.name}
           loading="lazy"
-          className="h-full w-full object-cover"
-          onError={() => setBroken(true)}
+          className="object-contain"
+          style={{ width: size * 0.6, height: size * 0.6 }}
+          onError={() => setIdx((i) => i + 1)}
         />
       ) : (
         <span className="text-[13px] font-semibold text-white/70">{item.name.slice(0, 1)}</span>
@@ -31,32 +50,32 @@ interface RowProps {
   onOpen: () => void;
 }
 
-/** Flat connector row: logo + name + 2-line description + status on the far side. */
+/** Flat connector row — no card, sits directly on the sheet surface. */
 export default function IntegrationRow({ item, connected, busy, onOpen }: RowProps) {
   return (
     <button
       type="button"
       onClick={onOpen}
-      className="flex w-full items-center gap-3 rounded-[14px] px-3 py-3 text-right transition-colors active:bg-white/[0.04]"
-      style={{ border: 0, background: "transparent", minHeight: 64 }}
+      className="flex w-full items-center gap-3 rounded-[14px] px-2 py-2.5 text-right transition-colors active:bg-white/[0.05]"
+      style={{ border: 0, background: "transparent", minHeight: 58 }}
     >
       <IntegrationLogo item={item} />
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-[14.5px] font-semibold text-white">{item.name}</span>
-        <span className="mt-0.5 line-clamp-2 block text-[11.5px] leading-[1.5] text-white/45">
+        <span className="block truncate text-[14.5px] font-medium text-white">{item.name}</span>
+        <span
+          dir="auto"
+          className="mt-0.5 block truncate text-[11.5px] leading-[1.5] text-white/40"
+        >
           {item.description}
         </span>
       </span>
-      <span className="shrink-0 text-white/45">
+      <span className="shrink-0 text-white/35">
         {busy ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : connected ? (
-          <Check className="h-4.5 w-4.5 text-primary" style={{ width: 18, height: 18 }} />
+          <Check style={{ width: 18, height: 18 }} className="text-primary" />
         ) : (
-          <span className="inline-flex items-center gap-1 text-[12.5px]">
-            اتصال
-            <ChevronLeft className="h-4 w-4" />
-          </span>
+          <ChevronLeft className="h-[18px] w-[18px]" />
         )}
       </span>
     </button>
