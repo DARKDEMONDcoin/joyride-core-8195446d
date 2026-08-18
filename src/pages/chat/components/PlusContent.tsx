@@ -128,18 +128,19 @@ const PlusMain = (p: PlusContentProps) => {
     { id: "file", label: "إرفاق ملف", Icon: FileUp, onClick: closeThen(() => p.fileInputRef.current?.click()) },
   ];
 
-  type RowItem = { id: string; label: string; Icon: any; badge?: string; active?: boolean; onClick: () => void };
+  type RowItem = { id: string; label: string; Icon: any; badge?: string; active?: boolean; toggle?: boolean; onClick: () => void };
 
   const sections: { title?: string; items: RowItem[] }[] = [
     {
       title: "الأدوات",
       items: [
-        { id: "search", label: "البحث في الويب", Icon: Globe, active: p.searchEnabled, onClick: closeThen(() => p.handleSearchToggle()) },
+        { id: "search", label: "البحث في الويب", Icon: Globe, active: p.searchEnabled, toggle: true, onClick: () => p.handleSearchToggle() },
         { id: "tasks", label: "المهام المجدولة", Icon: ListChecks, onClick: closeThen(() => p.navigate("/settings/tasks")) },
         { id: "skills", label: "المهارات", Icon: Puzzle, onClick: closeThen(() => p.navigate("/settings/skills")) },
         { id: "integrations", label: "التكاملات", Icon: Plug, onClick: closeThen(() => p.navigate("/chat?integrations=1")) },
       ],
     },
+
     {
       title: "الإنشاء",
       items: [
