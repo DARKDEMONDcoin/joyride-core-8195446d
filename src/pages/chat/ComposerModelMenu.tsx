@@ -304,11 +304,13 @@ export default function ComposerModelMenu({
                   style={{
                     position: "fixed",
                     top: Math.max(12, pos.top ?? 64),
-                    left: 16,
-                    right: 16,
+                    left: Math.max(12, Math.min((pos.left ?? 12) - 8, window.innerWidth - 300 - 12)),
+                    width: Math.min(300, window.innerWidth - 24),
                     maxHeight: `calc(100dvh - ${Math.max(12, pos.top ?? 64) + 24}px)`,
+                    background: "#232323",
+                    border: "1px solid rgba(255,255,255,0.06)",
                   }}
-                  className="z-[9999] flex flex-col gap-1 overflow-y-auto overscroll-contain rounded-[22px] bg-[#232323] p-2 shadow-[0_18px_50px_rgba(0,0,0,0.55)]"
+                  className="z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[18px] p-1.5 shadow-[0_18px_50px_rgba(0,0,0,0.55)]"
                 >
 
                   {[...CHAT_COMPOSER_MODEL_OPTIONS].reverse().map((item) => {
@@ -330,33 +332,35 @@ export default function ComposerModelMenu({
                           else onChatModelSelect({ id: item.id, label: item.label });
                           onOpenChange(false);
                         }}
-                        className="flex w-full items-start gap-3 rounded-2xl px-3 py-3 text-right transition-colors active:bg-white/[0.06]"
+                        style={{ background: "transparent", border: 0, boxShadow: "none" }}
+                        className="flex w-full items-start gap-2 rounded-[14px] px-2.5 py-2 text-right transition-colors active:bg-white/[0.06]"
                       >
                         <span className="min-w-0 flex-1">
-                          <span className="flex items-center gap-2">
-                            <span className="truncate text-[17px] font-semibold text-white">{item.label}</span>
+                          <span className="flex items-center gap-1.5">
+                            <span className="truncate text-[14px] font-semibold text-white">{item.label}</span>
                             <span
-                              className={`shrink-0 rounded-md px-1.5 py-0.5 text-[11px] font-medium ${
+                              className={`shrink-0 rounded px-1 py-[1px] text-[9px] font-medium leading-tight ${
                                 item.premium
-                                  ? "bg-white/10 text-white/70"
+                                  ? "bg-white/10 text-white/60"
                                   : "bg-primary/15 text-primary"
                               }`}
                             >
                               {item.premium ? "Pro" : "مجاني لفترة محدودة"}
                             </span>
                           </span>
-                          <span className="mt-1 block text-[13px] leading-snug text-white/50">{item.desc}</span>
+                          <span className="mt-0.5 block text-[11px] leading-snug text-white/45 line-clamp-2">{item.desc}</span>
                         </span>
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center">
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center">
                           {locked ? (
-                            <Lock className="h-4 w-4 text-white/40" />
+                            <Lock className="h-3.5 w-3.5 text-white/40" />
                           ) : active ? (
-                            <Check className="h-5 w-5 text-white" strokeWidth={2.5} />
+                            <Check className="h-4 w-4 text-white" strokeWidth={2.5} />
                           ) : null}
                         </span>
                       </button>
                     );
                   })}
+
                 </motion.div>
               </>
             )}
