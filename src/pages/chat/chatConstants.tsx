@@ -248,8 +248,9 @@ export const getChatModelDisplayLabel = (
     return normalizeMegsyModelLabel(selectedModel.label);
   }
   return (
-    CHAT_COMPOSER_MODEL_OPTIONS.find((item) => item.kind === "model" && item.id === selectedModel.id)
-      ?.label || normalizeMegsyModelLabel(selectedModel.label) || getMegsyTierLabel(tier)
+    CHAT_COMPOSER_MODEL_OPTIONS.find((item) => item.id === selectedModel.id)?.label ||
+    normalizeMegsyModelLabel(selectedModel.label) ||
+    getMegsyTierLabel(tier)
   );
 };
 
