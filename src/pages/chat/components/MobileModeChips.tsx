@@ -179,11 +179,13 @@ export function MobileModeChips({
                     : { type: "spring", stiffness: 500, damping: 22 },
                 }}
                 whileHover={{ y: -1 }}
-                onClick={() => handleClick(id)}
-                onPointerDown={() => startPress(id)}
+                onClick={() => { if (!movedRef.current) handleClick(id); }}
+                onPointerDown={(e) => startPress(id, e)}
+                onPointerMove={movePress}
                 onPointerUp={endPress}
                 onPointerLeave={endPress}
                 onPointerCancel={endPress}
+
                 onContextMenu={(e) => e.preventDefault()}
                 className={
                   isDesktopChat
