@@ -35,9 +35,9 @@ const FLICK = 0.55;
  *    sheet either drags or the content scrolls for the rest of that gesture.
  *  - Dragging down is only allowed when the content is at scrollTop 0, so a
  *    mid-list drag never yanks the sheet.
- *  - Dragging up expands while collapsed; while expanded it scrolls the list.
- *  - Dragging down from the grip collapses first, then dismisses. This keeps
- *    dismissal out of the content scroller and avoids pointer-cancel races.
+ *  - An upward swipe on the compact surface dismisses upward. Once expanded,
+ *    only the grip can dismiss upward; the content keeps native scrolling.
+ *  - Dragging down from the grip collapses first, then dismisses.
  *  - Settling is velocity-projected: a flick decides the direction, distance
  *    only matters for slow drags.
  */
@@ -70,10 +70,10 @@ export const DraggablePlusSheet = ({
   }, []);
 
   const close = useCallback(
-    (velocity = 0) => {
+    (direction: "down" | "up", velocity = 0) => {
       if (closingRef.current) return;
       closingRef.current = true;
-      animate(y, height, {
+      animate(y, direction === "up" ? -height : height, {
         ...SNAP,
         velocity,
         onComplete: onClose,
@@ -143,10 +143,9 @@ export const DraggablePlusSheet = ({
       if (!s.decided) {
         if (Math.abs(dy) < 6) return;
         s.decided = true;
-        const down = dy > 0;
         // The compact sheet is one draggable surface. Once expanded, only the
         // grip moves the sheet; the content always keeps native scrolling.
-        s.dragging = !s.startedExpanded || (s.fromGrip && down);
+        s.dragging = !s.startedExpanded || s.fromGrip;
         if (s.dragging) {
           try {
             el.setPointerCapture(e.pointerId);
@@ -159,9 +158,9 @@ export const DraggablePlusSheet = ({
       if (!s.dragging) return;
       e.preventDefault();
 
-      // Never let the sheet travel above its expanded snap point. Upward
-      // motion from compact follows the finger until it reaches y=0.
-      y.set(Math.max(0, s.baseY + dy));
+      // Follow the finger linearly. An upward gesture is a deliberate exit,
+      // so it must not rubber-band or reverse into an expansion.
+      y.set(s.baseY + dy);
     };
 
     const settle = (e: PointerEvent) => {
@@ -178,6 +177,15 @@ export const DraggablePlusSheet = ({
       const upFlick = -v;
       if (!s.dragging) return;
 
+      // Upward is a dedicated dismiss path. Requiring either meaningful
+      // travel or velocity prevents accidental closes from taps and jitter.
+      const travel = e.clientY - s.startY;
+      if (travel < 0) {
+        if (upFlick > FLICK || travel < -64) close("up", Math.min(v, -0.18) * 1000);
+        else snapTo(s.startedExpanded ? "expanded" : "collapsed", v * 1000);
+        return;
+      }
+
       const current = y.get();
       // Project where the sheet lands with the current momentum (~120ms).
       const projected = current + v * 120;
@@ -187,11 +195,7 @@ export const DraggablePlusSheet = ({
         // From expanded, the first downward gesture returns to compact. From
         // compact, the same gesture dismisses the sheet.
         if (s.startedExpanded && collapsedY > 0) snapTo("collapsed", v * 1000);
-        else close(v * 1000);
-        return;
-      }
-      if (upFlick > FLICK) {
-        snapTo("expanded", v * 1000);
+        else close("down", v * 1000);
         return;
       }
       if (collapsedY <= 0) {
