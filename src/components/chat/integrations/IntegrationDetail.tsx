@@ -31,18 +31,19 @@ export default function IntegrationDetail({ item, connected, busy, onBack, onTog
       <div className="flex flex-col items-center pt-4 text-center">
         <IntegrationLogo item={item} size={72} />
         <h3 className="mt-3 text-[19px] font-semibold text-foreground">{item.name}</h3>
-        <p className="mt-2 max-w-[34ch] text-[13px] leading-[1.7] text-foreground/50">
+        <p dir="auto" className="mt-2 max-w-[34ch] text-[13px] leading-[1.7] text-foreground/50">
           {item.description}
         </p>
       </div>
 
-      <p className="mb-2 mt-6 px-2 text-[12.5px] text-foreground/40">التفاصيل</p>
-      <div className="overflow-hidden rounded-[18px] bg-[var(--chat-claude-control,#1f1f20)]">
-        <DetailRow label="نوع الموصل" value={typeLabel(item.type)} />
+      <p className="mb-1 mt-6 px-2 text-[12.5px] text-foreground/40">التفاصيل</p>
+      <div className="overflow-hidden rounded-[18px]">
+        <DetailRow label="نوع التكامل" value={typeLabel(item.type)} />
         <DetailRow label="الفئة" value={item.category} />
-        {item.domain && <DetailRow label="الموقع الإلكتروني" value={item.domain} />}
+        {item.domain && <DetailRow label="الموقع" value={item.domain} />}
         <DetailRow label="المعرّف" value={item.app} last />
       </div>
+
 
       <div className="mt-6 pb-2">
         <button
