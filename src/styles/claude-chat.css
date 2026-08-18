@@ -133,10 +133,9 @@
     display: none !important;
   }
 
-  /* Solid, clearly visible border on mobile so the composer edges read
-     against the dark chat surface without relying on the subtle gradient. */
+  /* Composer sits flush against the dark chat surface with no visible edge. */
   [data-skin="claude"] .chat-composer-frame {
-    border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+    border: 0 !important;
   }
   [data-skin="claude"] .chat-composer-frame::before {
     content: none !important;
