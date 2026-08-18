@@ -163,7 +163,7 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
                       className="flex min-h-full flex-col"
                     >
                       <h2 className="px-2 pb-3 text-center text-[16px] font-semibold text-foreground">
-                        الموصلات
+                        التكاملات
                       </h2>
 
                       <div className="flex items-center gap-2 rounded-[16px] bg-[var(--chat-claude-control,#1f1f20)] px-3.5 py-2.5">
@@ -171,9 +171,21 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
                         <input
                           value={query}
                           onChange={(e) => setQuery(e.target.value)}
-                          placeholder="البحث عن الموصلات"
-                          className="w-full bg-transparent text-[14px] text-foreground outline-none placeholder:text-foreground/35"
-                          style={{ border: 0, touchAction: "auto" }}
+                          placeholder="ابحث عن تطبيق"
+                          className="w-full text-[14px] text-foreground outline-none placeholder:text-foreground/35"
+                          style={{
+                            border: 0,
+                            outline: "none",
+                            boxShadow: "none",
+                            background: "transparent",
+                            borderRadius: 0,
+                            padding: 0,
+                            height: "auto",
+                            minHeight: 0,
+                            WebkitAppearance: "none",
+                            appearance: "none",
+                            touchAction: "auto",
+                          }}
                         />
                       </div>
 
@@ -195,7 +207,7 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
                         ))}
                       </div>
 
-                      <div className="mt-3 flex-1">
+                      <div className="mt-2 flex-1">
                         {tab === "mcp" ? (
                           <EmptyConnectors
                             label="لا يوجد MCP مخصص"
@@ -206,25 +218,20 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
                           <EmptyConnectors label="لا توجد نتائج" />
                         ) : (
                           <>
-                            {tab === "api" && (
-                              <p className="px-2 pb-1 text-[12px] text-foreground/40">
-                                تطبيقات تحتاج مفتاح API للتكامل
-                              </p>
-                            )}
                             {connectedList.length > 0 && (
-                              <div className="mb-4">
-                                <p className="px-2 pb-1 text-[12px] text-foreground/40">المتصل</p>
-                                <div className="overflow-hidden rounded-[18px] bg-[var(--chat-claude-control,#1f1f20)]">
-                                  {connectedList.map((item) => (
-                                    <IntegrationRow
-                                      key={item.id}
-                                      item={item}
-                                      connected
-                                      busy={busy === item.app}
-                                      onOpen={() => setDetail(item)}
-                                    />
-                                  ))}
-                                </div>
+                              <div className="mb-3">
+                                <p className="px-2 pb-1 pt-2 text-[12px] text-foreground/40">
+                                  المتصلة
+                                </p>
+                                {connectedList.map((item) => (
+                                  <IntegrationRow
+                                    key={item.id}
+                                    item={item}
+                                    connected
+                                    busy={busy === item.app}
+                                    onOpen={() => setDetail(item)}
+                                  />
+                                ))}
                               </div>
                             )}
                             {restList.map((item) => (
@@ -239,6 +246,7 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
                           </>
                         )}
                       </div>
+
                     </motion.div>
                   )}
                 </AnimatePresence>
