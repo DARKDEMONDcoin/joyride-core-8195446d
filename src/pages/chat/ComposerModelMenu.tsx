@@ -732,7 +732,11 @@ export default function ComposerModelMenu({
                     ...(pos.bottom !== undefined ? { bottom: pos.bottom } : {}),
                     maxHeight: pos.maxHeight,
                     scrollBehavior: "smooth",
-                    ...glassModelMenuStyle,
+                    background: "var(--chat-claude-composer, #262627)",
+                    border: 0,
+                    backdropFilter: "none",
+                    WebkitBackdropFilter: "none",
+                    boxShadow: "none",
                   }}
                   className="z-[9999] rounded-2xl p-2 text-white overflow-y-auto overscroll-contain unified-menu-surface scrollbar-thin"
                 >
