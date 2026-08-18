@@ -452,6 +452,11 @@ const AnimatedInput = ({
             <motion.button
               type="button"
               onClick={onPlusClick}
+              onPointerDown={() => {
+                // Warm the sheet chunk on touch-down so the tap opens instantly.
+                void import("@/pages/chat/components/PlusContent");
+                void import("@/pages/chat/components/DraggablePlusSheet");
+              }}
               whileTap={{ scale: 0.9 }}
               transition={{ type: "spring", stiffness: 420, damping: 24 }}
               className="animated-plus-btn shrink-0 inline-flex w-9 h-9 items-center justify-center rounded-full border-0 outline-none text-white/70 hover:text-white transition-colors"
@@ -459,6 +464,7 @@ const AnimatedInput = ({
               aria-label={uiT("openTools")}
               data-plus-trigger
             >
+
               <Plus className="w-[20px] h-[20px]" strokeWidth={1.9} />
             </motion.button>
 
