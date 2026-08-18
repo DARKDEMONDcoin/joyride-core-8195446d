@@ -73,11 +73,18 @@ export const DraggablePlusSheet = ({
     setExpanded(next);
   }, []);
 
-  const close = useCallback(() => {
-    if (closingRef.current) return;
-    closingRef.current = true;
-    animate(y, height, { ...SNAP, velocity: 0, onComplete: onClose });
-  }, [height, onClose, y]);
+  const close = useCallback(
+    (direction: "down" | "up" = "down", velocity = 0) => {
+      if (closingRef.current) return;
+      closingRef.current = true;
+      animate(y, direction === "up" ? -height : height, {
+        ...SNAP,
+        velocity,
+        onComplete: onClose,
+      });
+    },
+    [height, onClose, y],
+  );
 
   const snapTo = useCallback(
     (target: "expanded" | "collapsed", velocity = 0) => {
@@ -139,9 +146,10 @@ export const DraggablePlusSheet = ({
         if (Math.abs(dy) < 6) return;
         s.decided = true;
         const down = dy > 0;
-        // Down: drag only from the top of the list. Up: drag only while the
-        // sheet is still collapsed (expanding). Otherwise the list scrolls.
-        s.dragging = down ? atTop() : !expandedRef.current;
+        // Down: drag only from the top of the list. Up: drag while collapsed
+        // (expanding) or while expanded and already at the top of the list
+        // (dismiss upward). Otherwise the list scrolls.
+        s.dragging = down ? atTop() : !expandedRef.current || atTop();
         if (s.dragging) {
           try {
             el.setPointerCapture(e.pointerId);
@@ -155,7 +163,9 @@ export const DraggablePlusSheet = ({
       e.preventDefault();
 
       let next = s.baseY + dy;
-      if (next < 0) next = -rubber(-next, height); // resist above expanded
+      // Above the expanded snap point the sheet keeps following the finger
+      // (upward dismiss), with a light rubber-band for the first few px.
+      if (next < 0 && !expandedRef.current) next = -rubber(-next, height);
       y.set(next);
     };
 
@@ -175,7 +185,8 @@ export const DraggablePlusSheet = ({
       // Strong upward flick from the very top of an expanded sheet dismisses
       // it, reversing the opening animation.
       if (!s.dragging) {
-        if (expandedRef.current && atTop() && upFlick > STRONG_FLICK) close();
+        if (expandedRef.current && atTop() && upFlick > STRONG_FLICK)
+          close("up", v * 1000);
         return;
       }
 
@@ -184,12 +195,20 @@ export const DraggablePlusSheet = ({
       const projected = current + v * 120;
       const dismissLine = collapsedY + Math.max(96, (height - collapsedY) * 0.4);
 
+      // Pulled above the expanded snap point: dismiss upward on a flick or
+      // once it has travelled far enough, otherwise settle back to expanded.
+      if (current < 0 || projected < 0) {
+        if (upFlick > FLICK || projected < -72) close("up", v * 1000);
+        else snapTo("expanded", v * 1000);
+        return;
+      }
+
       if (v > FLICK || projected > dismissLine) {
-        close();
+        close("down", v * 1000);
         return;
       }
       if (upFlick > FLICK) {
-        if (collapsedY <= 0) close();
+        if (collapsedY <= 0) close("up", v * 1000);
         else snapTo("expanded", v * 1000);
         return;
       }
