@@ -584,7 +584,7 @@ export default function ComposerModelMenu({
                                   toast.success(`Selected: ${choice.name}`);
                                   onOpenChange(false);
                                 }}
-                                className={`flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors border-t border-white/[0.05] first:border-t-0 ${active ? "bg-white/[0.04]" : "hover:bg-white/[0.03]"}`}
+                                className={`flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors ${active ? "bg-white/[0.035]" : "hover:bg-white/[0.02]"}`}
                               >
                                 <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-foreground/[0.05]">
                                   {hasBrandIcon(choice.name, choice.provider) ? (
