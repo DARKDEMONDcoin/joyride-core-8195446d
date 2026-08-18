@@ -172,33 +172,34 @@ const PlusMain = (p: PlusContentProps) => {
     <motion.button
       data-no-neo
       type="button"
-      whileTap={{ scale: 0.975 }}
+      whileTap={{ scale: 0.98 }}
       transition={iosSpring}
       onClick={item.onClick}
-      className="plus-row w-full flex items-center gap-3.5 px-3 h-[50px] text-start border-0 bg-transparent rounded-[14px]"
+      className="plus-row w-full flex items-center gap-3 px-3.5 h-[52px] text-start border-0 bg-transparent"
     >
       <item.Icon
-        className="shrink-0 w-[21px] h-[21px]"
+        className="shrink-0 w-[20px] h-[20px]"
         strokeWidth={1.7}
-        style={{ color: item.active ? "hsl(var(--primary))" : "hsl(var(--foreground) / 0.75)" }}
+        style={{ color: item.active ? "hsl(var(--primary))" : "hsl(var(--foreground) / 0.7)" }}
       />
       <span
-        className="flex-1 min-w-0 truncate text-[15.5px] font-normal"
-        style={{ color: "hsl(var(--foreground) / 0.95)" }}
+        className="flex-1 min-w-0 truncate text-[15px] font-normal"
+        style={{ color: "hsl(var(--foreground) / 0.92)" }}
       >
         {item.label}
       </span>
       {item.badge && (
         <span
-          className="shrink-0 rounded-full px-2 py-[2px] text-[11px] font-semibold"
-          style={{ background: "hsl(var(--primary) / 0.18)", color: "hsl(var(--primary))" }}
+          className="shrink-0 rounded-full px-2 py-[2px] text-[10.5px] font-semibold"
+          style={{ background: "hsl(var(--primary) / 0.16)", color: "hsl(var(--primary))" }}
         >
           {item.badge}
         </span>
       )}
-      {item.active && <Check className="shrink-0 w-[18px] h-[18px]" style={{ color: "hsl(var(--primary))" }} />}
+      {item.active && <Check className="shrink-0 w-[17px] h-[17px]" style={{ color: "hsl(var(--primary))" }} />}
     </motion.button>
   );
+
 
   return (
     <motion.div key="main" {...fadeProps(-8)} className="flex flex-col">
