@@ -242,9 +242,10 @@ export const DraggablePlusSheet = ({
     <motion.div
       ref={sheetRef}
       key="plus-sheet"
-      exit={{ y: height, transition: SNAP }}
+      exit={{ y: height, opacity: 0, transition: EXIT }}
       style={{
         y,
+        opacity,
         height,
         paddingBottom: bottomOffset,
         boxShadow: "none",
@@ -252,6 +253,7 @@ export const DraggablePlusSheet = ({
         // nothing may pan natively so the first gesture always hits the sheet.
         touchAction: expanded ? "pan-y" : "none",
       }}
+
       data-plus-menu
       onClick={(e) => e.stopPropagation()}
       onWheel={(e) => {
