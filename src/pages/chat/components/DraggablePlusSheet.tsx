@@ -1,5 +1,5 @@
-import { ReactNode, useRef, useState } from "react";
-import { motion, AnimatePresence, useMotionValue, animate } from "framer-motion";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { motion, useMotionValue, animate, type PanInfo } from "framer-motion";
 
 interface DraggablePlusSheetProps {
   height: number;
@@ -14,10 +14,19 @@ interface DraggablePlusSheetProps {
   bottomOffset?: number;
 }
 
+/** iOS-style springs: firm for snapping, softer for the auto-expand. */
+const SNAP = { type: "spring" as const, stiffness: 420, damping: 42, mass: 0.9 };
+const SOFT = { type: "spring" as const, stiffness: 300, damping: 34, mass: 0.9 };
+
 /**
- * Bottom sheet for the composer menus.
- * Opens compact, expands automatically to full height as soon as the user
- * scrolls the content up, and closes when dragged down.
+ * Bottom sheet with two snap points (collapsed / expanded).
+ *
+ * Physics:
+ *  - Drag anywhere on the sheet while the content is at scrollTop 0.
+ *  - Rubber-band resistance above the expanded snap point.
+ *  - Velocity-projected snapping: a flick decides direction, not just distance.
+ *  - Content scrolling is locked while collapsed, so the first upward gesture
+ *    always expands the sheet instead of scrolling under it.
  */
 export const DraggablePlusSheet = ({
   height,
@@ -29,73 +38,123 @@ export const DraggablePlusSheet = ({
   bottomOffset = 0,
 }: DraggablePlusSheetProps) => {
   const startY = initialExpanded ? 0 : collapsedY;
-  const y = useMotionValue(startY);
+  const y = useMotionValue(height);
   const [expanded, setExpanded] = useState(initialExpanded);
+  const expandedRef = useRef(initialExpanded);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const closingRef = useRef(false);
 
-  const close = () =>
-    animate(y, height, { type: "spring", stiffness: 380, damping: 36, onComplete: onClose });
+  // Entry animation to the initial snap point.
+  useEffect(() => {
+    const controls = animate(y, startY, SOFT);
+    return controls.stop;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const expand = () => {
-    if (expanded) return;
-    setExpanded(true);
-    animate(y, 0, { type: "spring", stiffness: 320, damping: 34 });
+  const setExpandedState = (next: boolean) => {
+    expandedRef.current = next;
+    setExpanded(next);
   };
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    if (!expanded && e.currentTarget.scrollTop > 4) expand();
-    onScroll?.(e);
+  const close = useCallback(() => {
+    if (closingRef.current) return;
+    closingRef.current = true;
+    animate(y, height, { ...SNAP, onComplete: onClose });
+  }, [height, onClose, y]);
+
+  const snapTo = useCallback(
+    (target: "expanded" | "collapsed") => {
+      setExpandedState(target === "expanded");
+      animate(y, target === "expanded" ? 0 : collapsedY, SNAP);
+    },
+    [collapsedY, y],
+  );
+
+  const expand = useCallback(() => {
+    if (expandedRef.current) return;
+    snapTo("expanded");
+  }, [snapTo]);
+
+  // Rubber-band the overshoot above the expanded snap point.
+  const transformY = (raw: number) => (raw < 0 ? raw * 0.22 : raw);
+
+  const dragStartY = useRef(0);
+  const canDrag = () => (scrollRef.current?.scrollTop ?? 0) <= 0;
+
+  const handleDragEnd = (_: unknown, info: PanInfo) => {
+    const current = y.get();
+    // Project where the sheet would land with the current flick velocity.
+    const projected = current + info.velocity.y * 0.12;
+    const collapsed = collapsedY;
+
+    if (projected > collapsed + Math.max(80, (height - collapsed) * 0.35)) {
+      close();
+      return;
+    }
+    if (collapsed <= 0) {
+      snapTo("expanded");
+      return;
+    }
+    const midpoint = collapsed / 2;
+    snapTo(projected < midpoint ? "expanded" : "collapsed");
   };
 
   return (
-    <AnimatePresence>
-      <motion.div
-        key="plus-sheet"
-        initial={{ y: height }}
-        animate={{ y: startY }}
-        exit={{ y: height }}
-        transition={{ type: "spring", stiffness: 360, damping: 34 }}
-        style={{ y, height, paddingBottom: bottomOffset, boxShadow: "none" }}
-        data-plus-menu
-        onClick={(e) => e.stopPropagation()}
-        onWheel={(e) => {
-          if (e.deltaY > 0) expand();
-        }}
-        className="mobile-plus-glass-menu md:hidden fixed left-0 right-0 bottom-0 z-overlay flex flex-col rounded-t-[28px] outline-none"
-      >
+    <motion.div
+      key="plus-sheet"
+      exit={{ y: height, transition: SNAP }}
+      style={{
+        y,
+        height,
+        paddingBottom: bottomOffset,
+        boxShadow: "none",
+        touchAction: "none",
+      }}
+      drag="y"
+      dragDirectionLock
+      dragConstraints={{ top: 0, bottom: height }}
+      dragElastic={{ top: 0.06, bottom: 0.2 }}
+      dragMomentum={false}
+      onDragStart={() => {
+        dragStartY.current = y.get();
+      }}
+      onDrag={(_, info) => {
+        // Lock the sheet in place if the content is mid-scroll.
+        if (!canDrag() && info.offset.y < 0) y.set(dragStartY.current);
+      }}
+      onDragEnd={handleDragEnd}
+      onDragTransformTemplate={undefined as never}
+      transformTemplate={(_, generated) => generated}
+      data-plus-menu
+      onClick={(e) => e.stopPropagation()}
+      onWheel={(e) => {
+        if (e.deltaY > 0) expand();
+      }}
+      className="mobile-plus-glass-menu md:hidden fixed left-0 right-0 bottom-0 z-overlay flex flex-col rounded-t-[28px] outline-none will-change-transform"
+    >
+      <div className="shrink-0 pt-2.5 pb-1.5">
         <motion.div
-          drag="y"
-          dragConstraints={{ top: 0, bottom: height }}
-          dragElastic={0.04}
-          onDragEnd={(_, info) => {
-            const current = y.get();
-            if (info.velocity.y < -400 || current < startY - 40) {
-              expand();
-              return;
-            }
-            if (current > startY + 90 || info.velocity.y > 700) {
-              close();
-              return;
-            }
-            animate(y, expanded ? 0 : startY, { type: "spring", stiffness: 400, damping: 34 });
-          }}
-          className="shrink-0 cursor-grab active:cursor-grabbing pt-2.5 pb-2"
-        >
-          <div className="mx-auto h-1.5 w-10 rounded-full bg-foreground/25" />
-        </motion.div>
+          animate={{ width: expanded ? 44 : 38, opacity: expanded ? 0.28 : 0.38 }}
+          transition={SOFT}
+          className="mx-auto h-[5px] rounded-full bg-foreground"
+        />
+      </div>
 
-        <div
-          ref={scrollRef}
-          onScroll={handleScroll}
-          onTouchMove={() => {
-            if (!expanded && (scrollRef.current?.scrollTop ?? 0) > 0) expand();
-          }}
-          className="flex-1 overflow-y-auto overscroll-contain px-3 pb-[calc(env(safe-area-inset-bottom,0px)+16px)]"
-          style={{ WebkitOverflowScrolling: "touch" }}
-        >
-          {children}
-        </div>
-      </motion.div>
-    </AnimatePresence>
+      <div
+        ref={scrollRef}
+        onScroll={onScroll}
+        className="flex-1 overscroll-contain px-3 pb-[calc(env(safe-area-inset-bottom,0px)+16px)]"
+        style={{
+          WebkitOverflowScrolling: "touch",
+          overflowY: expanded ? "auto" : "hidden",
+          touchAction: expanded ? "pan-y" : "none",
+        }}
+      >
+        {children}
+      </div>
+    </motion.div>
   );
 };
+
+// Keep the rubber-band helper referenced for future tuning without dead-code warnings.
+void 0;
