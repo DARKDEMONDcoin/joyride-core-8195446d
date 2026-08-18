@@ -111,7 +111,7 @@ export function StarterCards({ onPick, className = "" }: StarterCardsProps) {
             key={c.id}
             type="button"
             onClick={() => onPick(c.prompt)}
-            className="snap-start shrink-0 w-[252px] flex items-center gap-2.5 rounded-[18px] border-0 bg-[color:var(--chat-claude-composer,#262627)] hover:brightness-110 active:scale-[0.99] transition-all p-2.5 text-start"
+            className="snap-start shrink-0 w-[84%] max-w-[330px] flex items-center gap-3 rounded-[16px] border-0 bg-[color:var(--chat-claude-composer,#262627)] hover:brightness-110 active:scale-[0.99] transition-all px-3.5 py-3 text-start"
           >
             <img
               src={c.img}
@@ -120,13 +120,13 @@ export function StarterCards({ onPick, className = "" }: StarterCardsProps) {
               decoding="async"
               width={512}
               height={512}
-              className="w-[46px] h-[46px] object-contain shrink-0"
+              className="w-[58px] h-[58px] object-contain shrink-0"
             />
-            <span className="min-w-0 flex flex-col gap-0.5">
-              <span className="text-[14px] font-semibold leading-tight text-foreground truncate">
+            <span className="min-w-0 flex flex-col gap-1">
+              <span className="text-[15px] font-bold leading-tight text-foreground truncate">
                 {c.title}
               </span>
-              <span className="text-[12px] leading-snug text-foreground/50 line-clamp-2">
+              <span className="text-[12.5px] leading-snug text-foreground/45 line-clamp-2">
                 {c.desc}
               </span>
             </span>
