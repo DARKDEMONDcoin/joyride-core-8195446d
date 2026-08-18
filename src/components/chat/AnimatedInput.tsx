@@ -14,6 +14,9 @@ import ModelPickerDropdown from "@/components/model-picker/ModelPickerDropdown";
 import type { AgentDef, AgentModel } from "@/lib/agentRegistry";
 import { getAgentById } from "@/lib/agentRegistry";
 import { TypingAnimation } from "@/components/ui/typing-animation";
+import ComposerMicButton from "@/components/chat/ComposerMicButton";
+import ComposerIntegrationsButton from "@/components/chat/ComposerIntegrationsButton";
+import ComposerVoiceWave from "@/components/chat/ComposerVoiceWave";
 import { isSendKey } from "@/lib/composerKey";
 import { parseSlashCommand } from "@/lib/slashCommands";
 import { useNavigate } from "react-router-dom";
@@ -139,6 +142,7 @@ const AnimatedInput = ({
   const [modelQuery, setModelQuery] = useState("");
   const [lastSelectedAgent, setLastSelectedAgent] = useState<AgentDef | null>(null);
   const [focused, setFocused] = useState(false);
+  const [listening, setListening] = useState(false);
   const isActive = focused || !!value;
 
 
@@ -428,7 +432,9 @@ const AnimatedInput = ({
                 style={{ minHeight: "38px" }}
               />
             </div>
+            <AnimatePresence>{listening ? <ComposerVoiceWave /> : null}</AnimatePresence>
           </div>
+
 
           {/* Bottom controls row */}
           <div
@@ -451,8 +457,17 @@ const AnimatedInput = ({
               <Plus className="w-5 h-5" strokeWidth={2.4} color="#10b981" />
             </motion.button>
 
+            <ComposerIntegrationsButton onClick={() => navigate("/integrations")} />
+
+            <ComposerMicButton
+              onListeningChange={setListening}
+              onTranscript={(text) =>
+                onChange(value ? `${value.trimEnd()} ${text}` : text)
+              }
+            />
 
             <div className="flex-1" />
+
 
 
             <AnimatePresence mode="popLayout" initial={false}>
