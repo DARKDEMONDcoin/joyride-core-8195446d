@@ -2554,15 +2554,12 @@ const ChatPage = () => {
       const composerTop = r?.top ?? vh - 96;
       const composerH = r ? Math.max(0, vh - composerTop) : 96;
       const isBigView = plusView === "skills" || plusView === "tools";
-      // Skills / Integrations need almost the full viewport on mobile — the
-      // 55vh cap was cropping the sheet to a thin strip and hiding rows.
-      const expandedCap = isBigView ? vh * 0.88 : vh * 0.55;
+      // Manus-style sheet: nearly full height so nothing is clipped.
+      const expandedCap = isBigView ? vh * 0.9 : vh * 0.86;
       const collapsedH = Math.max(280, Math.min(vh * 0.46, composerTop - 24));
-      const expandedH = Math.max(
-        collapsedH,
-        Math.min(expandedCap, composerTop - 8),
-      );
+      const expandedH = Math.max(collapsedH, Math.min(expandedCap, vh - 40));
       const collapsedY = expandedH - collapsedH;
+
 
       return createPortal(
         <>
