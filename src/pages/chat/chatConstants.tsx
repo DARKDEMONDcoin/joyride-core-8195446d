@@ -235,8 +235,8 @@ export const PegtopIcon = ({ className }: { className?: string }) => (
 export const MEGSY_MODEL = "google/gemini-2.5-flash-lite-preview-09-2025";
 
 export const getMegsyTierLabel = (tier: "lite" | "pro" | "max") => {
-  const brand = MEGSY_CHAT_MODEL_LABEL;
-  return tier === "lite" ? brand : tier === "pro" ? `${brand} Pro` : `${brand} Max`;
+  const brand = `${MEGSY_CHAT_MODEL_LABEL} 3.9`;
+  return tier === "lite" ? `${brand} Lite` : tier === "pro" ? brand : `${brand} Max`;
 };
 
 export const getChatModelDisplayLabel = (
@@ -254,70 +254,36 @@ export const getChatModelDisplayLabel = (
 };
 
 
+// Chat picker = Megsy agents only (Lite / 3.9 / Max)
 export const CHAT_COMPOSER_MODEL_OPTIONS = [
   {
     kind: "tier" as const,
     id: "lite",
-    label: `${MEGSY_CHAT_MODEL_LABEL} 3.9`,
-    desc: "The default. Fast, warm, and gets everyday tasks done.",
+    label: `${MEGSY_CHAT_MODEL_LABEL} 3.9 Lite`,
+    desc: "وكيل خفيف الوزن مناسب للمهام اليومية.",
     premium: false,
     brand: "megsy" as const,
     strength: "Balanced" as const,
   },
   {
-    kind: "model" as const,
-    id: "z-ai/glm-4.6:glm-5.3",
-    label: "GLM 5.3",
-    desc: "Zhipu's flagship reasoning model for hard analytical work.",
-    premium: true,
-    brand: "glm" as const,
+    kind: "tier" as const,
+    id: "pro",
+    label: `${MEGSY_CHAT_MODEL_LABEL} 3.9`,
+    desc: "وكيل متعدد الوظائف قادر على التعامل مع معظم المهام.",
+    premium: false,
+    brand: "megsy" as const,
     strength: "Powerful" as const,
   },
   {
-    kind: "model" as const,
-    id: "google/gemini-2.5-flash:gemini-3-pro",
-    label: "Gemini 3 Pro",
-    desc: "Multimodal thinking across text, images, and long context.",
+    kind: "tier" as const,
+    id: "max",
+    label: `${MEGSY_CHAT_MODEL_LABEL} 3.9 Max`,
+    desc: "وكيل عالي الأداء مصمم للمهام المعقدة.",
     premium: true,
-    brand: "gemini" as const,
-    strength: "Powerful" as const,
-  },
-  {
-    kind: "model" as const,
-    id: "anthropic/claude-sonnet-4.5:claude-sonnet-5",
-    label: "Claude Sonnet 5",
-    desc: "Fast, sharp writing and reasoning from Anthropic.",
-    premium: true,
-    brand: "claude" as const,
-    strength: "Powerful" as const,
-  },
-  {
-    kind: "model" as const,
-    id: "anthropic/claude-sonnet-4.5:claude-opus-4.8",
-    label: "Claude Opus 4.8",
-    desc: "Anthropic's most capable model for deep research and code.",
-    premium: true,
-    brand: "claude" as const,
+    brand: "megsy" as const,
     strength: "Max" as const,
   },
-  {
-    kind: "model" as const,
-    id: "moonshot/kimi-k3:kimi-k3",
-    label: "Kimi K3",
-    desc: "Moonshot's long-context expert. Best for large documents.",
-    premium: true,
-    brand: "kimi" as const,
-    strength: "Powerful" as const,
-  },
-  {
-    kind: "model" as const,
-    id: "openai/gpt-sol:gpt-sol",
-    label: "GPT Sol",
-    desc: "OpenAI's 2026 flagship. Elite reasoning and world knowledge.",
-    premium: true,
-    brand: "openai" as const,
-    strength: "Max" as const,
-  },
+
 ];
 
 export type ChatModelBrand = "megsy" | "claude" | "gemini" | "openai" | "glm" | "kimi";
