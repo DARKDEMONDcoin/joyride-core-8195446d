@@ -31,7 +31,7 @@ import {
   ScanSearch,
   ShoppingBag,
   Monitor,
-  X,
+  
 
 } from "lucide-react";
 import { toast } from "sonner";
