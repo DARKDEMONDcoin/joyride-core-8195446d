@@ -285,7 +285,6 @@ export default function ComposerModelMenu({
           </span>
         )}
         <span data-model-label className="truncate tracking-tight text-foreground">{triggerLabel}</span>
-        <ChevronRight className="h-4 w-4 shrink-0 text-foreground/70" />
       </button>
 
 
