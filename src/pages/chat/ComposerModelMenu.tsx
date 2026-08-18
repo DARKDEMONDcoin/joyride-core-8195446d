@@ -746,7 +746,7 @@ export default function ComposerModelMenu({
                       <button
                         type="button"
                         onClick={() => setView(view === "settings" ? "models" : "settings")}
-                        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11.5px] font-semibold text-white/90 bg-white/10 border border-white/15 hover:bg-white/15 transition-colors"
+                        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11.5px] font-semibold text-white/90 bg-white/[0.06] hover:bg-white/[0.09] transition-colors"
                         aria-label={view === "settings" ? "Back to models" : "Open model settings"}
                       >
                         {view === "settings" ? (
