@@ -452,7 +452,7 @@ export default function ComposerModelMenu({
                         resetMobileHeader();
                         if (view === "models") onOpenChange(false);
                         else setView("models");
-                      }} className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/10 backdrop-blur-xl shadow-[0_2px_10px_rgba(0,0,0,0.15)] hover:bg-white/15 transition-colors" aria-label={view === "models" ? "Close" : "Back"}>
+                      }} className="flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.06] hover:bg-white/[0.09] transition-colors" aria-label={view === "models" ? "Close" : "Back"}>
                         {view === "models" ? <X className="h-5 w-5" /> : <ArrowLeft className="h-5 w-5" />}
                       </button>
                       <div className="relative flex-1 flex items-center justify-center overflow-hidden">
