@@ -185,7 +185,8 @@ export const DraggablePlusSheet = ({
       // Strong upward flick from the very top of an expanded sheet dismisses
       // it, reversing the opening animation.
       if (!s.dragging) {
-        if (expandedRef.current && atTop() && upFlick > STRONG_FLICK) close();
+        if (expandedRef.current && atTop() && upFlick > STRONG_FLICK)
+          close("up", v * 1000);
         return;
       }
 
@@ -194,12 +195,20 @@ export const DraggablePlusSheet = ({
       const projected = current + v * 120;
       const dismissLine = collapsedY + Math.max(96, (height - collapsedY) * 0.4);
 
+      // Pulled above the expanded snap point: dismiss upward on a flick or
+      // once it has travelled far enough, otherwise settle back to expanded.
+      if (current < 0 || projected < 0) {
+        if (upFlick > FLICK || projected < -72) close("up", v * 1000);
+        else snapTo("expanded", v * 1000);
+        return;
+      }
+
       if (v > FLICK || projected > dismissLine) {
-        close();
+        close("down", v * 1000);
         return;
       }
       if (upFlick > FLICK) {
-        if (collapsedY <= 0) close();
+        if (collapsedY <= 0) close("up", v * 1000);
         else snapTo("expanded", v * 1000);
         return;
       }
