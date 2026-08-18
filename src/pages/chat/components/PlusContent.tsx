@@ -246,15 +246,9 @@ const PlusMain = (p: PlusContentProps) => {
           .plus-row:active { background: hsl(0 0% 100% / 0.06); }
         `}</style>
 
-        {/* Header */}
-        <div
-          className="sticky top-0 z-10 flex items-center gap-2 px-1.5 pb-3 pt-0.5"
-          style={{ background: "var(--chat-claude-composer, #101312)" }}
-        >
-          <span className="flex-1 text-[16px] font-semibold" style={{ color: "hsl(var(--foreground) / 0.95)" }}>
-            إضافة إلى المحادثة
-          </span>
-        </div>
+        <div className="pt-1" />
+
+
 
         {/* Media tiles strip */}
         <motion.div
