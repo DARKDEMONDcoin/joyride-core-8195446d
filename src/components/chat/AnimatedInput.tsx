@@ -436,26 +436,24 @@ const AnimatedInput = ({
           </div>
 
 
-          {/* Bottom controls row */}
+          {/* Bottom controls row — borderless icon buttons, send is the only filled one */}
           <div
             dir="ltr"
-            className="relative flex items-center gap-2 pt-1 -ml-3 -mr-1 md:ml-0 md:mr-0 md:pt-0"
+            className="relative flex items-center gap-1 pt-1 md:pt-0"
           >
-            {/* "+" attach / tools button — opens the plus menu.
-                Dark theme: black button with mint accent icon.
-                Light theme: white button with mint accent icon + subtle border. */}
             <motion.button
               type="button"
               onClick={onPlusClick}
               whileTap={{ scale: 0.9 }}
               transition={{ type: "spring", stiffness: 420, damping: 24 }}
-              className="animated-plus-btn shrink-0 inline-flex w-9 h-9 md:w-10 md:h-10 items-center justify-center rounded-full border-0 outline-none transition-colors"
+              className="animated-plus-btn shrink-0 inline-flex w-9 h-9 items-center justify-center rounded-full border-0 outline-none text-white/70 hover:text-white transition-colors"
               style={{ boxShadow: "none", background: "transparent", border: 0 }}
               aria-label={uiT("openTools")}
               data-plus-trigger
             >
-              <Plus className="w-5 h-5" strokeWidth={2.4} color="#10b981" />
+              <Plus className="w-[20px] h-[20px]" strokeWidth={1.9} />
             </motion.button>
+
 
             <ComposerIntegrationsButton onClick={() => navigate("/integrations")} />
 
