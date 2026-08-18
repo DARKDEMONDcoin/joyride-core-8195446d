@@ -12,6 +12,7 @@ interface DraggablePlusSheetProps {
   view?: string;
   onScroll?: (e: React.UIEvent<HTMLDivElement>) => void;
   bottomOffset?: number;
+  sheetKind?: "tools" | "integrations";
 }
 
 /**
@@ -55,6 +56,7 @@ export const DraggablePlusSheet = ({
   onScroll,
   initialExpanded = false,
   bottomOffset = 0,
+  sheetKind = "tools",
 }: DraggablePlusSheetProps) => {
   const startSnap = initialExpanded || collapsedY <= 0 ? 0 : collapsedY;
   const y = useMotionValue(height);
@@ -255,6 +257,7 @@ export const DraggablePlusSheet = ({
       }}
 
       data-plus-menu
+      data-integrations-sheet={sheetKind === "integrations" ? "true" : undefined}
       onClick={(e) => e.stopPropagation()}
       onWheel={(e) => {
         if (e.deltaY > 0 && !expandedRef.current) snapTo("expanded");

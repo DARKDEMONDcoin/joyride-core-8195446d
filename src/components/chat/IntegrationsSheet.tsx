@@ -123,7 +123,7 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
-            className="fixed inset-0 z-[55] bg-black/25"
+            className="fixed inset-0 z-[55] bg-transparent"
             onClick={() => onOpenChange(false)}
           />
           <Suspense fallback={null}>
@@ -133,6 +133,7 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
               bottomOffset={0}
               initialExpanded={false}
               view={detail ? `detail-${detail.id}` : tab}
+              sheetKind="integrations"
               onClose={() => onOpenChange(false)}
             >
               <div dir="rtl" className="flex min-h-full flex-col">
@@ -167,13 +168,13 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
                         التكاملات
                       </h2>
 
-                      <div className="flex items-center gap-2 rounded-[16px] bg-[var(--chat-claude-control,#1f1f20)] px-3.5 py-2.5">
+                      <div data-connectors-search className="flex h-11 items-center gap-2 rounded-[16px] px-3.5">
                         <Search className="h-4 w-4 shrink-0 text-foreground/40" />
                         <input
                           value={query}
                           onChange={(e) => setQuery(e.target.value)}
                           placeholder="ابحث عن تطبيق"
-                          className="w-full text-[14px] text-foreground outline-none placeholder:text-foreground/35"
+                          className="h-full w-full text-[14px] text-foreground outline-none placeholder:text-foreground/35"
                           style={{
                             border: 0,
                             outline: "none",
@@ -181,7 +182,7 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
                             background: "transparent",
                             borderRadius: 0,
                             padding: 0,
-                            height: "auto",
+                            height: "100%",
                             minHeight: 0,
                             WebkitAppearance: "none",
                             appearance: "none",
@@ -198,8 +199,8 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
                             onClick={() => setTab(t.id)}
                             className={`rounded-full px-4 py-2 text-[13px] transition-colors ${
                               tab === t.id
-                                ? "bg-primary font-medium text-primary-foreground"
-                                : "bg-[var(--chat-claude-control,#1f1f20)] text-foreground/60"
+                                ? "bg-foreground/[0.08] font-medium text-foreground"
+                                : "bg-transparent text-foreground/55"
                             }`}
                             style={{ border: 0 }}
                           >
@@ -221,9 +222,7 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
                           <>
                             {connectedList.length > 0 && (
                               <div className="mb-3">
-                                <p className="px-2 pb-1 pt-2 text-[12px] text-foreground/40">
-                                  المتصلة
-                                </p>
+                                <p className="px-2 pb-1 pt-2 text-[12px] text-foreground/40">المتصلة حاليًا</p>
                                 {connectedList.map((item) => (
                                   <IntegrationRow
                                     key={item.id}
