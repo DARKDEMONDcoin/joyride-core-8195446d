@@ -16,10 +16,11 @@ import { getAgentById } from "@/lib/agentRegistry";
 import { TypingAnimation } from "@/components/ui/typing-animation";
 import ComposerMicButton from "@/components/chat/ComposerMicButton";
 import ComposerIntegrationsButton from "@/components/chat/ComposerIntegrationsButton";
+import IntegrationsSheet from "@/components/chat/IntegrationsSheet";
 import ComposerVoiceWave from "@/components/chat/ComposerVoiceWave";
 import { isSendKey } from "@/lib/composerKey";
 import { parseSlashCommand } from "@/lib/slashCommands";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { t as uiT, useUserLang } from "@/lib/authI18n";
 
 interface SmartQuestion {
@@ -143,6 +144,13 @@ const AnimatedInput = ({
   const [lastSelectedAgent, setLastSelectedAgent] = useState<AgentDef | null>(null);
   const [focused, setFocused] = useState(false);
   const [listening, setListening] = useState(false);
+  const [integrationsOpen, setIntegrationsOpen] = useState(false);
+  const composerLocation = useLocation();
+  useEffect(() => {
+    if (new URLSearchParams(composerLocation.search).get("integrations") === "1") {
+      setIntegrationsOpen(true);
+    }
+  }, [composerLocation.search]);
   const isActive = focused || !!value;
 
 
@@ -455,7 +463,8 @@ const AnimatedInput = ({
             </motion.button>
 
 
-            <ComposerIntegrationsButton onClick={() => navigate("/integrations")} />
+            <ComposerIntegrationsButton onClick={() => setIntegrationsOpen(true)} />
+            <IntegrationsSheet open={integrationsOpen} onOpenChange={setIntegrationsOpen} />
 
             <ComposerMicButton
               onListeningChange={setListening}

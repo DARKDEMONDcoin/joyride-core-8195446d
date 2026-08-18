@@ -32,8 +32,6 @@ import {
   ReferralResourcesPage,
   WithdrawPage,
   // integrations hub
-  IntegrationsPage,
-  IntegrationDetailPage,
   // settings
   SettingsPage,
   CustomizationPage,
@@ -137,17 +135,9 @@ export const AppRoutes = ({ currentUserId }: { currentUserId: string | null }) =
       />
     </Route>
 
-    {/* ── Integrations hub — one page, animated inner views ──── */}
-    <Route element={<AnimatedShell />}>
-      <Route
-        path="/settings/integrations"
-        element={<ProtectedRoute><IntegrationsPage /></ProtectedRoute>}
-      />
-      <Route
-        path="/settings/integrations/:id"
-        element={<ProtectedRoute><IntegrationDetailPage /></ProtectedRoute>}
-      />
-    </Route>
+    {/* Integrations are managed from the chat composer sheet now. */}
+    <Route path="/settings/integrations" element={<Navigate to="/chat?integrations=1" replace />} />
+    <Route path="/settings/integrations/:id" element={<Navigate to="/chat?integrations=1" replace />} />
 
     {/* ── Settings ──────────────────────────────────────────── */}
     <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
@@ -295,8 +285,8 @@ export const AppRoutes = ({ currentUserId }: { currentUserId: string | null }) =
     <Route path="/billing" element={<Navigate to="/settings/billing" replace />} />
     <Route path="/billing/referrals" element={<Navigate to="/settings/referrals" replace />} />
     <Route path="/referrals" element={<Navigate to="/settings/referrals" replace />} />
-    <Route path="/integrations" element={<Navigate to="/settings/integrations" replace />} />
-    <Route path="/integration" element={<Navigate to="/settings/integrations" replace />} />
+    <Route path="/integrations" element={<Navigate to="/chat?integrations=1" replace />} />
+    <Route path="/integration" element={<Navigate to="/chat?integrations=1" replace />} />
     <Route path="/settings/help" element={<Navigate to="/settings/support/help" replace />} />
     <Route path="/settings/contact" element={<Navigate to="/settings/support/contact" replace />} />
     <Route path="/settings/switch-account" element={<Navigate to="/settings/switch" replace />} />

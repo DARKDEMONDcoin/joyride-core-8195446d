@@ -92,7 +92,7 @@ const SettingsPage = () => {
         { icon: AppearanceIcon, label: authT("rowAppearance"), path: "/settings/customization" },
         
         { icon: (props: SVGProps<SVGSVGElement>) => <Brain {...props} />, label: "Memory", path: "/settings/memory" },
-        { icon: IntegrationsIcon, label: authT("rowIntegrations"), path: "/settings/integrations" },
+        { icon: IntegrationsIcon, label: authT("rowIntegrations"), path: "/chat?integrations=1" },
         {
           icon: (props: SVGProps<SVGSVGElement>) => <Globe {...props} />,
           label: authT("rowLanguage"),

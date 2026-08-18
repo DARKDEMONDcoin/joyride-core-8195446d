@@ -154,7 +154,7 @@ const PlusMain = (p: PlusContentProps) => {
   const sections: RowItem[][] = [
     [
       { id: "skills", label: "المهارات", Icon: Lightbulb, onClick: go(() => p.navigate("/settings/skills")) },
-      { id: "integrations", label: "التكاملات", Icon: Plug, onClick: go(() => p.navigate("/settings/integrations")) },
+      { id: "integrations", label: "التكاملات", Icon: Plug, onClick: go(() => p.navigate("/chat?integrations=1")) },
       { id: "search", label: p.searchEnabled ? "البحث في الويب (مفعّل)" : "البحث في الويب", Icon: Globe, onClick: go(() => p.handleSearchToggle()) },
     ],
     [

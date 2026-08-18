@@ -1,9 +1,10 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode } from "react";
 import { motion, AnimatePresence, useMotionValue, animate } from "framer-motion";
 
 interface DraggablePlusSheetProps {
   height: number;
-  collapsedY: number;
+  /** Kept for API compatibility — the sheet always opens at full height. */
+  collapsedY?: number;
   onClose: () => void;
   children: ReactNode;
   initialExpanded?: boolean;
@@ -14,140 +15,55 @@ interface DraggablePlusSheetProps {
 }
 
 /**
- * Bottom sheet with drag-to-collapse/close, framer-motion based.
- * Replaces vaul because vaul's snap points misbehaved under this app's
- * mobile chat layout (rendered off-screen). Two snap positions:
- *   - collapsed at translateY = collapsedY
- *   - expanded at translateY = 0
- * Dragging below collapsedY + threshold closes the sheet.
+ * Bottom sheet for the composer menus.
+ * Opens fully so nothing is clipped, scrolls natively, and closes only when
+ * the user drags the sheet (handle/header area) downwards.
  */
 export const DraggablePlusSheet = ({
   height,
-  collapsedY,
   onClose,
   children,
-  initialExpanded = false,
-  view,
   onScroll,
   bottomOffset = 0,
 }: DraggablePlusSheetProps) => {
-  const y = useMotionValue(initialExpanded ? 0 : collapsedY);
-  const [expanded, setExpanded] = useState(initialExpanded);
-  const touchStart = useRef(0);
-  const touchHandled = useRef(false);
+  const y = useMotionValue(0);
 
-  // Snap points: 0 = full, midY = half, collapsedY = collapsed (peek).
-  const midY = collapsedY / 2;
-  const snapPoints = collapsedY > 24 ? [0, midY, collapsedY] : [0];
-  const SPRING = { type: "spring" as const, stiffness: 380, damping: 34 };
-
-  useEffect(() => {
-    if (view === "skills" || view === "tools") {
-      setExpanded(true);
-      animate(y, 0, SPRING);
-    } else if (view === "main") {
-      setExpanded(false);
-      animate(y, collapsedY, SPRING);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view, collapsedY]);
+  const close = () =>
+    animate(y, height, { type: "spring", stiffness: 380, damping: 36, onComplete: onClose });
 
   return (
     <AnimatePresence>
       <motion.div
         key="plus-sheet"
         initial={{ y: height }}
-        animate={{ y: initialExpanded ? 0 : collapsedY }}
+        animate={{ y: 0 }}
         exit={{ y: height }}
         transition={{ type: "spring", stiffness: 360, damping: 34 }}
-        drag="y"
-        dragConstraints={{ top: 0, bottom: height }}
-        dragElastic={0.02}
-        style={{
-          y,
-          height,
-          paddingBottom: bottomOffset,
-          boxShadow: "0 -12px 44px hsl(var(--foreground) / 0.14)",
-        }}
-        onDragEnd={(_, info) => {
-          const current = y.get();
-          // Close if dragged well past collapsed position
-          if (current > collapsedY + 120 || (info.velocity.y > 900 && current > collapsedY - 40)) {
-            animate(y, height, {
-              type: "spring",
-              stiffness: 380,
-              damping: 36,
-              onComplete: onClose,
-            });
-            return;
-          }
-          // Project the flick, then snap to the nearest snap point
-          const projected = current + info.velocity.y * 0.12;
-          const target = snapPoints.reduce((best, p) =>
-            Math.abs(p - projected) < Math.abs(best - projected) ? p : best,
-          snapPoints[0]);
-          setExpanded(target === 0);
-          animate(y, target, SPRING);
-        }}
+        style={{ y, height, paddingBottom: bottomOffset, boxShadow: "none" }}
         data-plus-menu
         onClick={(e) => e.stopPropagation()}
-        className="mobile-plus-glass-menu md:hidden fixed left-0 right-0 bottom-0 z-overlay flex flex-col rounded-t-[28px] outline-none touch-none"
+        className="mobile-plus-glass-menu md:hidden fixed left-0 right-0 bottom-0 z-overlay flex flex-col rounded-t-[28px] outline-none"
       >
-        <button
-          type="button"
-          aria-label="Toggle"
-          onClick={() => {
-            // Cycle collapsed -> half -> full -> collapsed
-            const current = y.get();
-            const idx = snapPoints.reduce(
-              (bi, p, i) =>
-                Math.abs(p - current) < Math.abs(snapPoints[bi] - current) ? i : bi,
-              0,
-            );
-            const next = snapPoints[idx === 0 ? snapPoints.length - 1 : idx - 1];
-            setExpanded(next === 0);
-            animate(y, next, SPRING);
+        <motion.div
+          drag="y"
+          dragConstraints={{ top: 0, bottom: height }}
+          dragElastic={0.04}
+          onDragEnd={(_, info) => {
+            if (y.get() > 90 || info.velocity.y > 700) close();
+            else animate(y, 0, { type: "spring", stiffness: 400, damping: 34 });
           }}
-          className="mx-auto mt-2.5 mb-2 w-10 h-1.5 rounded-full bg-foreground/25 cursor-grab active:cursor-grabbing"
-        />
+          className="shrink-0 cursor-grab active:cursor-grabbing pt-2.5 pb-2"
+        >
+          <div className="mx-auto h-1.5 w-10 rounded-full bg-foreground/25" />
+        </motion.div>
+
         <div
           onScroll={onScroll}
-          onWheel={(e) => {
-            const el = e.currentTarget;
-            if (e.deltaY < -6 && y.get() > 4) {
-              setExpanded(true);
-              animate(y, 0, SPRING);
-            } else if (e.deltaY > 6 && el.scrollTop <= 0 && y.get() >= collapsedY - 4) {
-              animate(y, height, { type: "spring", stiffness: 380, damping: 36, onComplete: onClose });
-            }
-          }}
-          onTouchStart={(e) => {
-            touchStart.current = e.touches[0]?.clientY ?? 0;
-            touchHandled.current = false;
-          }}
-          onTouchMove={(e) => {
-            if (touchHandled.current) return;
-            const el = e.currentTarget;
-            const dy = (e.touches[0]?.clientY ?? 0) - touchStart.current;
-            // Swipe up anywhere: grow the sheet toward full height.
-            if (dy < -14 && y.get() > 4) {
-              touchHandled.current = true;
-              setExpanded(true);
-              animate(y, 0, SPRING);
-              return;
-            }
-            // Pull down while the list is already at the top: dismiss.
-            if (dy > 70 && el.scrollTop <= 0 && y.get() >= collapsedY - 4) {
-              touchHandled.current = true;
-              animate(y, height, { type: "spring", stiffness: 380, damping: 36, onComplete: onClose });
-            }
-          }}
-          className="flex-1 overflow-y-auto overscroll-contain px-3 pb-[calc(env(safe-area-inset-bottom,0px)+16px)] touch-auto"
+          className="flex-1 overflow-y-auto overscroll-contain px-3 pb-[calc(env(safe-area-inset-bottom,0px)+16px)]"
           style={{ WebkitOverflowScrolling: "touch" }}
         >
           {children}
         </div>
-
       </motion.div>
     </AnimatePresence>
   );

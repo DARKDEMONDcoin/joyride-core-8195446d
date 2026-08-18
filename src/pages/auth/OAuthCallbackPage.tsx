@@ -40,7 +40,7 @@ const OAuthCallbackPage = () => {
             window.opener.postMessage({ type: "pipedream-oauth", ok: true }, "*");
             setTimeout(() => window.close(), 500);
           } else {
-            setTimeout(() => navigate("/settings/integrations"), 1500);
+            setTimeout(() => navigate("/chat?integrations=1"), 1500);
           }
           return;
         }
@@ -93,7 +93,7 @@ const OAuthCallbackPage = () => {
           );
           setTimeout(() => window.close(), 500);
         } else {
-          setTimeout(() => navigate("/settings/integrations"), 1500);
+          setTimeout(() => navigate("/chat?integrations=1"), 1500);
         }
       } catch (e: any) {
         setStatus("error");
@@ -121,7 +121,7 @@ const OAuthCallbackPage = () => {
         <p className="text-sm text-foreground">{message}</p>
         {status === "error" && (
           <button
-            onClick={() => navigate("/settings/integrations")}
+            onClick={() => navigate("/chat?integrations=1")}
             className="text-xs text-muted-foreground underline"
           >
             Back to Programming

@@ -310,7 +310,7 @@ export default function ComposerModelMenu({
                     background: "#2a2a2a",
                     border: 0,
                   }}
-                  className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[18px] p-1.5 shadow-[0_16px_44px_rgba(0,0,0,0.5)]"
+                  className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[18px] p-1.5"
 
 
                 >

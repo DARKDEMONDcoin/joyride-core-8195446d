@@ -32,7 +32,7 @@ export const ChatGlobalModals = ({
         <ConnectorsDialog
           open={connectorsOpen}
           onOpenChange={setConnectorsOpen}
-          onNavigateIntegrations={() => navigate("/settings/integrations")}
+          onNavigateIntegrations={() => navigate("/chat?integrations=1")}
         />
       )}
 
@@ -40,7 +40,7 @@ export const ChatGlobalModals = ({
         <DirectoryDialog
           open={directoryOpen}
           onOpenChange={setDirectoryOpen}
-          onNavigateIntegrations={() => navigate("/settings/integrations")}
+          onNavigateIntegrations={() => navigate("/chat?integrations=1")}
         />
       )}
 
