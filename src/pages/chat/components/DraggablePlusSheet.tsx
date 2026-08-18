@@ -145,10 +145,12 @@ export const DraggablePlusSheet = ({
       if (!s.decided) {
         if (Math.abs(dy) < 6) return;
         s.decided = true;
-        // Compact content may move the sheet to its expanded snap. Once the
-        // sheet is expanded, content is always owned by the native scroller;
-        // only the grip is allowed to move or dismiss the sheet.
-        s.dragging = !s.startedExpanded || s.fromGrip;
+        // Any surface can move the sheet: downward gestures drag the sheet
+        // whenever the content is already scrolled to the top, otherwise the
+        // native scroller keeps the gesture. Upward gestures from compact
+        // expand the sheet; once expanded they always scroll the content.
+        const atTop = (scrollRef.current?.scrollTop ?? 0) <= 0;
+        s.dragging = s.fromGrip || !s.startedExpanded || (dy > 0 && atTop);
         if (s.dragging) {
           try {
             el.setPointerCapture(e.pointerId);
@@ -157,6 +159,7 @@ export const DraggablePlusSheet = ({
           }
         }
       }
+
 
       if (!s.dragging) return;
       e.preventDefault();
