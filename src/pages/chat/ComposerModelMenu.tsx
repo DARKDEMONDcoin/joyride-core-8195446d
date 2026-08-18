@@ -648,7 +648,7 @@ export default function ComposerModelMenu({
                                   ? "Effort"
                                   : settingsLabel}
                             </span>
-                            {mode !== "images" && mode !== "video" && mode !== "deep-research" ? (
+                            {mode !== "images" && mode !== "video" && (mode as ChatMode) !== "deep-research" ? (
                               <span className="text-[13.5px] text-foreground/55">
                                 {getEffortPresetsForModel(selectedModel?.id ?? "lite").find((p) => p.id === effortValue)?.label ?? ""}
                               </span>
