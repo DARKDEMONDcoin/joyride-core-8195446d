@@ -669,9 +669,9 @@ export default function ComposerModelMenu({
                     </div>
                     )}
                     {view === "models" && (
-                      <div className="mt-3 flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.03] overflow-hidden">
+                      <div className="mt-3 flex flex-col rounded-2xl bg-white/[0.02] overflow-hidden">
                         {settingsPanel ? (
-                          <button type="button" onClick={() => setView("settings")} className="flex w-full items-center gap-3 px-4 py-3.5 text-start border-t border-white/[0.05] first:border-t-0 hover:bg-white/[0.03] transition-colors">
+                          <button type="button" onClick={() => setView("settings")} className="flex w-full items-center gap-3 px-4 py-3.5 text-start hover:bg-white/[0.02] transition-colors">
                             <span className="flex-1 text-[14.5px] font-semibold">
                               {(mode as ChatMode) === "deep-research"
                                 ? "Depth"
@@ -688,7 +688,7 @@ export default function ComposerModelMenu({
                           </button>
                         ) : null}
                         {(mode === "images" ? orderedImageOptions.length : mode === "video" ? orderedVideoOptions.length : orderedChatOptions.length) > 4 ? (
-                          <button type="button" onClick={() => setView("more")} className="flex w-full items-center gap-3 px-4 py-3.5 text-start border-t border-white/[0.05] first:border-t-0 hover:bg-white/[0.03] transition-colors">
+                          <button type="button" onClick={() => setView("more")} className="flex w-full items-center gap-3 px-4 py-3.5 text-start hover:bg-white/[0.02] transition-colors">
                             <span className="flex-1 text-[14.5px] font-semibold">More models</span>
                             <ChevronRight className="h-4 w-4 text-foreground/40" />
                           </button>
