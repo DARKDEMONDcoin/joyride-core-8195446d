@@ -722,51 +722,11 @@ const MobileChatLanding = ({
 
   return (
     <div className="md:hidden relative w-full h-full overflow-hidden text-foreground" style={{ background: "var(--chat-reference-bg, #1f1f1f)" }}>
-      {/* Clean centered hero — blue Megsy star + greeting on flat charcoal */}
+      {/* Empty canvas — no hero star, no greeting text */}
       <div
         className="absolute inset-0 overflow-y-auto overflow-x-hidden overscroll-contain touch-pan-y pt-[max(env(safe-area-inset-top),16px)] px-5"
         style={{ color: "#F5F5F7" }}
-      >
-        <div className="min-h-[calc(100dvh-260px)] flex flex-col items-center justify-center text-center pb-6">
-          <div className="flex flex-col items-center justify-center gap-5 w-full max-w-sm">
-            {!isReactive && (
-              <div aria-hidden>
-                <MegsyStar size={64} static className="text-[var(--megsy-blue)]" />
-              </div>
-            )}
-
-            {!isReactive && (
-              <motion.h1
-                key={firstName || "friend"}
-                dir={isRtl ? "rtl" : "ltr"}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3, ease: "easeOut", delay: 0.08 }}
-                className="text-[22px]"
-                style={{
-                  fontFamily:
-                    '"Source Serif 4", "Source Serif Pro", "Tiempos Headline", Georgia, serif',
-                  fontWeight: 500,
-                  color: "#F5F5F7",
-                  letterSpacing: "-0.4px",
-                  lineHeight: 1.2,
-                }}
-              >
-                {(() => {
-                  const h = new Date().getHours();
-                  const greeting = h < 12 ? uiT("goodMorning", lang) : h < 18 ? uiT("goodAfternoon", lang) : uiT("goodEvening", lang);
-                  if (isRtl) {
-                    return firstName ? `${greeting}، ${firstName}` : greeting;
-                  }
-                  return firstName ? `${greeting}, ${firstName}` : greeting;
-                })()}
-              </motion.h1>
-            )}
-          </div>
-        </div>
-
-      </div>
+      />
 
 
 
