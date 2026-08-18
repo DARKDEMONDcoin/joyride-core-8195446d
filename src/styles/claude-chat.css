@@ -569,9 +569,8 @@
   background: transparent !important;
 }
 
+/* Keep the chevrons visible (reference design); hide only brand thumbnails. */
 [data-skin="claude"] [data-tier-trigger] > [data-model-icon],
-[data-skin="claude"] [data-tier-trigger] > svg,
-[data-skin="claude"] [data-model-trigger] > svg,
 [data-skin="claude"] [data-tier-trigger] img,
 [data-skin="claude"] [data-model-trigger] img {
   display: none !important;
