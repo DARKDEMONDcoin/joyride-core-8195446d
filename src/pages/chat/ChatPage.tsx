@@ -190,12 +190,15 @@ const ChatPage = () => {
       | undefined;
     const run = () => {
       warmEdgeFunctions();
+      // The "+" sheet is the most-tapped mobile action — warm it on idle too so
+      // the first tap never waits on a network chunk fetch.
+      preloadPlusMenu();
       if (!mobileNow) {
-        preloadPlusMenu();
         void import("@/pages/marketing/PricingPage").catch(() => {});
         void import("@/pages/settings/SettingsPage").catch(() => {});
       }
     };
+
     const id = ric ? ric(run, { timeout: mobileNow ? 6500 : 3000 }) : window.setTimeout(run, mobileNow ? 4500 : 1500);
     return () => {
       if (ric && (window as any).cancelIdleCallback) (window as any).cancelIdleCallback(id);

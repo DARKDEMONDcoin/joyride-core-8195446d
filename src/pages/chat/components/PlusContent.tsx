@@ -176,19 +176,20 @@ const PlusMain = (p: PlusContentProps) => {
       whileTap={{ scale: item.toggle ? 1 : 0.98 }}
       transition={iosSpring}
       onClick={item.onClick}
-      className="plus-row w-full flex items-center gap-3 px-3.5 h-[52px] text-start border-0 bg-transparent"
+      className="plus-row w-full flex items-center gap-3.5 px-2.5 h-[56px] rounded-[14px] text-start border-0 bg-transparent"
     >
       <item.Icon
-        className="shrink-0 w-[20px] h-[20px] transition-colors duration-200"
-        strokeWidth={1.7}
-        style={{ color: item.active ? "hsl(var(--primary))" : "hsl(var(--foreground) / 0.7)" }}
+        className="shrink-0 w-[22px] h-[22px] transition-colors duration-200"
+        strokeWidth={1.6}
+        style={{ color: item.active ? "hsl(var(--primary))" : "hsl(var(--foreground) / 0.82)" }}
       />
       <span
-        className="flex-1 min-w-0 truncate text-[15px] font-normal"
+        className="flex-1 min-w-0 truncate text-[15.5px] font-normal"
         style={{ color: "hsl(var(--foreground) / 0.92)" }}
       >
         {item.label}
       </span>
+
       {item.badge && (
         <span
           className="shrink-0 rounded-full px-2 py-[2px] text-[10.5px] font-semibold"
@@ -274,34 +275,25 @@ const PlusMain = (p: PlusContentProps) => {
           ))}
         </motion.div>
 
-        {/* Grouped rows */}
-        <div className="px-1.5 flex flex-col gap-4">
+        {/* Flat grouped rows — no titles, thin full-width divider between groups */}
+        <div className="px-1.5 flex flex-col">
           {sections.map((section, si) => (
             <motion.div
               key={si}
               variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0, transition: iosSpring } }}
             >
-              {section.title && (
-                <div
-                  className="px-2 pb-1.5 text-[11px] font-semibold"
-                  style={{ color: "hsl(var(--foreground) / 0.4)", letterSpacing: "0.02em" }}
-                >
-                  {section.title}
-                </div>
+              {si > 0 && (
+                <div className="h-px my-2" style={{ background: "hsl(var(--foreground) / 0.08)" }} />
               )}
-              <div className="rounded-[20px] overflow-hidden" style={{ background: "hsl(0 0% 100% / 0.035)" }}>
-                {section.items.map((it, idx) => (
-                  <div key={it.id}>
-                    {idx > 0 && (
-                      <div className="h-px mr-[48px]" style={{ background: "hsl(var(--foreground) / 0.06)" }} />
-                    )}
-                    <SheetRow item={it} />
-                  </div>
+              <div className="flex flex-col">
+                {section.items.map((it) => (
+                  <SheetRow key={it.id} item={it} />
                 ))}
               </div>
             </motion.div>
           ))}
         </div>
+
 
       </motion.div>
 
