@@ -287,10 +287,85 @@ export default function ComposerModelMenu({
         <span data-model-label className="truncate tracking-tight text-foreground">{triggerLabel}</span>
       </button>
 
-
+      {/* MOBILE (chat) — anchored dropdown card */}
+      {isMobile && !isMediaMode && typeof document !== "undefined" &&
+        createPortal(
+          <AnimatePresence>
+            {open && pos && (
+              <>
+                <div className="fixed inset-0 z-[9998]" onClick={() => onOpenChange(false)} />
+                <motion.div
+                  data-tier-menu
+                  initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 34, mass: 0.6 }}
+                  dir="rtl"
+                  style={{
+                    position: "fixed",
+                    top: pos.top ?? 64,
+                    left: 16,
+                    right: 16,
+                    maxHeight: "70vh",
+                  }}
+                  className="z-[9999] overflow-y-auto overscroll-contain rounded-[22px] bg-[#232323] p-2 shadow-[0_18px_50px_rgba(0,0,0,0.55)]"
+                >
+                  {[...CHAT_COMPOSER_MODEL_OPTIONS].reverse().map((item) => {
+                    const locked = item.premium && (userPlan === "free" || userPlan === "trial");
+                    const active =
+                      item.kind === "tier"
+                        ? !selectedModel && megsyTier === item.id
+                        : selectedModel?.id === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => {
+                          if (locked) {
+                            toast.info(`${item.label} متاح في الباقات المدفوعة فقط`);
+                            return;
+                          }
+                          if (item.kind === "tier") onTierSelect(item.id as "lite" | "pro" | "max");
+                          else onChatModelSelect({ id: item.id, label: item.label });
+                          onOpenChange(false);
+                        }}
+                        className="flex w-full items-start gap-3 rounded-2xl px-3 py-3 text-right transition-colors active:bg-white/[0.06]"
+                      >
+                        <span className="min-w-0 flex-1">
+                          <span className="flex items-center gap-2">
+                            <span className="truncate text-[17px] font-semibold text-white">{item.label}</span>
+                            <span
+                              className={`shrink-0 rounded-md px-1.5 py-0.5 text-[11px] font-medium ${
+                                item.premium
+                                  ? "bg-white/10 text-white/70"
+                                  : "bg-primary/15 text-primary"
+                              }`}
+                            >
+                              {item.premium ? "Pro" : "مجاني لفترة محدودة"}
+                            </span>
+                          </span>
+                          <span className="mt-1 block text-[13px] leading-snug text-white/50">{item.desc}</span>
+                        </span>
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center">
+                          {locked ? (
+                            <Lock className="h-4 w-4 text-white/40" />
+                          ) : active ? (
+                            <Check className="h-5 w-5 text-white" strokeWidth={2.5} />
+                          ) : null}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>,
+          document.body,
+        )}
 
       {/* MOBILE — unified bottom-sheet (Chat + Images + Videos) */}
-      {renderMobileSheet && isMobile && typeof document !== "undefined" &&
+      {renderMobileSheet && isMobile && isMediaMode && typeof document !== "undefined" &&
+
         createPortal(
           <AnimatePresence>
             {open && (
@@ -313,7 +388,7 @@ export default function ComposerModelMenu({
                      if (view === "settings") {
                        // Model settings, media settings, and deep-research depth panels
                        // are compact — pick the fewest rows we need.
-                       if (mode === "deep-research") rows = 5;
+                       if ((mode as ChatMode) === "deep-research") rows = 5;
                        else if (mode === "images" || mode === "video") rows = 4;
                        else rows = 4; // 3 effort + 1 deep-thinking toggle
                      } else if (view === "more") {
@@ -360,7 +435,7 @@ export default function ComposerModelMenu({
                             className="text-[16px] font-semibold"
                           >
                             {view === "settings"
-                              ? (mode === "deep-research"
+                              ? ((mode as ChatMode) === "deep-research"
                                   ? "Depth"
                                   : mode !== "images" && mode !== "video"
                                     ? "Effort"
@@ -567,13 +642,13 @@ export default function ComposerModelMenu({
                         {settingsPanel ? (
                           <button type="button" onClick={() => setView("settings")} className="flex w-full items-center gap-3 px-4 py-3.5 text-start border-t border-white/[0.05] first:border-t-0 hover:bg-white/[0.03] transition-colors">
                             <span className="flex-1 text-[14.5px] font-semibold">
-                              {mode === "deep-research"
+                              {(mode as ChatMode) === "deep-research"
                                 ? "Depth"
                                 : mode !== "images" && mode !== "video"
                                   ? "Effort"
                                   : settingsLabel}
                             </span>
-                            {mode !== "images" && mode !== "video" && mode !== "deep-research" ? (
+                            {mode !== "images" && mode !== "video" && (mode as ChatMode) !== "deep-research" ? (
                               <span className="text-[13.5px] text-foreground/55">
                                 {getEffortPresetsForModel(selectedModel?.id ?? "lite").find((p) => p.id === effortValue)?.label ?? ""}
                               </span>
