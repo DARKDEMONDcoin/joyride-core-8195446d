@@ -288,7 +288,7 @@ export default function ComposerModelMenu({
       </button>
 
       {/* MOBILE (chat) — anchored dropdown card */}
-      {isMobile && !isMediaMode && typeof document !== "undefined" &&
+      {renderMobileSheet && isMobile && !isMediaMode && typeof document !== "undefined" &&
         createPortal(
           <AnimatePresence>
             {open && pos && (
@@ -303,13 +303,14 @@ export default function ComposerModelMenu({
                   dir="rtl"
                   style={{
                     position: "fixed",
-                    top: pos.top ?? 64,
+                    top: Math.max(12, pos.top ?? 64),
                     left: 16,
                     right: 16,
-                    maxHeight: "70vh",
+                    maxHeight: `calc(100dvh - ${Math.max(12, pos.top ?? 64) + 24}px)`,
                   }}
-                  className="z-[9999] overflow-y-auto overscroll-contain rounded-[22px] bg-[#232323] p-2 shadow-[0_18px_50px_rgba(0,0,0,0.55)]"
+                  className="z-[9999] flex flex-col gap-1 overflow-y-auto overscroll-contain rounded-[22px] bg-[#232323] p-2 shadow-[0_18px_50px_rgba(0,0,0,0.55)]"
                 >
+
                   {[...CHAT_COMPOSER_MODEL_OPTIONS].reverse().map((item) => {
                     const locked = item.premium && (userPlan === "free" || userPlan === "trial");
                     const active =
