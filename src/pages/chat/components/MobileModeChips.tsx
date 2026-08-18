@@ -80,10 +80,16 @@ export function MobileModeChips({
     }
   }, []);
 
-  const startPress = (id: ChipId) => {
+  const startXRef = useRef<number>(0);
+  const movedRef = useRef(false);
+
+  const startPress = (id: ChipId, e?: React.PointerEvent) => {
+    startXRef.current = e?.clientX ?? 0;
+    movedRef.current = false;
     setPressingId(id);
     clearPressTimer();
     timerRef.current = window.setTimeout(() => {
+      if (movedRef.current) return;
       setLongFiredId(id);
       if (typeof navigator !== "undefined" && "vibrate" in navigator) {
         try { navigator.vibrate?.(18); } catch { /* ignore */ }
@@ -93,10 +99,19 @@ export function MobileModeChips({
     }, LONG_PRESS_MS);
   };
 
+  const movePress = (e: React.PointerEvent) => {
+    if (Math.abs(e.clientX - startXRef.current) > 6) {
+      movedRef.current = true;
+      clearPressTimer();
+      setPressingId(null);
+    }
+  };
+
   const endPress = () => {
     clearPressTimer();
     setPressingId(null);
   };
+
 
   const handleClick = (id: ChipId) => {
     if (id === "docs") {
