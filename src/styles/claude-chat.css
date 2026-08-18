@@ -726,3 +726,14 @@ body:has([data-shell="manus"]) #root,
   background: var(--chat-claude-bg, #1a1a1a) !important;
   background-color: var(--chat-claude-bg, #1a1a1a) !important;
 }
+
+/* Mobile chat model dropdown — flat rows, no nested cards */
+[data-tier-menu] > button {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 14px !important;
+}
+[data-tier-menu] > button:active {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
