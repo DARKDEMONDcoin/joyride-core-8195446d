@@ -176,19 +176,20 @@ const PlusMain = (p: PlusContentProps) => {
       whileTap={{ scale: item.toggle ? 1 : 0.98 }}
       transition={iosSpring}
       onClick={item.onClick}
-      className="plus-row w-full flex items-center gap-3 px-3.5 h-[52px] text-start border-0 bg-transparent"
+      className="plus-row w-full flex items-center gap-3.5 px-2.5 h-[56px] rounded-[14px] text-start border-0 bg-transparent"
     >
       <item.Icon
-        className="shrink-0 w-[20px] h-[20px] transition-colors duration-200"
-        strokeWidth={1.7}
-        style={{ color: item.active ? "hsl(var(--primary))" : "hsl(var(--foreground) / 0.7)" }}
+        className="shrink-0 w-[22px] h-[22px] transition-colors duration-200"
+        strokeWidth={1.6}
+        style={{ color: item.active ? "hsl(var(--primary))" : "hsl(var(--foreground) / 0.82)" }}
       />
       <span
-        className="flex-1 min-w-0 truncate text-[15px] font-normal"
+        className="flex-1 min-w-0 truncate text-[15.5px] font-normal"
         style={{ color: "hsl(var(--foreground) / 0.92)" }}
       >
         {item.label}
       </span>
+
       {item.badge && (
         <span
           className="shrink-0 rounded-full px-2 py-[2px] text-[10.5px] font-semibold"
