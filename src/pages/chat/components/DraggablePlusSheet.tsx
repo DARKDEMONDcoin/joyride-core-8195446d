@@ -73,11 +73,18 @@ export const DraggablePlusSheet = ({
     setExpanded(next);
   }, []);
 
-  const close = useCallback(() => {
-    if (closingRef.current) return;
-    closingRef.current = true;
-    animate(y, height, { ...SNAP, velocity: 0, onComplete: onClose });
-  }, [height, onClose, y]);
+  const close = useCallback(
+    (direction: "down" | "up" = "down", velocity = 0) => {
+      if (closingRef.current) return;
+      closingRef.current = true;
+      animate(y, direction === "up" ? -height : height, {
+        ...SNAP,
+        velocity,
+        onComplete: onClose,
+      });
+    },
+    [height, onClose, y],
+  );
 
   const snapTo = useCallback(
     (target: "expanded" | "collapsed", velocity = 0) => {
