@@ -225,14 +225,6 @@ const PlusMain = (p: PlusContentProps) => {
           <span className="flex-1 text-[16.5px] font-semibold" style={{ color: "hsl(var(--foreground))" }}>
             إضافة إلى المحادثة
           </span>
-          <button
-            type="button"
-            onClick={() => p.setPlusMenuOpen(false)}
-            className="w-8 h-8 flex items-center justify-center bg-transparent border-0 rounded-full"
-            aria-label="إغلاق"
-          >
-            <X className="w-[20px] h-[20px]" style={{ color: "hsl(var(--foreground) / 0.5)" }} />
-          </button>
         </div>
 
         {/* Media tiles strip */}
