@@ -314,7 +314,7 @@ export default function ComposerModelMenu({
                     width: pos.width ?? 260,
                     maxHeight: pos.maxHeight,
                     background: "var(--chat-claude-composer, #262627)",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    border: 0,
                     backdropFilter: "none",
                     WebkitBackdropFilter: "none",
                     boxShadow: "none",
