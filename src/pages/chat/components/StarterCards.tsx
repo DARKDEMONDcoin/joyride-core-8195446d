@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import gameImg from "@/assets/starter-game.jpg";
-import agentImg from "@/assets/starter-agent.jpg";
-import websiteImg from "@/assets/starter-website.jpg";
 import researchImg from "@/assets/starter-research.jpg";
+import imageImg from "@/assets/starter-image.jpg";
+import slidesImg from "@/assets/starter-slides.jpg";
+import codeImg from "@/assets/starter-code.jpg";
 
 export interface StarterCardsProps {
   /** Fills the composer with the card prompt. */
@@ -11,34 +11,35 @@ export interface StarterCardsProps {
   className?: string;
 }
 
+/** Real capabilities of the app — no filler. */
 const CARDS = [
-  {
-    id: "game",
-    img: gameImg,
-    title: "أنشئ لعبتك الخاصة",
-    desc: "صِف فكرتك، وسأبني لك لعبة قابلة للعب.",
-    prompt: "اعملي لعبة بسيطة قابلة للعب على المتصفح، ابدأ باقتراح الفكرة والميكانيكا.",
-  },
-  {
-    id: "agent",
-    img: agentImg,
-    title: "احصل على Agent الخاص بك",
-    desc: "هوية مميزة مع ذاكرة تنمو معك.",
-    prompt: "ساعدني أبني وكيل ذكي بشخصية وذاكرة خاصة بمهامي اليومية.",
-  },
-  {
-    id: "website",
-    img: websiteImg,
-    title: "ابنِ موقعك في دقائق",
-    desc: "صفحة هبوط كاملة جاهزة للنشر.",
-    prompt: "ابنِ لي موقع هبوط احترافي لمشروعي مع أقسام وأزرار دعوة للإجراء.",
-  },
   {
     id: "research",
     img: researchImg,
     title: "بحث عميق بمصادر",
     desc: "تقرير منظّم مع مراجع موثوقة.",
-    prompt: "اعمل بحث عميق ومنظم مع مصادر عن موضوع سأحدده الآن:",
+    prompt: "اعمل بحث عميق ومنظم مع مصادر عن: ",
+  },
+  {
+    id: "image",
+    img: imageImg,
+    title: "توليد الصور",
+    desc: "صور عالية الجودة من وصف نصي.",
+    prompt: "ولّد لي صورة عالية الجودة لـ: ",
+  },
+  {
+    id: "slides",
+    img: slidesImg,
+    title: "عرض تقديمي جاهز",
+    desc: "شرائح متكاملة بتصميم نظيف.",
+    prompt: "اعمل لي عرض تقديمي متكامل عن: ",
+  },
+  {
+    id: "code",
+    img: codeImg,
+    title: "اكتب ونفّذ كود",
+    desc: "مشروع كامل مع معاينة مباشرة.",
+    prompt: "اكتب لي كود لمشروع: ",
   },
 ];
 
@@ -52,8 +53,8 @@ export function StarterCards({ onPick, className = "" }: StarterCardsProps) {
 
   return (
     <div className={`w-full ${className}`}>
-      <div className="flex items-center justify-between px-3 pb-2">
-        <span className="text-[13px] font-semibold text-foreground/80">ابدأ الآن</span>
+      <div className="flex items-center justify-between px-2 pb-2">
+        <span className="text-[13px] font-medium text-foreground/70">ابدأ الآن</span>
         <button
           type="button"
           aria-label="إخفاء الاقتراحات"
@@ -64,13 +65,13 @@ export function StarterCards({ onPick, className = "" }: StarterCardsProps) {
         </button>
       </div>
 
-      <div className="flex gap-3 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory">
+      <div className="flex gap-3 overflow-x-auto px-2 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x">
         {CARDS.map((c) => (
           <button
             key={c.id}
             type="button"
             onClick={() => onPick(c.prompt)}
-            className="snap-start shrink-0 w-[85%] sm:w-[320px] flex items-center gap-3 rounded-2xl border border-border/60 bg-card/60 hover:border-primary/40 active:scale-[0.99] transition-all p-3 text-start"
+            className="snap-start shrink-0 w-[84%] sm:w-[300px] flex items-center gap-3 rounded-[20px] border-0 bg-[color:var(--chat-claude-composer,#1c1c1c)] hover:brightness-110 active:scale-[0.99] transition-all p-3 text-start"
           >
             <img
               src={c.img}
@@ -79,13 +80,13 @@ export function StarterCards({ onPick, className = "" }: StarterCardsProps) {
               decoding="async"
               width={512}
               height={512}
-              className="w-14 h-14 rounded-xl object-cover shrink-0 bg-background"
+              className="w-[52px] h-[52px] rounded-[14px] object-cover shrink-0"
             />
             <span className="min-w-0 flex flex-col gap-1">
               <span className="text-[14px] font-semibold leading-tight text-foreground truncate">
                 {c.title}
               </span>
-              <span className="text-[12px] leading-snug text-muted-foreground line-clamp-2">
+              <span className="text-[12px] leading-snug text-foreground/50 line-clamp-2">
                 {c.desc}
               </span>
             </span>
