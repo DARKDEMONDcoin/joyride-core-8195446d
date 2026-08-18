@@ -698,3 +698,13 @@ body:has([data-shell="manus"][data-skin="claude"]) {
 [data-skin="claude"] [data-plus-trigger]::before {
   content: none !important;
 }
+
+/* Chat surface color (desktop + mobile) matches the reference site. */
+[data-shell="manus"][data-skin="claude"],
+[data-shell="manus"][data-skin="claude"] .chat-surface-dark,
+[data-shell="manus"][data-skin="claude"] [data-chat-main="true"],
+body:has([data-shell="manus"][data-skin="claude"]),
+body:has([data-shell="manus"][data-skin="claude"]) #root {
+  background: var(--chat-claude-bg, #1a1a1a) !important;
+  background-color: var(--chat-claude-bg, #1a1a1a) !important;
+}
