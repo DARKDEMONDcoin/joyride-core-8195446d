@@ -21,9 +21,13 @@ interface DraggablePlusSheetProps {
  */
 const SNAP = { type: "spring" as const, stiffness: 460, damping: 44, mass: 0.9 };
 const SOFT = { type: "spring" as const, stiffness: 300, damping: 34, mass: 0.9 };
+/** Dismissal is a short, calm tween - never a spring fly-off. */
+const EXIT = { duration: 0.26, ease: [0.32, 0.72, 0, 1] as const };
+const EXIT_FADE = { duration: 0.2, ease: [0.4, 0, 1, 1] as const };
 
 /** px/ms thresholds. */
 const FLICK = 0.55;
+
 
 /**
  * Bottom sheet with two snap points (collapsed / expanded) and one dismiss
