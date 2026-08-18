@@ -181,25 +181,8 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
                 </div>
               </div>
 
-              {/* Desktop chips: horizontal-scroll row BELOW the input, landing only.
-                  On landing we ALWAYS show chips (even if a mode is active) so the
-                  user can switch modes. hasActiveService only hides them inside an
-                  active conversation. */}
-              <AnimatePresence initial={false}>
-                {showDesktopLandingChips ? (
-                  <div key="chips-desktop-below" className="hidden md:block mt-4 w-full relative z-[12] pointer-events-auto">
-                    <MobileModeChips
-                      variant="desktop-chat"
-                      chatMode={d.chatMode}
-                      selectedAgent={d.selectedAgent}
-                      handleModeChange={d.handleModeChange}
-                      setChatMode={d.setChatMode}
-                      setSelectedAgent={d.setSelectedAgent}
-                      onAgentSelect={d.onAgentSelect}
-                    />
-                  </div>
-                ) : null}
-              </AnimatePresence>
+              {/* Desktop chips row removed by design: modes live in the + menu. */}
+
             </div>
 
           </div>
