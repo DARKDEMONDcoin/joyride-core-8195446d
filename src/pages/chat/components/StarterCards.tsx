@@ -71,16 +71,16 @@ export function StarterCards({ onPick, className = "" }: StarterCardsProps) {
             key={c.id}
             type="button"
             onClick={() => onPick(c.prompt)}
-            className="snap-start shrink-0 w-[84%] sm:w-[300px] flex items-center gap-3 rounded-[20px] border-0 bg-[color:var(--chat-claude-composer,#1c1c1c)] hover:brightness-110 active:scale-[0.99] transition-all p-3 text-start"
+            className="snap-start shrink-0 w-[268px] flex items-center gap-3 rounded-[18px] border-0 bg-[color:var(--chat-claude-composer,#1c1c1c)] hover:brightness-110 active:scale-[0.99] transition-all p-2.5 text-start"
           >
             <img
               src={c.img}
               alt=""
               loading="lazy"
               decoding="async"
-              width={512}
-              height={512}
-              className="w-[52px] h-[52px] rounded-[14px] object-cover shrink-0"
+              width={816}
+              height={816}
+              className="w-[54px] h-[54px] rounded-[13px] object-cover shrink-0"
             />
             <span className="min-w-0 flex flex-col gap-1">
               <span className="text-[14px] font-semibold leading-tight text-foreground truncate">
