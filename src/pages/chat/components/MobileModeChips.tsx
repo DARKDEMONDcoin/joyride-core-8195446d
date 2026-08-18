@@ -130,10 +130,16 @@ export function MobileModeChips({
               ? "w-full gap-2 px-1 md:overflow-x-auto md:flex-nowrap md:justify-start"
               : "w-full justify-start flex-nowrap chips-edge-fade"
           }`}
-          style={{ scrollbarWidth: "none" }}
-
-
+          style={{
+            scrollbarWidth: "none",
+            touchAction: "pan-x",
+            overscrollBehaviorX: "contain",
+            WebkitOverflowScrolling: "touch",
+          }}
+          onTouchMove={endPress}
+          onScroll={endPress}
         >
+
           {CHIPS.map(({ id, label, Icon }, index) => {
             const active = activeId === id;
             const pressing = pressingId === id;
