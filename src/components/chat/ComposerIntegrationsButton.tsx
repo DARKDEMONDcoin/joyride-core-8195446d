@@ -23,11 +23,11 @@ export function ComposerIntegrationsButton({ onClick, label = "التكاملا�
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="shrink-0 inline-flex h-9 md:h-10 items-center justify-center rounded-full border-0 bg-transparent outline-none px-1 transition-opacity hover:opacity-80 active:scale-95"
+      className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-full border-0 bg-transparent outline-none transition-opacity hover:opacity-80 active:scale-95"
       style={{ background: "transparent", border: 0, boxShadow: "none" }}
     >
       {shown.length === 0 ? (
-        <Blocks className="w-5 h-5 text-foreground/70" strokeWidth={2} />
+        <Blocks className="w-[20px] h-[20px] text-white/70" strokeWidth={1.9} />
       ) : (
         <span className="flex items-center">
           {shown.map((a, i) => (
