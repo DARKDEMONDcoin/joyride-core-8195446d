@@ -1,13 +1,20 @@
 /** @doc Optional Sentry error monitoring. No-op when VITE_SENTRY_DSN is not set. */
-import * as Sentry from "@sentry/react";
+type SentryModule = typeof import("@sentry/react");
 
 let initialized = false;
+let sentry: SentryModule | null = null;
 
-export function initSentry() {
+/**
+ * Sentry is loaded lazily: the SDK is ~1MB and must never sit in the initial
+ * bundle. When no DSN is configured the chunk is never fetched at all.
+ */
+export async function initSentry() {
   if (initialized) return;
   const dsn = import.meta.env.VITE_SENTRY_DSN as string | undefined;
   if (!dsn) return; // silently disabled — Sentry is optional
   try {
+    const Sentry = await import("@sentry/react");
+    sentry = Sentry;
     Sentry.init({
       dsn,
       environment: import.meta.env.MODE,
@@ -52,9 +59,9 @@ export function initSentry() {
 }
 
 export function captureAppError(err: unknown, context?: Record<string, unknown>) {
-  if (!initialized) return;
+  if (!initialized || !sentry) return;
   try {
-    Sentry.captureException(err, context ? { extra: context } : undefined);
+    sentry.captureException(err, context ? { extra: context } : undefined);
   } catch {
     /* ignore */
   }
