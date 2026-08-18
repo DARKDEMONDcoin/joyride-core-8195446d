@@ -199,7 +199,7 @@ export const DraggablePlusSheet = ({
           snapTo("expanded", Math.min(v, -0.12) * 1000);
           return;
         }
-        if (upFlick > FLICK || travel < -64) close("up", Math.min(v, -0.18) * 1000);
+        if (upFlick > FLICK || travel < -64) close("up");
         else snapTo(s.startedExpanded ? "expanded" : "collapsed", v * 1000);
         return;
       }
