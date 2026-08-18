@@ -304,13 +304,14 @@ export default function ComposerModelMenu({
                   style={{
                     position: "fixed",
                     top: Math.max(12, pos.top ?? 64),
-                    left: Math.max(12, Math.min((pos.left ?? 12) - 8, window.innerWidth - 300 - 12)),
-                    width: Math.min(300, window.innerWidth - 24),
+                    left: Math.max(12, Math.min((pos.left ?? 12) - 8, window.innerWidth - 336 - 12)),
+                    width: Math.min(336, window.innerWidth - 24),
                     maxHeight: `calc(100dvh - ${Math.max(12, pos.top ?? 64) + 24}px)`,
-                    background: "#232323",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    background: "#1f1f1f",
+                    border: 0,
                   }}
-                  className="z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[18px] p-1.5 shadow-[0_18px_50px_rgba(0,0,0,0.55)]"
+                  className="tier-menu-card z-[9999] flex flex-col gap-0.5 overflow-y-auto overscroll-contain rounded-[20px] p-2 shadow-[0_18px_50px_rgba(0,0,0,0.55)]"
+
                 >
 
                   {[...CHAT_COMPOSER_MODEL_OPTIONS].reverse().map((item) => {
