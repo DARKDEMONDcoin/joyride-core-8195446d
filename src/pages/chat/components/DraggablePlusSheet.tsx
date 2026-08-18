@@ -146,9 +146,10 @@ export const DraggablePlusSheet = ({
         if (Math.abs(dy) < 6) return;
         s.decided = true;
         const down = dy > 0;
-        // Down: drag only from the top of the list. Up: drag only while the
-        // sheet is still collapsed (expanding). Otherwise the list scrolls.
-        s.dragging = down ? atTop() : !expandedRef.current;
+        // Down: drag only from the top of the list. Up: drag while collapsed
+        // (expanding) or while expanded and already at the top of the list
+        // (dismiss upward). Otherwise the list scrolls.
+        s.dragging = down ? atTop() : !expandedRef.current || atTop();
         if (s.dragging) {
           try {
             el.setPointerCapture(e.pointerId);
