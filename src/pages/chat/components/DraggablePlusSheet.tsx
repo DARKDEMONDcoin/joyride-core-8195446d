@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, animate } from "framer-motion";
 
 interface DraggablePlusSheetProps {
@@ -33,6 +33,8 @@ export const DraggablePlusSheet = ({
 }: DraggablePlusSheetProps) => {
   const y = useMotionValue(initialExpanded ? 0 : collapsedY);
   const [expanded, setExpanded] = useState(initialExpanded);
+  const touchStart = useRef(0);
+  const touchHandled = useRef(false);
 
   // Snap points: 0 = full, midY = half, collapsedY = collapsed (peek).
   const midY = collapsedY / 2;
@@ -110,11 +112,42 @@ export const DraggablePlusSheet = ({
         />
         <div
           onScroll={onScroll}
+          onWheel={(e) => {
+            const el = e.currentTarget;
+            if (e.deltaY < -6 && y.get() > 4) {
+              setExpanded(true);
+              animate(y, 0, SPRING);
+            } else if (e.deltaY > 6 && el.scrollTop <= 0 && y.get() >= collapsedY - 4) {
+              animate(y, height, { type: "spring", stiffness: 380, damping: 36, onComplete: onClose });
+            }
+          }}
+          onTouchStart={(e) => {
+            touchStart.current = e.touches[0]?.clientY ?? 0;
+            touchHandled.current = false;
+          }}
+          onTouchMove={(e) => {
+            if (touchHandled.current) return;
+            const el = e.currentTarget;
+            const dy = (e.touches[0]?.clientY ?? 0) - touchStart.current;
+            // Swipe up anywhere: grow the sheet toward full height.
+            if (dy < -14 && y.get() > 4) {
+              touchHandled.current = true;
+              setExpanded(true);
+              animate(y, 0, SPRING);
+              return;
+            }
+            // Pull down while the list is already at the top: dismiss.
+            if (dy > 70 && el.scrollTop <= 0 && y.get() >= collapsedY - 4) {
+              touchHandled.current = true;
+              animate(y, height, { type: "spring", stiffness: 380, damping: 36, onComplete: onClose });
+            }
+          }}
           className="flex-1 overflow-y-auto overscroll-contain px-3 pb-[calc(env(safe-area-inset-bottom,0px)+16px)] touch-auto"
           style={{ WebkitOverflowScrolling: "touch" }}
         >
           {children}
         </div>
+
       </motion.div>
     </AnimatePresence>
   );

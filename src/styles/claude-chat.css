@@ -757,3 +757,12 @@ body:has([data-shell="manus"]) #root,
 .tier-menu-card > button:active {
   background: rgba(255, 255, 255, 0.05) !important;
 }
+
+/* Mobile chat model dropdown card — flat surface, no forced border/height */
+.tier-menu-card {
+  border: 0 !important;
+  border-top: 0 !important;
+  background: #2a2a2a !important;
+  backdrop-filter: none !important;
+  max-height: none;
+}

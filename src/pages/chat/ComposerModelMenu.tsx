@@ -303,14 +303,15 @@ export default function ComposerModelMenu({
                   dir="rtl"
                   style={{
                     position: "fixed",
-                    top: Math.max(12, pos.top ?? 64),
-                    left: Math.max(12, Math.min((pos.left ?? 12) - 8, window.innerWidth - 336 - 12)),
-                    width: Math.min(336, window.innerWidth - 24),
-                    maxHeight: `calc(100dvh - ${Math.max(12, pos.top ?? 64) + 24}px)`,
-                    background: "#1f1f1f",
+                    top: Math.max(10, (pos.top ?? 60) - 4),
+                    left: Math.max(10, Math.min((pos.left ?? 10) - 10, window.innerWidth - 288 - 10)),
+                    width: Math.min(288, window.innerWidth - 32),
+                    maxHeight: `calc(100dvh - ${Math.max(10, pos.top ?? 60) + 24}px)`,
+                    background: "#2a2a2a",
                     border: 0,
                   }}
-                  className="tier-menu-card z-[9999] flex flex-col gap-0.5 overflow-y-auto overscroll-contain rounded-[20px] p-2 shadow-[0_18px_50px_rgba(0,0,0,0.55)]"
+                  className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[18px] p-1.5 shadow-[0_16px_44px_rgba(0,0,0,0.5)]"
+
 
                 >
 
@@ -334,13 +335,13 @@ export default function ComposerModelMenu({
                           onOpenChange(false);
                         }}
                         style={{ background: "transparent", border: 0, boxShadow: "none" }}
-                        className="flex w-full items-start gap-2.5 rounded-[16px] px-3 py-2.5 text-right transition-colors tier-row"
+                        className="flex w-full items-start gap-2 rounded-[14px] px-2.5 py-2 text-right transition-colors tier-row"
                       >
                         <span className="min-w-0 flex-1">
-                          <span className="flex items-center gap-2">
-                            <span className="truncate text-[16px] font-semibold text-white">{item.label}</span>
+                          <span className="flex items-center gap-1.5">
+                            <span className="truncate text-[14px] font-semibold text-white">{item.label}</span>
                             <span
-                              className={`shrink-0 rounded-[6px] px-1.5 py-[2px] text-[10.5px] font-medium leading-tight ${
+                              className={`shrink-0 rounded-[5px] px-1.5 py-[1px] text-[9.5px] font-medium leading-tight ${
                                 item.premium
                                   ? "bg-white/10 text-white/70"
                                   : "bg-primary/15 text-primary"
@@ -349,15 +350,16 @@ export default function ComposerModelMenu({
                               {item.premium ? "Pro" : "مجاني لفترة محدودة"}
                             </span>
                           </span>
-                          <span className="mt-1 block text-[12.5px] leading-snug text-white/45">{item.desc}</span>
+                          <span className="mt-0.5 block text-[11.5px] leading-snug text-white/45">{item.desc}</span>
                         </span>
-                        <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center">
+                        <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center">
                           {locked ? (
-                            <Lock className="h-4 w-4 text-white/40" />
+                            <Lock className="h-3.5 w-3.5 text-white/40" />
                           ) : active ? (
-                            <Check className="h-[18px] w-[18px] text-white" strokeWidth={2.5} />
+                            <Check className="h-4 w-4 text-white" strokeWidth={2.5} />
                           ) : null}
                         </span>
+
 
                       </button>
                     );

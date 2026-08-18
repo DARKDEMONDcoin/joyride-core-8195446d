@@ -119,7 +119,7 @@ const PlusMain = (p: PlusContentProps) => {
   const tiles: Tile[] = [
     {
       id: "file",
-      label: "Attach file",
+      label: "إرفاق ملف",
       Icon: FileUp,
       onClick: () => {
         p.fileInputRef.current?.click();
@@ -128,7 +128,7 @@ const PlusMain = (p: PlusContentProps) => {
     },
     {
       id: "photos",
-      label: "Photos",
+      label: "الصور",
       Icon: ImageIcon,
       onClick: () => {
         p.imageInputRef.current?.click();
