@@ -221,7 +221,12 @@
           });
           observer.observe(root, { childList: true, subtree: true, characterData: true, attributes: true });
           requestAnimationFrame(function () { if (isRealContent()) { observer.disconnect(); hide(); } });
-          setTimeout(function () { if (isRealContent()) { observer.disconnect(); hide(); } }, 5000);
+          setTimeout(function () { if (isRealContent()) { observer.disconnect(); hide(); } }, 1200);
+          // Hard fallback: never keep the splash on screen for more than 2.5s,
+          // and let any tap dismiss it so it can never trap the user.
+          setTimeout(function () { if (observer) observer.disconnect(); hide(); }, 2500);
+          window.addEventListener("load", function () { setTimeout(function () { if (observer) observer.disconnect(); hide(); }, 300); });
+          document.addEventListener("pointerdown", function () { if (observer) observer.disconnect(); hide(); }, { once: true });
         } catch (err) { /* ignore */ }
       })();
     </script>
