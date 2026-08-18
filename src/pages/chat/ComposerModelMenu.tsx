@@ -307,7 +307,7 @@ export default function ComposerModelMenu({
                     left: Math.max(10, Math.min((pos.left ?? 10) - 10, window.innerWidth - 300 - 10)),
                     width: Math.min(300, window.innerWidth - 32),
                     maxHeight: `calc(100dvh - ${Math.max(10, pos.top ?? 60) + 24}px)`,
-                    background: "#1c1c1c",
+                    background: "var(--chat-claude-composer, #262627)",
                     border: 0,
                     backdropFilter: "none",
                     WebkitBackdropFilter: "none",
@@ -335,7 +335,9 @@ export default function ComposerModelMenu({
                           onOpenChange(false);
                         }}
                         style={{
-                          background: active ? "rgba(255,255,255,0.06)" : "transparent",
+                          background: active
+                            ? "var(--chat-claude-control, #1f1f20)"
+                            : "transparent",
                           border: 0,
                           boxShadow: "none",
                           marginTop: idx === 0 ? 0 : 2,
