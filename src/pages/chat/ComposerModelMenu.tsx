@@ -303,14 +303,15 @@ export default function ComposerModelMenu({
                   dir="rtl"
                   style={{
                     position: "fixed",
-                    top: Math.max(12, pos.top ?? 64),
-                    left: Math.max(12, Math.min((pos.left ?? 12) - 8, window.innerWidth - 336 - 12)),
-                    width: Math.min(336, window.innerWidth - 24),
-                    maxHeight: `calc(100dvh - ${Math.max(12, pos.top ?? 64) + 24}px)`,
-                    background: "#1f1f1f",
+                    top: Math.max(10, (pos.top ?? 60) - 4),
+                    left: Math.max(10, Math.min((pos.left ?? 10) - 10, window.innerWidth - 288 - 10)),
+                    width: Math.min(288, window.innerWidth - 32),
+                    maxHeight: `calc(100dvh - ${Math.max(10, pos.top ?? 60) + 24}px)`,
+                    background: "#2a2a2a",
                     border: 0,
                   }}
-                  className="tier-menu-card z-[9999] flex flex-col gap-0.5 overflow-y-auto overscroll-contain rounded-[20px] p-2 shadow-[0_18px_50px_rgba(0,0,0,0.55)]"
+                  className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[18px] p-1.5 shadow-[0_16px_44px_rgba(0,0,0,0.5)]"
+
 
                 >
 
