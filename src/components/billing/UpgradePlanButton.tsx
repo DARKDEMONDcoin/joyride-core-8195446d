@@ -117,7 +117,7 @@ export function UpgradePlanButton({ variant = "full", className, hideCredits = f
         "hover:-translate-y-[1px] hover:shadow-[0_0_24px_-4px_rgba(80,200,120,0.55)]",
         "active:translate-y-0 active:scale-[0.985]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black",
-        variant === "compact" ? "px-3" : "ps-1.5 pe-3.5",
+        variant === "compact" ? "w-9 justify-center p-0" : "ps-1.5 pe-3.5",
         className,
       )}
       style={{
@@ -153,7 +153,7 @@ export function UpgradePlanButton({ variant = "full", className, hideCredits = f
 
       {/* Star icon — hollow outline, emerald, no wrapper */}
       <MegsyStar
-        size={14}
+        size={variant === "compact" ? 16 : 14}
         static
         outline
         strokeWidth={6.5}
@@ -161,8 +161,10 @@ export function UpgradePlanButton({ variant = "full", className, hideCredits = f
         style={{ color: EMERALD }}
       />
 
-      {/* Label */}
-      <span className="relative z-10 whitespace-nowrap">{shortLabel}</span>
+      {/* Label (hidden in the icon-only compact variant) */}
+      {variant !== "compact" && (
+        <span className="relative z-10 whitespace-nowrap">{shortLabel}</span>
+      )}
 
       {/* Credits chip (full variant only) */}
       {variant === "full" && !hideCredits && credits != null && (

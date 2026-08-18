@@ -927,13 +927,12 @@ html:not(.dark) [class*="text-white/"]:not(.theme-fixed) {
   color: hsl(var(--muted-foreground)) !important;
 }
 
-/* + button in composer: borderless, black in dark theme, white in light. */
+/* + button in composer: fully borderless, plain icon (no fill, no accent). */
 .animated-plus-btn,
 button[data-testid="mobile-composer-plus"] {
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
-  color: #10b981 !important;
 }
 .animated-plus-btn:hover,
 button[data-testid="mobile-composer-plus"]:hover { background: transparent !important; }
@@ -944,13 +943,6 @@ html[data-theme="dark"] button[data-testid="mobile-composer-plus"] {
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
-  color: #34d399 !important;
-}
-html.dark .animated-plus-btn svg,
-html[data-theme="dark"] .animated-plus-btn svg,
-html.dark button[data-testid="mobile-composer-plus"] svg,
-html[data-theme="dark"] button[data-testid="mobile-composer-plus"] svg {
-  color: #34d399 !important;
 }
 html:not(.dark) .bg-black:not(.theme-fixed) {
   background-color: hsl(var(--card)) !important;

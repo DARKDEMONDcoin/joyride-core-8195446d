@@ -248,20 +248,19 @@ export default function ComposerModelMenu({
         className={
           variant === "segment"
             ? `${glassModelMenu.triggerSegment} justify-center ${triggerClassName || ""}`
-            : `group inline-flex h-9 max-w-[52vw] items-center justify-center gap-1.5 rounded-full pl-2 pr-3 text-[12.5px] font-semibold text-foreground hover:text-foreground active:scale-95 transition-all outline-none backdrop-blur-xl ${triggerClassName || ""}`
+            : `group inline-flex h-9 max-w-[62vw] items-center justify-center gap-1 rounded-full px-1 text-[16px] font-semibold text-foreground hover:text-foreground active:scale-95 transition-all outline-none ${triggerClassName || ""}`
         }
         style={
           variant === "segment"
             ? glassModelMenuTriggerStyle
-            : {
-                background: "hsl(var(--foreground) / 0.04)",
-                border: "1.5px solid hsl(var(--foreground) / 0.35)",
-                boxShadow: "0 1px 2px hsl(var(--foreground) / 0.08)",
-              }
+            : { background: "transparent", border: 0, boxShadow: "none" }
         }
         aria-label="Choose model"
         aria-expanded={open}
       >
+        <ChevronDown
+          className={`h-4 w-4 shrink-0 text-foreground/70 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        />
         {!noIcon && !(variant === "pill" && isMediaMode) && (
           <span data-model-icon className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-transparent border-0">
             {isMediaMode ? (
@@ -286,10 +285,7 @@ export default function ComposerModelMenu({
           </span>
         )}
         <span data-model-label className="truncate tracking-tight text-foreground">{triggerLabel}</span>
-        <ChevronDown
-          className={`h-3.5 w-3.5 shrink-0 text-foreground/60 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-        />
-
+        <ChevronRight className="h-4 w-4 shrink-0 text-foreground/70" />
       </button>
 
 
