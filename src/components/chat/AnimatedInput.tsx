@@ -16,6 +16,7 @@ import { getAgentById } from "@/lib/agentRegistry";
 import { TypingAnimation } from "@/components/ui/typing-animation";
 import ComposerMicButton from "@/components/chat/ComposerMicButton";
 import ComposerIntegrationsButton from "@/components/chat/ComposerIntegrationsButton";
+import IntegrationsSheet from "@/components/chat/IntegrationsSheet";
 import ComposerVoiceWave from "@/components/chat/ComposerVoiceWave";
 import { isSendKey } from "@/lib/composerKey";
 import { parseSlashCommand } from "@/lib/slashCommands";
@@ -455,7 +456,8 @@ const AnimatedInput = ({
             </motion.button>
 
 
-            <ComposerIntegrationsButton onClick={() => navigate("/integrations")} />
+            <ComposerIntegrationsButton onClick={() => setIntegrationsOpen(true)} />
+            <IntegrationsSheet open={integrationsOpen} onOpenChange={setIntegrationsOpen} />
 
             <ComposerMicButton
               onListeningChange={setListening}

@@ -2905,7 +2905,7 @@ body.app-fullscreen-active .mobile-sidebar-trigger {
   border-top: 1px solid var(--chat-claude-border, #2a2a2a) !important;
   border-left: 0 !important;
   border-right: 0 !important;
-  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: none !important;
   color: var(--chat-claude-fg, #f5f5f7) !important;
   isolation: isolate;
   scrollbar-width: none;
