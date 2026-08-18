@@ -562,7 +562,7 @@ export default function ComposerModelMenu({
                     <div className="mb-4">
                       <MediaModelTools mode="images" />
                       {visibleImageOptions.length === 0 ? (
-                        <p className="rounded-2xl border border-white/[0.08] bg-white/[0.03] px-3 py-3 text-[12.5px] text-foreground/50">
+                        <p className="rounded-2xl bg-white/[0.02] px-3 py-3 text-[12.5px] text-foreground/50">
                           {loading ? "Loading models…" : "No models available."}
                         </p>
                       ) : (
