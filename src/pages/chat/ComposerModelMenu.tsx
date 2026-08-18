@@ -151,15 +151,19 @@ export default function ComposerModelMenu({
       left = Math.max(12, Math.min(vw - menuW - 12, left));
       const width = menuW;
       const cap = isMobile ? Math.min(vh * 0.55, 420) : Math.min(vh * 0.7, 560);
-      if (side === "top") {
-        const bottom = vh - r.top + 8;
+      // Auto-flip: if the trigger sits in the lower part of the screen (composer),
+      // the menu should rise above it instead of being pushed off-screen below.
+      const placeAbove = side === "top" || r.bottom > vh * 0.55;
+      if (placeAbove) {
+        const bottom = vh - r.top + 10;
         const maxHeight = Math.min(cap, Math.max(220, r.top - 24));
         setPos({ left, width, bottom, maxHeight });
       } else {
-        const top = r.bottom + 8;
+        const top = r.bottom + 10;
         const maxHeight = Math.min(cap, Math.max(220, vh - top - 24));
         setPos({ left, width, top, maxHeight });
       }
+
     };
     update();
     window.addEventListener("resize", update);
