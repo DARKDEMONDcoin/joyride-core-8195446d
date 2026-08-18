@@ -5,8 +5,6 @@ import { RemoteAiBusyBanner } from "./RemoteAiBusyBanner";
 import { MentionDropdown } from "./MentionDropdown";
 import { ComposerMobileModeBar } from "./ComposerMobileModeBar";
 import { ComposerAnimatedInput } from "./ComposerAnimatedInput";
-import { MobileModeChips } from "./MobileModeChips";
-import { AnimatePresence } from "framer-motion";
 import { ActiveServicePill } from "./ActiveServicePill";
 
 import type { AttachedFile } from "../hooks/useAttachments";
@@ -84,15 +82,12 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
   const hasActiveService =
     d.selectedAgent?.id === "docs" ||
     (d.chatMode && d.chatMode !== "normal");
-  const showDesktopLandingChips = isDesktopLanding;
 
   // Hide chips whenever a service is active; also hide on mobile once the
   // conversation has started or the user is typing (input focused). They
   // auto-return when the service pill is cleared or the user opens a fresh
   // conversation on desktop.
-  const mobileShouldHide = messagesLength > 0;
   const effectiveModesShown = modesShown && !hasActiveService;
-  const effectiveMobileModesShown = effectiveModesShown && !mobileShouldHide;
 
 
 
