@@ -80,10 +80,16 @@ export function MobileModeChips({
     }
   }, []);
 
-  const startPress = (id: ChipId) => {
+  const startXRef = useRef<number>(0);
+  const movedRef = useRef(false);
+
+  const startPress = (id: ChipId, e?: React.PointerEvent) => {
+    startXRef.current = e?.clientX ?? 0;
+    movedRef.current = false;
     setPressingId(id);
     clearPressTimer();
     timerRef.current = window.setTimeout(() => {
+      if (movedRef.current) return;
       setLongFiredId(id);
       if (typeof navigator !== "undefined" && "vibrate" in navigator) {
         try { navigator.vibrate?.(18); } catch { /* ignore */ }
@@ -93,10 +99,19 @@ export function MobileModeChips({
     }, LONG_PRESS_MS);
   };
 
+  const movePress = (e: React.PointerEvent) => {
+    if (Math.abs(e.clientX - startXRef.current) > 6) {
+      movedRef.current = true;
+      clearPressTimer();
+      setPressingId(null);
+    }
+  };
+
   const endPress = () => {
     clearPressTimer();
     setPressingId(null);
   };
+
 
   const handleClick = (id: ChipId) => {
     if (id === "docs") {
@@ -130,10 +145,16 @@ export function MobileModeChips({
               ? "w-full gap-2 px-1 md:overflow-x-auto md:flex-nowrap md:justify-start"
               : "w-full justify-start flex-nowrap chips-edge-fade"
           }`}
-          style={{ scrollbarWidth: "none" }}
-
-
+          style={{
+            scrollbarWidth: "none",
+            touchAction: "pan-x",
+            overscrollBehaviorX: "contain",
+            WebkitOverflowScrolling: "touch",
+          }}
+          onTouchMove={endPress}
+          onScroll={endPress}
         >
+
           {CHIPS.map(({ id, label, Icon }, index) => {
             const active = activeId === id;
             const pressing = pressingId === id;
@@ -158,11 +179,13 @@ export function MobileModeChips({
                     : { type: "spring", stiffness: 500, damping: 22 },
                 }}
                 whileHover={{ y: -1 }}
-                onClick={() => handleClick(id)}
-                onPointerDown={() => startPress(id)}
+                onClick={() => { if (!movedRef.current) handleClick(id); }}
+                onPointerDown={(e) => startPress(id, e)}
+                onPointerMove={movePress}
                 onPointerUp={endPress}
                 onPointerLeave={endPress}
                 onPointerCancel={endPress}
+
                 onContextMenu={(e) => e.preventDefault()}
                 className={
                   isDesktopChat

@@ -128,18 +128,19 @@ const PlusMain = (p: PlusContentProps) => {
     { id: "file", label: "إرفاق ملف", Icon: FileUp, onClick: closeThen(() => p.fileInputRef.current?.click()) },
   ];
 
-  type RowItem = { id: string; label: string; Icon: any; badge?: string; active?: boolean; onClick: () => void };
+  type RowItem = { id: string; label: string; Icon: any; badge?: string; active?: boolean; toggle?: boolean; onClick: () => void };
 
   const sections: { title?: string; items: RowItem[] }[] = [
     {
       title: "الأدوات",
       items: [
-        { id: "search", label: "البحث في الويب", Icon: Globe, active: p.searchEnabled, onClick: closeThen(() => p.handleSearchToggle()) },
+        { id: "search", label: "البحث في الويب", Icon: Globe, active: p.searchEnabled, toggle: true, onClick: () => p.handleSearchToggle() },
         { id: "tasks", label: "المهام المجدولة", Icon: ListChecks, onClick: closeThen(() => p.navigate("/settings/tasks")) },
         { id: "skills", label: "المهارات", Icon: Puzzle, onClick: closeThen(() => p.navigate("/settings/skills")) },
         { id: "integrations", label: "التكاملات", Icon: Plug, onClick: closeThen(() => p.navigate("/chat?integrations=1")) },
       ],
     },
+
     {
       title: "الإنشاء",
       items: [
@@ -172,13 +173,13 @@ const PlusMain = (p: PlusContentProps) => {
     <motion.button
       data-no-neo
       type="button"
-      whileTap={{ scale: 0.98 }}
+      whileTap={{ scale: item.toggle ? 1 : 0.98 }}
       transition={iosSpring}
       onClick={item.onClick}
       className="plus-row w-full flex items-center gap-3 px-3.5 h-[52px] text-start border-0 bg-transparent"
     >
       <item.Icon
-        className="shrink-0 w-[20px] h-[20px]"
+        className="shrink-0 w-[20px] h-[20px] transition-colors duration-200"
         strokeWidth={1.7}
         style={{ color: item.active ? "hsl(var(--primary))" : "hsl(var(--foreground) / 0.7)" }}
       />
@@ -196,9 +197,36 @@ const PlusMain = (p: PlusContentProps) => {
           {item.badge}
         </span>
       )}
-      {item.active && <Check className="shrink-0 w-[17px] h-[17px]" style={{ color: "hsl(var(--primary))" }} />}
+      {item.toggle ? (
+        <span
+          role="switch"
+          aria-checked={!!item.active}
+          className="shrink-0 relative inline-flex items-center rounded-full transition-colors duration-250"
+          style={{
+            width: 42,
+            height: 25,
+            background: item.active ? "hsl(var(--primary))" : "hsl(0 0% 100% / 0.14)",
+          }}
+        >
+          <motion.span
+            className="absolute rounded-full"
+            style={{
+              width: 19,
+              height: 19,
+              top: 3,
+              left: 3,
+              background: item.active ? "#0b0f0d" : "hsl(0 0% 100% / 0.85)",
+            }}
+            animate={{ x: item.active ? 17 : 0 }}
+            transition={{ type: "spring", stiffness: 620, damping: 34, mass: 0.6 }}
+          />
+        </span>
+      ) : (
+        item.active && <Check className="shrink-0 w-[17px] h-[17px]" style={{ color: "hsl(var(--primary))" }} />
+      )}
     </motion.button>
   );
+
 
 
   return (
@@ -218,15 +246,9 @@ const PlusMain = (p: PlusContentProps) => {
           .plus-row:active { background: hsl(0 0% 100% / 0.06); }
         `}</style>
 
-        {/* Header */}
-        <div
-          className="sticky top-0 z-10 flex items-center gap-2 px-1.5 pb-3 pt-0.5"
-          style={{ background: "var(--chat-claude-composer, #101312)" }}
-        >
-          <span className="flex-1 text-[16px] font-semibold" style={{ color: "hsl(var(--foreground) / 0.95)" }}>
-            إضافة إلى المحادثة
-          </span>
-        </div>
+        <div className="pt-1" />
+
+
 
         {/* Media tiles strip */}
         <motion.div
