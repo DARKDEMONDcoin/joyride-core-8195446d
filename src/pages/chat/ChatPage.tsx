@@ -2560,7 +2560,6 @@ const ChatPage = () => {
       const collapsedH = Math.max(360, Math.min(vh * 0.55, composerTop - 24));
       const expandedH = Math.max(collapsedH, Math.min(expandedCap, vh - 40));
       const collapsedY = expandedH - collapsedH;
-      console.log({ vh, composerTop, collapsedH, expandedH, collapsedY });
 
 
       return createPortal(
