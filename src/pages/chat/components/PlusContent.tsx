@@ -141,79 +141,83 @@ const PlusMain = (p: PlusContentProps) => {
   type RowItem = {
     id: string;
     label: string;
-    desc?: string;
     Icon: any;
+    badge?: string;
     onClick: () => void;
   };
 
-  const listRows: RowItem[] = [
-    {
-      id: "integrations",
-      label: "Integrations",
-      desc: "Connect apps and databases to automate actions for you",
-      Icon: Plug,
-      onClick: () => {
-        p.setPlusMenuOpen(false);
-        p.navigate("/settings/integrations");
-      },
-    },
-    {
-      id: "skills",
-      label: "Skills",
-      desc: "Reuse specialized skills to handle specific tasks reliably",
-      Icon: Lightbulb,
-      onClick: () => {
-        p.setPlusMenuOpen(false);
-        p.navigate("/settings/skills");
-      },
-    },
+  const go = (fn: () => void) => () => {
+    p.setPlusMenuOpen(false);
+    fn();
+  };
+
+  const sections: RowItem[][] = [
+    [
+      { id: "skills", label: "المهارات", Icon: Lightbulb, onClick: go(() => p.navigate("/settings/skills")) },
+      { id: "integrations", label: "التكاملات", Icon: Plug, onClick: go(() => p.navigate("/settings/integrations")) },
+      { id: "search", label: p.searchEnabled ? "البحث في الويب (مفعّل)" : "البحث في الويب", Icon: Globe, onClick: go(() => p.handleSearchToggle()) },
+    ],
+    [
+      { id: "image", label: "إنشاء صورة", Icon: ImageIcon, onClick: go(() => p.onModeChange?.("images")) },
+      { id: "image-edit", label: "تعديل الصورة", Icon: Wrench, onClick: go(() => p.onModeChange?.("images")) },
+      { id: "music", label: "إنشاء صوت", Icon: Music2, onClick: go(() => p.onModeChange?.("music")) },
+      { id: "video", label: "إنشاء فيديو", Icon: VideoIcon, onClick: go(() => p.onModeChange?.("video")) },
+    ],
+    [
+      { id: "slides", label: "إنشاء شرائح عرض", Icon: Presentation, onClick: go(() => p.onModeChange?.("slides")) },
+      { id: "website", label: "إنشاء موقع إلكتروني", Icon: Code2, badge: "New", onClick: go(() => p.onWebsiteStart?.()) },
+      { id: "code", label: "كتابة وتطوير الكود", Icon: FileText, onClick: go(() => p.onModeChange?.("code")) },
+    ],
+    [
+      { id: "research", label: "بحث معمّق (Wide Research)", Icon: Microscope, onClick: go(() => p.onModeChange?.("deep-research")) },
+      { id: "learning", label: "وضع التعلّم", Icon: Lightbulb, onClick: go(() => p.onModeChange?.("learning")) },
+      { id: "shopping", label: "التسوّق", Icon: Globe, onClick: go(() => p.onModeChange?.("shopping")) },
+      { id: "operator", label: "ربط جهاز الكمبيوتر", Icon: Timer, onClick: go(() => p.onModeChange?.("operator")) },
+    ],
   ];
 
-  const ListRow = ({ item, isLast }: { item: RowItem; isLast: boolean }) => (
-    <div>
-      <motion.button
-        data-no-neo
-        type="button"
-        whileTap={{ scale: 0.99 }}
-        transition={iosSpring}
-        onClick={item.onClick}
-        className="plus-row w-full flex items-center gap-3.5 px-4 py-3.5 text-start border-0 bg-transparent transition-colors"
-      >
-        <item.Icon className="shrink-0 w-[22px] h-[22px]" strokeWidth={1.7} style={{ color: "hsl(var(--primary))" }} />
-        <span className="flex-1 min-w-0 flex flex-col gap-[3px] text-start">
-          <span className="text-[15.5px] font-semibold leading-[1.2]" style={{ color: "hsl(var(--foreground))" }}>
-            {item.label}
-          </span>
-          {item.desc && (
-            <span className="text-[12.5px] font-normal leading-[1.35]" style={{ color: "hsl(var(--foreground) / 0.55)" }}>
-              {item.desc}
-            </span>
-          )}
+  const SheetRow = ({ item }: { item: RowItem }) => (
+    <motion.button
+      data-no-neo
+      type="button"
+      whileTap={{ scale: 0.985 }}
+      transition={iosSpring}
+      onClick={item.onClick}
+      className="plus-row w-full flex items-center gap-3.5 px-1 py-[13px] text-start border-0 bg-transparent"
+    >
+      <item.Icon className="shrink-0 w-[21px] h-[21px]" strokeWidth={1.7} style={{ color: "hsl(var(--foreground) / 0.85)" }} />
+      <span className="flex-1 min-w-0 truncate text-[15px] font-medium" style={{ color: "hsl(var(--foreground) / 0.92)" }}>
+        {item.label}
+      </span>
+      {item.badge && (
+        <span
+          className="shrink-0 rounded-md px-2 py-[2px] text-[11px] font-semibold"
+          style={{ background: "hsl(var(--primary) / 0.18)", color: "hsl(var(--primary))" }}
+        >
+          {item.badge}
         </span>
-        <ChevronLeft className="w-[18px] h-[18px] shrink-0 rtl:rotate-0 -rotate-180 rtl:rotate-0" strokeWidth={2} style={{ color: "hsl(var(--foreground) / 0.4)" }} />
-      </motion.button>
-      {!isLast && <div className="h-px mx-4" style={{ background: "hsl(var(--foreground) / 0.08)" }} />}
-    </div>
+      )}
+    </motion.button>
   );
 
   return (
     <motion.div key="main" {...fadeProps(-8)} className="flex flex-col">
-      {/* MOBILE — Kimi-style: horizontal tiles + grouped list rows */}
+      {/* MOBILE — scrollable Manus-style sheet */}
       <div
-        className="md:hidden flex flex-col pt-1 pb-4 gap-4"
+        className="md:hidden flex flex-col pt-1 pb-4 gap-3"
         style={{ fontFamily: mobileFont }}
+        dir="rtl"
       >
         <style>{`
-          .kimi-tile, .kimi-card {
-            background: hsl(0 0% 100% / 0.03);
-            border: 1px solid hsl(var(--border));
+          .kimi-tile {
+            background: hsl(0 0% 100% / 0.05);
+            border: 0;
           }
-          .kimi-tile:active { background: hsl(var(--primary) / 0.12); border-color: hsl(var(--primary) / 0.45); }
-          .kimi-tile svg, .plus-row svg { color: hsl(var(--primary)); }
-          .plus-row:active { background: hsl(var(--primary) / 0.08); }
+          .kimi-tile:active { background: hsl(var(--primary) / 0.12); }
+          .plus-row:active { background: hsl(0 0% 100% / 0.05); border-radius: 14px; }
         `}</style>
 
-        {/* Two-column tile grid */}
+        {/* Top: images + files (unchanged) */}
         <div className="grid grid-cols-2 gap-3 px-3">
           {tiles.map((t) => (
             <motion.button
@@ -229,7 +233,7 @@ const PlusMain = (p: PlusContentProps) => {
               <t.Icon
                 className="w-[26px] h-[26px]"
                 strokeWidth={1.7}
-                style={{ color: "hsl(var(--primary))" }}
+                style={{ color: "hsl(var(--foreground) / 0.9)" }}
               />
               <span
                 className="text-[13px] font-medium leading-none"
@@ -241,15 +245,21 @@ const PlusMain = (p: PlusContentProps) => {
           ))}
         </div>
 
-        {/* Grouped rows card */}
-        <div className="px-3">
-          <div className="kimi-card rounded-[22px] overflow-hidden">
-            {listRows.map((it, i) => (
-              <ListRow key={it.id} item={it} isLast={i === listRows.length - 1} />
-            ))}
-          </div>
+        {/* Scrollable grouped rows */}
+        <div className="px-4">
+          {sections.map((section, si) => (
+            <div key={si}>
+              {section.map((it) => (
+                <SheetRow key={it.id} item={it} />
+              ))}
+              {si < sections.length - 1 && (
+                <div className="h-px my-1.5" style={{ background: "hsl(var(--foreground) / 0.08)" }} />
+              )}
+            </div>
+          ))}
         </div>
       </div>
+
 
 
 

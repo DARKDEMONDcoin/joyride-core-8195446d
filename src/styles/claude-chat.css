@@ -737,3 +737,23 @@ body:has([data-shell="manus"]) #root,
 [data-tier-menu] > button:active {
   background: rgba(255, 255, 255, 0.06) !important;
 }
+
+
+/* Mobile chat model dropdown card — fully flat rows */
+.tier-menu-card > button,
+.tier-menu-card > button * {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+.tier-menu-card > button span[class*="bg-white/10"] {
+  background: rgba(255, 255, 255, 0.10) !important;
+}
+.tier-menu-card > button span[class*="bg-primary/15"] {
+  background: hsl(var(--primary) / 0.15) !important;
+}
+.tier-menu-card > button:active {
+  background: rgba(255, 255, 255, 0.05) !important;
+}

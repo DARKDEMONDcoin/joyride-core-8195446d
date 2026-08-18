@@ -2522,7 +2522,7 @@ html[dir="rtl"] .user-bubble {
 }
 
 /* Model menus must never overflow tiny phones — and keep the 4.5-row peek */
-[data-tier-menu] {
+[data-tier-menu]:not(.tier-menu-card) {
   max-width: calc(100vw - 16px) !important;
   max-height: 270px !important;
   overscroll-behavior: contain;
