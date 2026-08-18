@@ -300,28 +300,32 @@ export default function ComposerModelMenu({
                 <div className="fixed inset-0 z-[9998]" onClick={() => onOpenChange(false)} />
                 <motion.div
                   data-tier-menu
-                  initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                  initial={{ opacity: 0, y: pos.bottom != null ? 10 : -10, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -8, scale: 0.97 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 34, mass: 0.6 }}
+                  exit={{ opacity: 0, y: pos.bottom != null ? 10 : -10, scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 420, damping: 36, mass: 0.6 }}
                   dir="rtl"
                   style={{
                     position: "fixed",
-                    top: Math.max(10, (pos.top ?? 60) - 4),
+                    ...(pos.bottom != null
+                      ? { bottom: Math.max(10, pos.bottom) }
+                      : { top: Math.max(10, pos.top ?? 60) }),
                     left: Math.max(12, Math.min(pos.left ?? 12, window.innerWidth - (pos.width ?? 260) - 12)),
                     width: pos.width ?? 260,
-                    maxHeight: `calc(100dvh - ${Math.max(10, pos.top ?? 60) + 24}px)`,
+                    maxHeight: pos.maxHeight,
                     background: "var(--chat-claude-composer, #262627)",
-                    border: 0,
+                    border: "1px solid rgba(255,255,255,0.06)",
                     backdropFilter: "none",
                     WebkitBackdropFilter: "none",
                     boxShadow: "none",
+                    transformOrigin: pos.bottom != null ? "bottom center" : "top center",
                   }}
-                  className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[20px] p-1"
+                  className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[26px] p-1.5"
                 >
-                  <div className="px-3 pb-1 pt-2 text-[11px] font-medium tracking-wide text-white/35">
+                  <div className="px-3 pb-1.5 pt-2 text-[11px] font-medium tracking-wide text-white/35">
                     اختر النموذج
                   </div>
+
                   {CHAT_COMPOSER_MODEL_OPTIONS.map((item, idx) => {
                     const locked = item.premium && (userPlan === "free" || userPlan === "trial");
                     const active =
