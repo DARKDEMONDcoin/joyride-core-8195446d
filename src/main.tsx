@@ -55,7 +55,7 @@ initTelegramWebApp();
 import { initSentry, captureAppError } from "@/lib/sentry";
 
 // Boot Sentry as early as possible (no-op when VITE_SENTRY_DSN is not set)
-initSentry();
+void initSentry();
 
 // Real-User Monitoring — Core Web Vitals (LCP/INP/CLS/TTFB/FCP) reported
 // after first paint via requestIdleCallback so it never competes with LCP.
