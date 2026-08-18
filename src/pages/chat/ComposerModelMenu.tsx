@@ -309,6 +309,9 @@ export default function ComposerModelMenu({
                     maxHeight: `calc(100dvh - ${Math.max(10, pos.top ?? 60) + 24}px)`,
                     background: "#2a2a2a",
                     border: 0,
+                    backdropFilter: "none",
+                    WebkitBackdropFilter: "none",
+                    boxShadow: "none",
                   }}
                   className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[18px] p-1.5"
 

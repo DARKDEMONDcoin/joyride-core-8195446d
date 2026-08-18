@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
+import { ReactNode, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, animate } from "framer-motion";
 
 interface DraggablePlusSheetProps {
   height: number;
-  /** Kept for API compatibility — the sheet always opens at full height. */
+  /** Distance the sheet is pushed down when collapsed (compact state). */
   collapsedY?: number;
   onClose: () => void;
   children: ReactNode;
@@ -16,32 +16,51 @@ interface DraggablePlusSheetProps {
 
 /**
  * Bottom sheet for the composer menus.
- * Opens fully so nothing is clipped, scrolls natively, and closes only when
- * the user drags the sheet (handle/header area) downwards.
+ * Opens compact, expands automatically to full height as soon as the user
+ * scrolls the content up, and closes when dragged down.
  */
 export const DraggablePlusSheet = ({
   height,
+  collapsedY = 0,
   onClose,
   children,
   onScroll,
+  initialExpanded = false,
   bottomOffset = 0,
 }: DraggablePlusSheetProps) => {
-  const y = useMotionValue(0);
+  const startY = initialExpanded ? 0 : collapsedY;
+  const y = useMotionValue(startY);
+  const [expanded, setExpanded] = useState(initialExpanded);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const close = () =>
     animate(y, height, { type: "spring", stiffness: 380, damping: 36, onComplete: onClose });
+
+  const expand = () => {
+    if (expanded) return;
+    setExpanded(true);
+    animate(y, 0, { type: "spring", stiffness: 320, damping: 34 });
+  };
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (!expanded && e.currentTarget.scrollTop > 4) expand();
+    onScroll?.(e);
+  };
 
   return (
     <AnimatePresence>
       <motion.div
         key="plus-sheet"
         initial={{ y: height }}
-        animate={{ y: 0 }}
+        animate={{ y: startY }}
         exit={{ y: height }}
         transition={{ type: "spring", stiffness: 360, damping: 34 }}
         style={{ y, height, paddingBottom: bottomOffset, boxShadow: "none" }}
         data-plus-menu
         onClick={(e) => e.stopPropagation()}
+        onWheel={(e) => {
+          if (e.deltaY > 0) expand();
+        }}
         className="mobile-plus-glass-menu md:hidden fixed left-0 right-0 bottom-0 z-overlay flex flex-col rounded-t-[28px] outline-none"
       >
         <motion.div
@@ -49,8 +68,16 @@ export const DraggablePlusSheet = ({
           dragConstraints={{ top: 0, bottom: height }}
           dragElastic={0.04}
           onDragEnd={(_, info) => {
-            if (y.get() > 90 || info.velocity.y > 700) close();
-            else animate(y, 0, { type: "spring", stiffness: 400, damping: 34 });
+            const current = y.get();
+            if (info.velocity.y < -400 || current < startY - 40) {
+              expand();
+              return;
+            }
+            if (current > startY + 90 || info.velocity.y > 700) {
+              close();
+              return;
+            }
+            animate(y, expanded ? 0 : startY, { type: "spring", stiffness: 400, damping: 34 });
           }}
           className="shrink-0 cursor-grab active:cursor-grabbing pt-2.5 pb-2"
         >
@@ -58,7 +85,11 @@ export const DraggablePlusSheet = ({
         </motion.div>
 
         <div
-          onScroll={onScroll}
+          ref={scrollRef}
+          onScroll={handleScroll}
+          onTouchMove={() => {
+            if (!expanded && (scrollRef.current?.scrollTop ?? 0) > 0) expand();
+          }}
           className="flex-1 overflow-y-auto overscroll-contain px-3 pb-[calc(env(safe-area-inset-bottom,0px)+16px)]"
           style={{ WebkitOverflowScrolling: "touch" }}
         >
