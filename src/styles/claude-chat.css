@@ -641,3 +641,59 @@ html[data-theme="dark"] [data-skin="claude"] [data-plus-trigger]:hover {
   }
 }
 
+
+/* ─────────────────────────────────────────────────────────────
+ * Reference-match composer (flat dark pill, no border/shadow)
+ * and pure-dark chat surface — desktop + mobile.
+ * ───────────────────────────────────────────────────────────── */
+:root,
+[data-shell="manus"][data-skin="claude"],
+body:has([data-shell="manus"][data-skin="claude"]) {
+  --chat-claude-bg: #0d0d0d;
+  --chat-claude-composer: #262627;
+}
+
+.chat-composer-frame,
+[data-theme="dark"] .chat-composer-frame,
+[data-skin="claude"] .chat-composer-frame,
+[data-skin="claude"] .chat-composer-frame.chat-composer-liquid,
+[data-skin="claude"] .composer-card {
+  background: var(--chat-claude-composer, #262627) !important;
+  background-color: var(--chat-claude-composer, #262627) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  border-radius: 26px !important;
+}
+
+[data-skin="claude"] .chat-composer-frame::before,
+[data-skin="claude"] .chat-composer-frame.chat-composer-liquid::before,
+[data-skin="claude"] .composer-card::before {
+  content: none !important;
+}
+
+@media (max-width: 767.98px) {
+  [data-skin="claude"] .chat-composer-frame {
+    border: 0 !important;
+  }
+  [data-shell="manus"][data-skin="claude"],
+  [data-shell="manus"][data-skin="claude"] .chat-surface-dark,
+  [data-shell="manus"][data-skin="claude"] [data-chat-main="true"],
+  body:has([data-shell="manus"][data-skin="claude"]),
+  body:has([data-shell="manus"][data-skin="claude"]) #root {
+    background: #0d0d0d !important;
+    background-color: #0d0d0d !important;
+  }
+}
+
+/* Composer controls: no background, no border (send button excepted). */
+[data-plus-trigger],
+[data-skin="claude"] [data-plus-trigger] {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+[data-plus-trigger]::before,
+[data-skin="claude"] [data-plus-trigger]::before {
+  content: none !important;
+}
