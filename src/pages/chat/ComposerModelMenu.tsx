@@ -313,9 +313,12 @@ export default function ComposerModelMenu({
                     WebkitBackdropFilter: "none",
                     boxShadow: "none",
                   }}
-                  className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[18px] p-1.5"
+                  className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[20px] p-1"
                 >
-                  {[...CHAT_COMPOSER_MODEL_OPTIONS].reverse().map((item, idx) => {
+                  <div className="px-3 pb-1 pt-2 text-[11px] font-medium tracking-wide text-white/35">
+                    اختر النموذج
+                  </div>
+                  {CHAT_COMPOSER_MODEL_OPTIONS.map((item, idx) => {
                     const locked = item.premium && (userPlan === "free" || userPlan === "trial");
                     const active =
                       item.kind === "tier"
@@ -336,43 +339,44 @@ export default function ComposerModelMenu({
                         }}
                         style={{
                           background: active
-                            ? "var(--chat-claude-control, #1f1f20)"
+                            ? "color-mix(in oklab, var(--primary) 12%, transparent)"
                             : "transparent",
                           border: 0,
                           boxShadow: "none",
-                          marginTop: idx === 0 ? 0 : 2,
-                          opacity: locked ? 0.55 : 1,
+                          marginTop: idx === 0 ? 0 : 1,
+                          opacity: locked ? 0.5 : 1,
                         }}
-                        className="flex min-h-14 w-full items-center gap-2.5 rounded-[14px] px-3 py-2 text-right transition-colors tier-row"
+                        className="flex w-full items-center gap-2.5 rounded-[14px] px-2.5 py-2.5 text-right transition-colors tier-row active:scale-[0.985]"
                       >
                         <span className="min-w-0 flex-1">
                           <span className="flex items-center gap-1.5">
-                            <span className="truncate text-[14.5px] font-semibold leading-tight text-white">
-                              {item.label}
-                            </span>
                             <span
-                              className={`shrink-0 rounded-full px-1.5 py-[1.5px] text-[9px] font-semibold leading-none ${
-                                item.premium
-                                  ? "bg-white/[0.08] text-white/60"
-                                  : "bg-primary/15 text-primary"
+                              className={`truncate text-[14px] leading-tight ${
+                                active ? "font-semibold text-white" : "font-medium text-white/90"
                               }`}
                             >
-                              {item.premium ? "Pro" : "مجاني"}
+                              {item.label}
                             </span>
+                            {item.premium && (
+                              <span className="shrink-0 rounded-md bg-white/[0.07] px-1.5 py-[2px] text-[9px] font-semibold leading-none text-white/50">
+                                Pro
+                              </span>
+                            )}
                           </span>
-                          <span className="mt-1 block truncate text-[11.5px] leading-snug text-white/40">
+                          <span className="mt-[3px] block truncate text-[11px] leading-snug text-white/35">
                             {item.desc}
                           </span>
                         </span>
                         <span className="flex h-5 w-5 shrink-0 items-center justify-center">
                           {locked ? (
-                            <Lock className="h-3.5 w-3.5 text-white/35" />
+                            <Lock className="h-3.5 w-3.5 text-white/30" />
                           ) : active ? (
-                            <Check className="h-[18px] w-[18px] text-primary" strokeWidth={2.6} />
+                            <Check className="h-[17px] w-[17px] text-primary" strokeWidth={2.8} />
                           ) : null}
                         </span>
                       </button>
                     );
+
                   })}
 
                 </motion.div>
