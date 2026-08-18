@@ -347,11 +347,11 @@ export default function ComposerModelMenu({
                         }}
                         style={{
                           background: active
-                            ? "color-mix(in oklab, var(--primary) 12%, transparent)"
+                            ? "rgba(255,255,255,0.035)"
                             : "transparent",
                           border: 0,
                           boxShadow: "none",
-                          marginTop: idx === 0 ? 0 : 1,
+                          marginTop: 0,
                           opacity: locked ? 0.5 : 1,
                         }}
                         className="flex w-full items-center gap-2.5 rounded-[20px] px-3 py-2.5 text-right transition-colors tier-row active:scale-[0.985]"
