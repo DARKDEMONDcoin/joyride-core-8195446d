@@ -2025,9 +2025,9 @@ svg {
   --neo-pink: #FFB3D1;
   --neo-lavender: #C9A8FF;
   --neo-peach: #FFB088;
-  --chat-claude-bg: #050605;
-  --chat-claude-composer: #101312;
-  --chat-claude-control: #161a18;
+  --chat-claude-bg: #1a1a1a;
+  --chat-claude-composer: #262627;
+  --chat-claude-control: #1f1f20;
   --chat-claude-border: #232826;
   --chat-claude-fg: #F1F5F3;
   --chat-claude-muted: #9AA6A1;
@@ -2039,10 +2039,10 @@ svg {
   body:has([data-shell="manus"][data-skin="claude"]),
   body:has([data-shell="manus"][data-skin="claude"]) #root,
   [data-shell="manus"][data-skin="claude"] {
-    --chat-claude-bg: #000;
-    --chat-reference-bg: #000;
-    background: #000 !important;
-    background-color: #000 !important;
+    --chat-claude-bg: #1a1a1a;
+    --chat-reference-bg: #1a1a1a;
+    background: #1a1a1a !important;
+    background-color: #1a1a1a !important;
     background-image: none !important;
   }
 
@@ -2051,8 +2051,8 @@ svg {
   [data-shell="manus"][data-skin="claude"] [role="log"],
   [data-shell="manus"][data-skin="claude"] [role="log"] > .absolute,
   [data-shell="manus"][data-skin="claude"] [role="log"] .md\:hidden {
-    background: #000 !important;
-    background-color: #000 !important;
+    background: #1a1a1a !important;
+    background-color: #1a1a1a !important;
     background-image: none !important;
   }
 
