@@ -22,6 +22,17 @@ import {
   FileText,
   Plug,
   Code2,
+  ListChecks,
+  Puzzle,
+  ImagePlus,
+  Wand2,
+  AudioLines,
+  Smartphone,
+  ScanSearch,
+  ShoppingBag,
+  Monitor,
+  X,
+
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
