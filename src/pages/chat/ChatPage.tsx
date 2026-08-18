@@ -2575,7 +2575,7 @@ const ChatPage = () => {
             <DraggablePlusSheet
               height={expandedH}
               collapsedY={collapsedY}
-              bottomOffset={composerH + 8}
+              bottomOffset={0}
               onClose={() => setPlusMenuOpen(false)}
               initialExpanded={plusView === "skills" || plusView === "tools"}
               view={plusView}
