@@ -58,6 +58,7 @@ export const DraggablePlusSheet = ({
 }: DraggablePlusSheetProps) => {
   const startSnap = initialExpanded || collapsedY <= 0 ? 0 : collapsedY;
   const y = useMotionValue(height);
+  const opacity = useMotionValue(1);
   const [expanded, setExpanded] = useState(initialExpanded || collapsedY <= 0);
   const expandedRef = useRef(expanded);
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -76,17 +77,17 @@ export const DraggablePlusSheet = ({
   }, []);
 
   const close = useCallback(
-    (direction: "down" | "up", velocity = 0) => {
+    (_direction: "down" | "up" = "down") => {
       if (closingRef.current) return;
       closingRef.current = true;
-      animate(y, direction === "up" ? -height : height, {
-        ...SNAP,
-        velocity,
-        onComplete: onClose,
-      });
+      // Always leave the same way: a short slide out of the bottom with a
+      // gentle fade. No velocity carry-over, so it never shoots off-screen.
+      animate(opacity, 0, EXIT_FADE);
+      animate(y, height, { ...EXIT, onComplete: onClose });
     },
-    [height, onClose, y],
+    [height, onClose, opacity, y],
   );
+
 
   const snapTo = useCallback(
     (target: "expanded" | "collapsed", velocity = 0) => {
