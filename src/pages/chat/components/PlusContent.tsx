@@ -169,23 +169,6 @@ const PlusMain = (p: PlusContentProps) => {
     },
   ];
 
-  const TileBtn = ({ item }: { item: Tile }) => (
-    <motion.button
-      data-no-neo
-      type="button"
-      whileTap={{ scale: 0.96 }}
-      transition={iosSpring}
-      onClick={item.onClick}
-      className="plus-tile shrink-0 flex flex-col items-center justify-center gap-2 rounded-[20px] transition-colors border-0"
-      style={{ width: 96, height: 96 }}
-    >
-      <item.Icon className="w-[24px] h-[24px]" strokeWidth={1.7} style={{ color: "hsl(var(--foreground) / 0.9)" }} />
-      <span className="text-[12.5px] font-medium leading-none" style={{ color: "hsl(var(--foreground) / 0.85)" }}>
-        {item.label}
-      </span>
-    </motion.button>
-  );
-
   const ListRow = ({ item, isLast }: { item: RowItem; isLast: boolean }) => (
     <div>
       <motion.button
@@ -211,65 +194,6 @@ const PlusMain = (p: PlusContentProps) => {
       </motion.button>
       {!isLast && <div className="h-px mx-4" style={{ background: "hsl(var(--foreground) / 0.08)" }} />}
     </div>
-  );
-
-  // iOS Action Sheet style: single grouped card, hairline separators,
-  // large tap targets, followed by a standalone "Cancel" pill.
-  type IOSRow = {
-    id: string;
-    label: string;
-    Icon: any;
-    trailing?: React.ReactNode;
-    onClick: () => void;
-    destructive?: boolean;
-  };
-
-  const iosRows: IOSRow[] = [
-    { id: "camera", label: "Camera", Icon: Camera, onClick: tiles[0].onClick },
-    { id: "photos", label: "Photos", Icon: ImageIcon, onClick: tiles[1].onClick },
-    { id: "file",   label: "Local file", Icon: FileUp, onClick: tiles[2].onClick },
-    {
-      id: "search",
-      label: "Web search",
-      Icon: Globe,
-      trailing: (
-        <span className="text-[13px] font-medium text-foreground/50">
-          {p.searchEnabled ? "On" : "Auto"}
-        </span>
-      ),
-      onClick: p.handleSearchToggle,
-    },
-    { id: "integrations", label: "Integrations", Icon: Plug, onClick: () => p.setPlusView("tools") },
-    { id: "skills", label: "Skills", Icon: Lightbulb, onClick: () => p.setPlusView("skills") },
-  ];
-
-  const IOSRowBtn = ({ item, isLast }: { item: IOSRow; isLast: boolean }) => (
-    <>
-      <motion.button
-        data-no-neo
-        type="button"
-        whileTap={{ scale: 0.995 }}
-        transition={iosSpring}
-        onClick={item.onClick}
-        className="ios-row w-full flex items-center gap-3.5 px-4 h-[56px] text-start border-0 bg-transparent"
-      >
-        <item.Icon
-          className="shrink-0 w-[22px] h-[22px]"
-          strokeWidth={1.8}
-          style={{ color: item.destructive ? "hsl(0 84% 55%)" : "hsl(var(--foreground) / 0.85)" }}
-        />
-        <span
-          className="flex-1 text-[17px] leading-none font-normal text-start"
-          style={{ color: item.destructive ? "hsl(0 84% 55%)" : "hsl(var(--foreground))" }}
-        >
-          {item.label}
-        </span>
-        {item.trailing}
-      </motion.button>
-      {!isLast && (
-        <div className="h-px" style={{ background: "hsl(var(--foreground) / 0.09)", marginInlineStart: 56 }} />
-      )}
-    </>
   );
 
   return (
