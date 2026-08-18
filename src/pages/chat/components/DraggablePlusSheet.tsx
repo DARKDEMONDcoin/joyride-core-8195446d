@@ -163,7 +163,9 @@ export const DraggablePlusSheet = ({
       e.preventDefault();
 
       let next = s.baseY + dy;
-      if (next < 0) next = -rubber(-next, height); // resist above expanded
+      // Above the expanded snap point the sheet keeps following the finger
+      // (upward dismiss), with a light rubber-band for the first few px.
+      if (next < 0 && !expandedRef.current) next = -rubber(-next, height);
       y.set(next);
     };
 
