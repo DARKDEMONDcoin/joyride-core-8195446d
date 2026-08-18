@@ -196,7 +196,7 @@ const PlusMain = (p: PlusContentProps) => {
         onClick={item.onClick}
         className="plus-row w-full flex items-center gap-3.5 px-4 py-3.5 text-start border-0 bg-transparent transition-colors"
       >
-        <item.Icon className="shrink-0 w-[22px] h-[22px]" strokeWidth={1.7} style={{ color: "hsl(var(--foreground) / 0.8)" }} />
+        <item.Icon className="shrink-0 w-[22px] h-[22px]" strokeWidth={1.7} style={{ color: "hsl(var(--primary))" }} />
         <span className="flex-1 min-w-0 flex flex-col gap-[3px] text-start">
           <span className="text-[15.5px] font-semibold leading-[1.2]" style={{ color: "hsl(var(--foreground))" }}>
             {item.label}
@@ -207,7 +207,7 @@ const PlusMain = (p: PlusContentProps) => {
             </span>
           )}
         </span>
-        <ChevronLeft className="w-[18px] h-[18px] shrink-0 rtl:rotate-0 ltr:-rotate-180" strokeWidth={2} style={{ color: "hsl(var(--foreground) / 0.4)" }} />
+        <ChevronLeft className="w-[18px] h-[18px] shrink-0 rtl:rotate-0 -rotate-180 rtl:rotate-0" strokeWidth={2} style={{ color: "hsl(var(--foreground) / 0.4)" }} />
       </motion.button>
       {!isLast && <div className="h-px mx-4" style={{ background: "hsl(var(--foreground) / 0.08)" }} />}
     </div>
@@ -277,28 +277,16 @@ const PlusMain = (p: PlusContentProps) => {
       {/* MOBILE — Kimi-style: horizontal tiles + grouped list rows */}
       <div
         className="md:hidden flex flex-col pt-1 pb-4 gap-4"
-        dir="rtl"
         style={{ fontFamily: mobileFont }}
       >
         <style>{`
-          .kimi-tile {
-            background: hsl(var(--foreground) / 0.05);
-            border: 1px solid hsl(var(--foreground) / 0.08);
+          .kimi-tile, .kimi-card {
+            background: hsl(0 0% 100% / 0.03);
+            border: 1px solid hsl(var(--border));
           }
-          .dark .kimi-tile {
-            background: hsl(var(--foreground) / 0.08);
-            border-color: hsl(var(--foreground) / 0.12);
-          }
-          .kimi-tile:active { background: hsl(var(--foreground) / 0.12); }
-          .kimi-card {
-            background: hsl(var(--foreground) / 0.05);
-            border: 1px solid hsl(var(--foreground) / 0.08);
-          }
-          .dark .kimi-card {
-            background: hsl(var(--foreground) / 0.08);
-            border-color: hsl(var(--foreground) / 0.12);
-          }
-          .kimi-row:active { background: hsl(var(--foreground) / 0.06); }
+          .kimi-tile:active { background: hsl(var(--primary) / 0.12); border-color: hsl(var(--primary) / 0.45); }
+          .kimi-tile svg, .plus-row svg { color: hsl(var(--primary)); }
+          .plus-row:active { background: hsl(var(--primary) / 0.08); }
         `}</style>
 
         {/* Two-column tile grid */}
@@ -317,7 +305,7 @@ const PlusMain = (p: PlusContentProps) => {
               <t.Icon
                 className="w-[26px] h-[26px]"
                 strokeWidth={1.7}
-                style={{ color: "hsl(var(--foreground) / 0.92)" }}
+                style={{ color: "hsl(var(--primary))" }}
               />
               <span
                 className="text-[13px] font-medium leading-none"
