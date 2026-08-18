@@ -354,7 +354,7 @@ export default function ComposerModelMenu({
                           marginTop: idx === 0 ? 0 : 1,
                           opacity: locked ? 0.5 : 1,
                         }}
-                        className="flex w-full items-center gap-2.5 rounded-[14px] px-2.5 py-2.5 text-right transition-colors tier-row active:scale-[0.985]"
+                        className="flex w-full items-center gap-2.5 rounded-[20px] px-3 py-2.5 text-right transition-colors tier-row active:scale-[0.985]"
                       >
                         <span className="min-w-0 flex-1">
                           <span className="flex items-center gap-1.5">
