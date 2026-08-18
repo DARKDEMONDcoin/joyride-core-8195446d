@@ -388,7 +388,7 @@ export default function ComposerModelMenu({
                      if (view === "settings") {
                        // Model settings, media settings, and deep-research depth panels
                        // are compact — pick the fewest rows we need.
-                       if (mode === "deep-research") rows = 5;
+                       if ((mode as ChatMode) === "deep-research") rows = 5;
                        else if (mode === "images" || mode === "video") rows = 4;
                        else rows = 4; // 3 effort + 1 deep-thinking toggle
                      } else if (view === "more") {
@@ -435,7 +435,7 @@ export default function ComposerModelMenu({
                             className="text-[16px] font-semibold"
                           >
                             {view === "settings"
-                              ? (mode === "deep-research"
+                              ? ((mode as ChatMode) === "deep-research"
                                   ? "Depth"
                                   : mode !== "images" && mode !== "video"
                                     ? "Effort"
@@ -642,7 +642,7 @@ export default function ComposerModelMenu({
                         {settingsPanel ? (
                           <button type="button" onClick={() => setView("settings")} className="flex w-full items-center gap-3 px-4 py-3.5 text-start border-t border-white/[0.05] first:border-t-0 hover:bg-white/[0.03] transition-colors">
                             <span className="flex-1 text-[14.5px] font-semibold">
-                              {mode === "deep-research"
+                              {(mode as ChatMode) === "deep-research"
                                 ? "Depth"
                                 : mode !== "images" && mode !== "video"
                                   ? "Effort"
