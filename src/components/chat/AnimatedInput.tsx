@@ -384,7 +384,8 @@ const AnimatedInput = ({
               )}
             </AnimatePresence>
 
-            <div className="relative">
+            <div className={`relative ${listening ? "hidden" : ""}`}>
+
               {!value && displayedPlaceholder && (
                 <div
                   aria-hidden
