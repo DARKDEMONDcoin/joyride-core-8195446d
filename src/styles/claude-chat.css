@@ -727,26 +727,33 @@ body:has([data-shell="manus"]) #root,
   background-color: var(--chat-claude-bg, #1a1a1a) !important;
 }
 
-/* Mobile chat model dropdown — flat rows, no nested cards */
+/* Mobile chat model dropdown — same solid palette as composer and chips. */
 [data-tier-menu] > button {
-  background: transparent !important;
+  background: var(--chat-claude-composer, #262627) !important;
   border: 0 !important;
   box-shadow: none !important;
   border-radius: 14px !important;
 }
 [data-tier-menu] > button:active {
-  background: rgba(255, 255, 255, 0.06) !important;
+  background: var(--chat-claude-control, #1f1f20) !important;
 }
 
 
 /* Mobile chat model dropdown card — fully flat rows */
-.tier-menu-card > button,
-.tier-menu-card > button * {
-  background: transparent !important;
-  background-color: transparent !important;
+.tier-menu-card > button {
+  background: var(--chat-claude-composer, #262627) !important;
+  background-color: var(--chat-claude-composer, #262627) !important;
   border: 0 !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
+}
+.tier-menu-card > button > span,
+.tier-menu-card > button > span > span {
+  background-color: transparent;
+}
+.tier-menu-card > button[style*="--chat-claude-control"] {
+  background: var(--chat-claude-control, #1f1f20) !important;
+  background-color: var(--chat-claude-control, #1f1f20) !important;
 }
 .tier-menu-card > button span[class*="bg-white/10"] {
   background: rgba(255, 255, 255, 0.10) !important;
@@ -755,14 +762,15 @@ body:has([data-shell="manus"]) #root,
   background: hsl(var(--primary) / 0.15) !important;
 }
 .tier-menu-card > button:active {
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: var(--chat-claude-control, #1f1f20) !important;
 }
 
 /* Mobile chat model dropdown card — flat surface, no forced border/height */
 .tier-menu-card {
   border: 0 !important;
   border-top: 0 !important;
-  background: #2a2a2a !important;
+  background: var(--chat-claude-composer, #262627) !important;
+  background-color: var(--chat-claude-composer, #262627) !important;
   backdrop-filter: none !important;
   box-shadow: none !important;
   max-height: none;
