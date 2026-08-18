@@ -205,12 +205,13 @@ export const DraggablePlusSheet = ({
       const dismissLine = collapsedY + Math.max(96, (height - collapsedY) * 0.4);
 
       if (v > FLICK || projected > dismissLine) {
-        // From expanded, the first downward gesture returns to compact. From
-        // compact, the same gesture dismisses the sheet.
-        if (s.startedExpanded && collapsedY > 0) snapTo("collapsed", v * 1000);
+        // The grip steps expanded -> compact -> closed. A downward gesture on
+        // the content itself dismisses in one go.
+        if (s.startedExpanded && s.fromGrip && collapsedY > 0) snapTo("collapsed", v * 1000);
         else close("down", v * 1000);
         return;
       }
+
       if (collapsedY <= 0) {
         snapTo("expanded", v * 1000);
         return;
