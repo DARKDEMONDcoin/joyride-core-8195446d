@@ -133,20 +133,8 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
               <div className="hidden md:flex justify-center mb-8">{desktopGreeting}</div>
             ) : null}
 
-            <AnimatePresence initial={false}>
-              {effectiveMobileModesShown ? (
-                <div key="chips-mobile-above" className="md:hidden mb-2">
-                  <MobileModeChips
-                    chatMode={d.chatMode}
-                    selectedAgent={d.selectedAgent}
-                    handleModeChange={d.handleModeChange}
-                    setChatMode={d.setChatMode}
-                    setSelectedAgent={d.setSelectedAgent}
-                    onAgentSelect={d.onAgentSelect}
-                  />
-                </div>
-              ) : null}
-            </AnimatePresence>
+            {/* Mode chips row removed by design: modes live in the + menu. */}
+
 
             <div className="md:contents">
               <div ref={composerRef as any} className="relative z-[8] md:p-[1px] md:rounded-[28px]">
