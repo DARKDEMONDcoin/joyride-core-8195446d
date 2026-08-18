@@ -6,6 +6,7 @@ import { MentionDropdown } from "./MentionDropdown";
 import { ComposerMobileModeBar } from "./ComposerMobileModeBar";
 import { ComposerAnimatedInput } from "./ComposerAnimatedInput";
 import { ActiveServicePill } from "./ActiveServicePill";
+import StarterCards from "./StarterCards";
 
 import type { AttachedFile } from "../hooks/useAttachments";
 
@@ -129,6 +130,15 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
             ) : null}
 
             {/* Mode chips row removed by design: modes live in the + menu. */}
+
+            {isEmpty ? (
+              <StarterCards
+                className="mb-3"
+                onPick={(prompt) => {
+                  (composerAnimatedInputProps as any).setInput?.(prompt);
+                }}
+              />
+            ) : null}
 
 
             <div className="md:contents">
