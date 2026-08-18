@@ -649,8 +649,9 @@ html[data-theme="dark"] [data-skin="claude"] [data-plus-trigger]:hover {
 :root,
 [data-shell="manus"][data-skin="claude"],
 body:has([data-shell="manus"][data-skin="claude"]) {
-  --chat-claude-bg: #0d0d0d;
+  --chat-claude-bg: #1a1a1a;
   --chat-claude-composer: #262627;
+  --chat-claude-control: #1a1a1a;
 }
 
 .chat-composer-frame,
@@ -681,8 +682,8 @@ body:has([data-shell="manus"][data-skin="claude"]) {
   [data-shell="manus"][data-skin="claude"] [data-chat-main="true"],
   body:has([data-shell="manus"][data-skin="claude"]),
   body:has([data-shell="manus"][data-skin="claude"]) #root {
-    background: #0d0d0d !important;
-    background-color: #0d0d0d !important;
+    background: #1a1a1a !important;
+    background-color: #1a1a1a !important;
   }
 }
 

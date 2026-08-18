@@ -73,12 +73,12 @@ export function ComposerMicButton({ onTranscript, onListeningChange, lang = "ar-
       onClick={() => (listening ? stop() : start())}
       aria-label={listening ? "إيقاف التسجيل" : "إدخال صوتي"}
       aria-pressed={listening}
-      className="shrink-0 inline-flex w-9 h-9 md:w-10 md:h-10 items-center justify-center rounded-full border-0 bg-transparent outline-none transition-opacity hover:opacity-80 active:scale-95"
+      className="shrink-0 inline-flex w-9 h-9 items-center justify-center rounded-full border-0 bg-transparent outline-none transition-opacity hover:opacity-80 active:scale-95"
       style={{ background: "transparent", border: 0, boxShadow: "none" }}
     >
       <Mic
-        className={`w-5 h-5 transition-colors ${listening ? "text-primary" : "text-foreground/70"}`}
-        strokeWidth={2}
+        className={`w-[20px] h-[20px] transition-colors ${listening ? "text-primary" : "text-white/70"}`}
+        strokeWidth={1.9}
       />
     </button>
   );
