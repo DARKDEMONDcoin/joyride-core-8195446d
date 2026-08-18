@@ -21,9 +21,13 @@ interface DraggablePlusSheetProps {
  */
 const SNAP = { type: "spring" as const, stiffness: 460, damping: 44, mass: 0.9 };
 const SOFT = { type: "spring" as const, stiffness: 300, damping: 34, mass: 0.9 };
+/** Dismissal is a short, calm tween - never a spring fly-off. */
+const EXIT = { duration: 0.26, ease: [0.32, 0.72, 0, 1] as const };
+const EXIT_FADE = { duration: 0.2, ease: [0.4, 0, 1, 1] as const };
 
 /** px/ms thresholds. */
 const FLICK = 0.55;
+
 
 /**
  * Bottom sheet with two snap points (collapsed / expanded) and one dismiss
@@ -54,6 +58,7 @@ export const DraggablePlusSheet = ({
 }: DraggablePlusSheetProps) => {
   const startSnap = initialExpanded || collapsedY <= 0 ? 0 : collapsedY;
   const y = useMotionValue(height);
+  const opacity = useMotionValue(1);
   const [expanded, setExpanded] = useState(initialExpanded || collapsedY <= 0);
   const expandedRef = useRef(expanded);
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -72,17 +77,17 @@ export const DraggablePlusSheet = ({
   }, []);
 
   const close = useCallback(
-    (direction: "down" | "up", velocity = 0) => {
+    (_direction: "down" | "up" = "down") => {
       if (closingRef.current) return;
       closingRef.current = true;
-      animate(y, direction === "up" ? -height : height, {
-        ...SNAP,
-        velocity,
-        onComplete: onClose,
-      });
+      // Always leave the same way: a short slide out of the bottom with a
+      // gentle fade. No velocity carry-over, so it never shoots off-screen.
+      animate(opacity, 0, EXIT_FADE);
+      animate(y, height, { ...EXIT, onComplete: onClose });
     },
-    [height, onClose, y],
+    [height, onClose, opacity, y],
   );
+
 
   const snapTo = useCallback(
     (target: "expanded" | "collapsed", velocity = 0) => {
@@ -194,7 +199,7 @@ export const DraggablePlusSheet = ({
           snapTo("expanded", Math.min(v, -0.12) * 1000);
           return;
         }
-        if (upFlick > FLICK || travel < -64) close("up", Math.min(v, -0.18) * 1000);
+        if (upFlick > FLICK || travel < -64) close("up");
         else snapTo(s.startedExpanded ? "expanded" : "collapsed", v * 1000);
         return;
       }
@@ -208,7 +213,7 @@ export const DraggablePlusSheet = ({
         // The grip steps expanded -> compact -> closed. A downward gesture on
         // the content itself dismisses in one go.
         if (s.startedExpanded && s.fromGrip && collapsedY > 0) snapTo("collapsed", v * 1000);
-        else close("down", v * 1000);
+        else close("down");
         return;
       }
 
@@ -237,9 +242,10 @@ export const DraggablePlusSheet = ({
     <motion.div
       ref={sheetRef}
       key="plus-sheet"
-      exit={{ y: height, transition: SNAP }}
+      exit={{ y: height, opacity: 0, transition: EXIT }}
       style={{
         y,
+        opacity,
         height,
         paddingBottom: bottomOffset,
         boxShadow: "none",
@@ -247,6 +253,7 @@ export const DraggablePlusSheet = ({
         // nothing may pan natively so the first gesture always hits the sheet.
         touchAction: expanded ? "pan-y" : "none",
       }}
+
       data-plus-menu
       onClick={(e) => e.stopPropagation()}
       onWheel={(e) => {
