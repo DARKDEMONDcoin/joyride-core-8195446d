@@ -2557,7 +2557,7 @@ const ChatPage = () => {
       // Manus-style sheet: opens compact but shows header + first rows,
       // then expands upward as the user scrolls.
       const expandedCap = isBigView ? vh * 0.9 : vh * 0.86;
-      const collapsedH = Math.max(360, Math.min(vh * 0.55, composerTop - 24));
+      const collapsedH = Math.max(400, Math.min(vh * 0.6, composerTop - 16));
       const expandedH = Math.max(collapsedH, Math.min(expandedCap, vh - 40));
       const collapsedY = expandedH - collapsedH;
 
