@@ -220,17 +220,17 @@ const PlusMain = (p: PlusContentProps) => {
 
         {/* Header */}
         <div
-          className="sticky top-0 z-10 flex items-center gap-2 px-1 pb-3 pt-0.5"
+          className="sticky top-0 z-10 flex items-center gap-2 px-1.5 pb-3 pt-0.5"
           style={{ background: "var(--chat-claude-composer, #101312)" }}
         >
-          <span className="flex-1 text-[16.5px] font-semibold" style={{ color: "hsl(var(--foreground))" }}>
+          <span className="flex-1 text-[16px] font-semibold" style={{ color: "hsl(var(--foreground) / 0.95)" }}>
             إضافة إلى المحادثة
           </span>
         </div>
 
         {/* Media tiles strip */}
         <motion.div
-          className="flex gap-2.5 px-1 pb-4"
+          className="flex gap-2 px-1.5 pb-4"
           variants={{ hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0, transition: iosSpring } }}
         >
           {tiles.map((t) => (
@@ -238,14 +238,14 @@ const PlusMain = (p: PlusContentProps) => {
               key={t.id}
               data-no-neo
               type="button"
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.96 }}
               transition={iosSpring}
               onClick={t.onClick}
-              className="kimi-tile flex flex-1 flex-col items-center justify-center gap-2 rounded-[18px]"
-              style={{ height: 86 }}
+              className="kimi-tile flex flex-1 flex-col items-center justify-center gap-2 rounded-[20px]"
+              style={{ height: 82 }}
             >
-              <t.Icon className="w-[24px] h-[24px]" strokeWidth={1.6} style={{ color: "hsl(var(--foreground) / 0.85)" }} />
-              <span className="text-[12.5px] font-medium leading-none" style={{ color: "hsl(var(--foreground) / 0.8)" }}>
+              <t.Icon className="w-[22px] h-[22px]" strokeWidth={1.6} style={{ color: "hsl(var(--foreground) / 0.85)" }} />
+              <span className="text-[12px] font-medium leading-none" style={{ color: "hsl(var(--foreground) / 0.75)" }}>
                 {t.label}
               </span>
             </motion.button>
@@ -253,7 +253,7 @@ const PlusMain = (p: PlusContentProps) => {
         </motion.div>
 
         {/* Grouped rows */}
-        <div className="px-1 flex flex-col gap-3">
+        <div className="px-1.5 flex flex-col gap-4">
           {sections.map((section, si) => (
             <motion.div
               key={si}
@@ -261,17 +261,17 @@ const PlusMain = (p: PlusContentProps) => {
             >
               {section.title && (
                 <div
-                  className="px-3 pb-1 text-[11.5px] font-semibold tracking-wide"
-                  style={{ color: "hsl(var(--foreground) / 0.42)" }}
+                  className="px-2 pb-1.5 text-[11px] font-semibold"
+                  style={{ color: "hsl(var(--foreground) / 0.4)", letterSpacing: "0.02em" }}
                 >
                   {section.title}
                 </div>
               )}
-              <div className="rounded-[18px] overflow-hidden" style={{ background: "hsl(0 0% 100% / 0.035)" }}>
+              <div className="rounded-[20px] overflow-hidden" style={{ background: "hsl(0 0% 100% / 0.035)" }}>
                 {section.items.map((it, idx) => (
                   <div key={it.id}>
                     {idx > 0 && (
-                      <div className="h-px mr-[50px]" style={{ background: "hsl(var(--foreground) / 0.07)" }} />
+                      <div className="h-px mr-[48px]" style={{ background: "hsl(var(--foreground) / 0.06)" }} />
                     )}
                     <SheetRow item={it} />
                   </div>
@@ -280,6 +280,7 @@ const PlusMain = (p: PlusContentProps) => {
             </motion.div>
           ))}
         </div>
+
       </motion.div>
 
 
