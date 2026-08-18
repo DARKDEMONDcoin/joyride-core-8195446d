@@ -1,5 +1,5 @@
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, animate, type PanInfo } from "framer-motion";
+import { motion, useMotionValue, animate } from "framer-motion";
 
 interface DraggablePlusSheetProps {
   height: number;
@@ -14,19 +14,36 @@ interface DraggablePlusSheetProps {
   bottomOffset?: number;
 }
 
-/** iOS-style springs: firm for snapping, softer for the auto-expand. */
-const SNAP = { type: "spring" as const, stiffness: 420, damping: 42, mass: 0.9 };
+/**
+ * iOS-style springs.
+ * SNAP  - firm, used for every settle (open / collapse / expand / close).
+ * SOFT  - slightly softer, used for the handle morph.
+ */
+const SNAP = { type: "spring" as const, stiffness: 460, damping: 44, mass: 0.9 };
 const SOFT = { type: "spring" as const, stiffness: 300, damping: 34, mass: 0.9 };
 
+/** Rubber-band resistance beyond a snap point (iOS scroll-bounce curve). */
+const rubber = (overshoot: number, dimension: number) =>
+  (1 - 1 / ((overshoot * 0.55) / dimension + 1)) * dimension;
+
+/** px/ms thresholds. */
+const FLICK = 0.55;
+const STRONG_FLICK = 1.1;
+
 /**
- * Bottom sheet with two snap points (collapsed / expanded).
+ * Bottom sheet with two snap points (collapsed / expanded) and one dismiss
+ * point (fully off-screen).
  *
- * Physics:
- *  - Drag anywhere on the sheet while the content is at scrollTop 0.
- *  - Rubber-band resistance above the expanded snap point.
- *  - Velocity-projected snapping: a flick decides direction, not just distance.
- *  - Content scrolling is locked while collapsed, so the first upward gesture
- *    always expands the sheet instead of scrolling under it.
+ * Gesture model (single pointer, no library drag - the library's drag fights
+ * the inner scroller):
+ *  - The gesture direction is decided once, after a 6px threshold, and the
+ *    sheet either drags or the content scrolls for the rest of that gesture.
+ *  - Dragging down is only allowed when the content is at scrollTop 0, so a
+ *    mid-list drag never yanks the sheet.
+ *  - Dragging up expands while collapsed; while expanded it scrolls the list,
+ *    except for a strong upward flick at the very top, which dismisses.
+ *  - Settling is velocity-projected: a flick decides the direction, distance
+ *    only matters for slow drags.
  */
 export const DraggablePlusSheet = ({
   height,
@@ -37,73 +54,167 @@ export const DraggablePlusSheet = ({
   initialExpanded = false,
   bottomOffset = 0,
 }: DraggablePlusSheetProps) => {
-  const startY = initialExpanded ? 0 : collapsedY;
+  const startSnap = initialExpanded || collapsedY <= 0 ? 0 : collapsedY;
   const y = useMotionValue(height);
-  const [expanded, setExpanded] = useState(initialExpanded);
-  const expandedRef = useRef(initialExpanded);
+  const [expanded, setExpanded] = useState(initialExpanded || collapsedY <= 0);
+  const expandedRef = useRef(expanded);
+  const sheetRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const closingRef = useRef(false);
 
-  // Entry animation to the initial snap point.
   useEffect(() => {
-    const controls = animate(y, startY, SOFT);
+    const controls = animate(y, startSnap, SNAP);
     return controls.stop;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const setExpandedState = (next: boolean) => {
+  const setExpandedState = useCallback((next: boolean) => {
     expandedRef.current = next;
     setExpanded(next);
-  };
+  }, []);
 
   const close = useCallback(() => {
     if (closingRef.current) return;
     closingRef.current = true;
-    animate(y, height, { ...SNAP, onComplete: onClose });
+    animate(y, height, { ...SNAP, velocity: 0, onComplete: onClose });
   }, [height, onClose, y]);
 
   const snapTo = useCallback(
-    (target: "expanded" | "collapsed") => {
+    (target: "expanded" | "collapsed", velocity = 0) => {
       setExpandedState(target === "expanded");
-      animate(y, target === "expanded" ? 0 : collapsedY, SNAP);
+      animate(y, target === "expanded" ? 0 : collapsedY, { ...SNAP, velocity });
     },
-    [collapsedY, y],
+    [collapsedY, setExpandedState, y],
   );
 
-  const expand = useCallback(() => {
-    if (expandedRef.current) return;
-    snapTo("expanded");
-  }, [snapTo]);
+  /* ------------------------------ gestures ------------------------------ */
 
-  const dragStartY = useRef(0);
-  const canDrag = () => (scrollRef.current?.scrollTop ?? 0) <= 0;
+  const g = useRef({
+    active: false,
+    decided: false,
+    dragging: false,
+    startY: 0,
+    baseY: 0,
+    lastY: 0,
+    lastT: 0,
+    velocity: 0,
+  });
 
-  const handleDragEnd = (_: unknown, info: PanInfo) => {
-    const current = y.get();
-    // Project where the sheet would land with the current flick velocity.
-    const projected = current + info.velocity.y * 0.12;
-    const collapsed = collapsedY;
+  useEffect(() => {
+    const el = sheetRef.current;
+    if (!el) return;
 
-    if (projected > collapsed + Math.max(80, (height - collapsed) * 0.35)) {
-      close();
-      return;
-    }
-    // Swipe up (past the expanded snap point) closes the sheet the same way
-    // it opened - reversing the entry animation.
-    if (expandedRef.current && (info.offset.y < -56 || info.velocity.y < -650)) {
-      close();
-      return;
-    }
-    if (collapsed <= 0) {
-      snapTo("expanded");
-      return;
-    }
-    const midpoint = collapsed / 2;
-    snapTo(projected < midpoint ? "expanded" : "collapsed");
-  };
+    const atTop = () => (scrollRef.current?.scrollTop ?? 0) <= 0;
+
+    const onDown = (e: PointerEvent) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      g.current = {
+        active: true,
+        decided: false,
+        dragging: false,
+        startY: e.clientY,
+        baseY: y.get(),
+        lastY: e.clientY,
+        lastT: performance.now(),
+        velocity: 0,
+      };
+    };
+
+    const onMove = (e: PointerEvent) => {
+      const s = g.current;
+      if (!s.active) return;
+
+      const dy = e.clientY - s.startY;
+      const now = performance.now();
+      const dt = now - s.lastT;
+      if (dt > 0) {
+        // Low-pass filtered velocity so a single jittery frame can't flick.
+        const v = (e.clientY - s.lastY) / dt;
+        s.velocity = s.velocity * 0.7 + v * 0.3;
+        s.lastY = e.clientY;
+        s.lastT = now;
+      }
+
+      if (!s.decided) {
+        if (Math.abs(dy) < 6) return;
+        s.decided = true;
+        const down = dy > 0;
+        // Down: drag only from the top of the list. Up: drag only while the
+        // sheet is still collapsed (expanding). Otherwise the list scrolls.
+        s.dragging = down ? atTop() : !expandedRef.current;
+        if (s.dragging) {
+          try {
+            el.setPointerCapture(e.pointerId);
+          } catch {
+            /* capture is best-effort */
+          }
+        }
+      }
+
+      if (!s.dragging) return;
+      e.preventDefault();
+
+      let next = s.baseY + dy;
+      if (next < 0) next = -rubber(-next, height); // resist above expanded
+      y.set(next);
+    };
+
+    const settle = (e: PointerEvent) => {
+      const s = g.current;
+      if (!s.active) return;
+      s.active = false;
+      try {
+        el.releasePointerCapture(e.pointerId);
+      } catch {
+        /* ignore */
+      }
+
+      const v = s.velocity; // px/ms, + is downward
+      const upFlick = -v;
+
+      // Strong upward flick from the very top of an expanded sheet dismisses
+      // it, reversing the opening animation.
+      if (!s.dragging) {
+        if (expandedRef.current && atTop() && upFlick > STRONG_FLICK) close();
+        return;
+      }
+
+      const current = y.get();
+      // Project where the sheet lands with the current momentum (~120ms).
+      const projected = current + v * 120;
+      const dismissLine = collapsedY + Math.max(96, (height - collapsedY) * 0.4);
+
+      if (v > FLICK || projected > dismissLine) {
+        close();
+        return;
+      }
+      if (upFlick > FLICK) {
+        if (collapsedY <= 0) close();
+        else snapTo("expanded", v * 1000);
+        return;
+      }
+      if (collapsedY <= 0) {
+        snapTo("expanded", v * 1000);
+        return;
+      }
+      snapTo(projected < collapsedY / 2 ? "expanded" : "collapsed", v * 1000);
+    };
+
+    el.addEventListener("pointerdown", onDown, { passive: true });
+    el.addEventListener("pointermove", onMove, { passive: false });
+    el.addEventListener("pointerup", settle);
+    el.addEventListener("pointercancel", settle);
+    return () => {
+      el.removeEventListener("pointerdown", onDown);
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerup", settle);
+      el.removeEventListener("pointercancel", settle);
+    };
+  }, [close, collapsedY, height, snapTo, y]);
 
   return (
     <motion.div
+      ref={sheetRef}
       key="plus-sheet"
       exit={{ y: height, transition: SNAP }}
       style={{
@@ -111,25 +222,14 @@ export const DraggablePlusSheet = ({
         height,
         paddingBottom: bottomOffset,
         boxShadow: "none",
-        touchAction: "none",
+        // The scroller owns vertical panning while expanded; while collapsed
+        // nothing may pan natively so the first gesture always hits the sheet.
+        touchAction: expanded ? "pan-y" : "none",
       }}
-      drag="y"
-      dragDirectionLock
-      dragConstraints={{ top: 0, bottom: height }}
-      dragElastic={{ top: 0.06, bottom: 0.2 }}
-      dragMomentum={false}
-      onDragStart={() => {
-        dragStartY.current = y.get();
-      }}
-      onDrag={(_, info) => {
-        // Lock the sheet in place if the content is mid-scroll.
-        if (!canDrag() && info.offset.y < 0) y.set(dragStartY.current);
-      }}
-      onDragEnd={handleDragEnd}
       data-plus-menu
       onClick={(e) => e.stopPropagation()}
       onWheel={(e) => {
-        if (e.deltaY > 0) expand();
+        if (e.deltaY > 0 && !expandedRef.current) snapTo("expanded");
       }}
       className="mobile-plus-glass-menu md:hidden fixed left-0 right-0 bottom-0 z-overlay flex flex-col rounded-t-[28px] outline-none will-change-transform"
     >
