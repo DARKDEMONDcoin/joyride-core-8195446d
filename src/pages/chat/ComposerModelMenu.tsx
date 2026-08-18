@@ -314,7 +314,7 @@ export default function ComposerModelMenu({
                     width: pos.width ?? 260,
                     maxHeight: pos.maxHeight,
                     background: "var(--chat-claude-composer, #262627)",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    border: 0,
                     backdropFilter: "none",
                     WebkitBackdropFilter: "none",
                     boxShadow: "none",
@@ -347,11 +347,11 @@ export default function ComposerModelMenu({
                         }}
                         style={{
                           background: active
-                            ? "color-mix(in oklab, var(--primary) 12%, transparent)"
+                            ? "rgba(255,255,255,0.035)"
                             : "transparent",
                           border: 0,
                           boxShadow: "none",
-                          marginTop: idx === 0 ? 0 : 1,
+                          marginTop: 0,
                           opacity: locked ? 0.5 : 1,
                         }}
                         className="flex w-full items-center gap-2.5 rounded-[20px] px-3 py-2.5 text-right transition-colors tier-row active:scale-[0.985]"
@@ -452,7 +452,7 @@ export default function ComposerModelMenu({
                         resetMobileHeader();
                         if (view === "models") onOpenChange(false);
                         else setView("models");
-                      }} className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/10 backdrop-blur-xl shadow-[0_2px_10px_rgba(0,0,0,0.15)] hover:bg-white/15 transition-colors" aria-label={view === "models" ? "Close" : "Back"}>
+                      }} className="flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.06] hover:bg-white/[0.09] transition-colors" aria-label={view === "models" ? "Close" : "Back"}>
                         {view === "models" ? <X className="h-5 w-5" /> : <ArrowLeft className="h-5 w-5" />}
                       </button>
                       <div className="relative flex-1 flex items-center justify-center overflow-hidden">
@@ -503,7 +503,7 @@ export default function ComposerModelMenu({
                     {/* Chat models — shown only when in chat mode */}
                     {mode !== "images" && mode !== "video" && (
                     <div className="mb-4">
-                      <div className="flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.03] overflow-hidden">
+                      <div className="flex flex-col rounded-2xl bg-white/[0.02] overflow-hidden">
 
                         {(view === "more" ? orderedChatOptions : orderedChatOptions.slice(0, 4)).map((item) => {
                           const locked =
@@ -530,7 +530,7 @@ export default function ComposerModelMenu({
                                 toast.success(`Selected: ${item.label}`);
                                 onOpenChange(false);
                               }}
-                              className={`flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors border-t border-white/[0.05] first:border-t-0 ${active ? "bg-white/[0.04]" : "hover:bg-white/[0.03]"}`}
+                              className={`flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors ${active ? "bg-white/[0.035]" : "hover:bg-white/[0.02]"}`}
                             >
                               <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-foreground/[0.05]">
                                 <ComposerModelIcon brand={item.brand} />
@@ -562,11 +562,11 @@ export default function ComposerModelMenu({
                     <div className="mb-4">
                       <MediaModelTools mode="images" />
                       {visibleImageOptions.length === 0 ? (
-                        <p className="rounded-2xl border border-white/[0.08] bg-white/[0.03] px-3 py-3 text-[12.5px] text-foreground/50">
+                        <p className="rounded-2xl bg-white/[0.02] px-3 py-3 text-[12.5px] text-foreground/50">
                           {loading ? "Loading models…" : "No models available."}
                         </p>
                       ) : (
-                        <div className="flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.03] overflow-hidden">
+                        <div className="flex flex-col rounded-2xl bg-white/[0.02] overflow-hidden">
                           {visibleImageOptions.map((model) => {
                             const choice = asMediaChoice(model, "images");
                             const active = mode === "images" && mediaModel?.slug === choice.slug;
@@ -584,7 +584,7 @@ export default function ComposerModelMenu({
                                   toast.success(`Selected: ${choice.name}`);
                                   onOpenChange(false);
                                 }}
-                                className={`flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors border-t border-white/[0.05] first:border-t-0 ${active ? "bg-white/[0.04]" : "hover:bg-white/[0.03]"}`}
+                                className={`flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors ${active ? "bg-white/[0.035]" : "hover:bg-white/[0.02]"}`}
                               >
                                 <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-foreground/[0.05]">
                                   {hasBrandIcon(choice.name, choice.provider) ? (
@@ -618,11 +618,11 @@ export default function ComposerModelMenu({
                     <div className="mb-2">
                       <MediaModelTools mode="video" />
                       {visibleVideoOptions.length === 0 ? (
-                        <p className="rounded-2xl border border-white/[0.08] bg-white/[0.03] px-3 py-3 text-[12.5px] text-foreground/50">
+                        <p className="rounded-2xl bg-white/[0.02] px-3 py-3 text-[12.5px] text-foreground/50">
                           {loading ? "Loading models…" : "No models available."}
                         </p>
                       ) : (
-                        <div className="flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.03] overflow-hidden">
+                        <div className="flex flex-col rounded-2xl bg-white/[0.02] overflow-hidden">
                           {visibleVideoOptions.map((model) => {
                             const choice = asMediaChoice(model, "video");
                             const active = mode === "video" && mediaModel?.slug === choice.slug;
@@ -640,7 +640,7 @@ export default function ComposerModelMenu({
                                   toast.success(`Selected: ${choice.name}`);
                                   onOpenChange(false);
                                 }}
-                                className={`flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors border-t border-white/[0.05] first:border-t-0 ${active ? "bg-white/[0.04]" : "hover:bg-white/[0.03]"}`}
+                                className={`flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors ${active ? "bg-white/[0.035]" : "hover:bg-white/[0.02]"}`}
                               >
                                 <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-foreground/[0.05]">
                                   {hasBrandIcon(choice.name, choice.provider) ? (
@@ -669,9 +669,9 @@ export default function ComposerModelMenu({
                     </div>
                     )}
                     {view === "models" && (
-                      <div className="mt-3 flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.03] overflow-hidden">
+                      <div className="mt-3 flex flex-col rounded-2xl bg-white/[0.02] overflow-hidden">
                         {settingsPanel ? (
-                          <button type="button" onClick={() => setView("settings")} className="flex w-full items-center gap-3 px-4 py-3.5 text-start border-t border-white/[0.05] first:border-t-0 hover:bg-white/[0.03] transition-colors">
+                          <button type="button" onClick={() => setView("settings")} className="flex w-full items-center gap-3 px-4 py-3.5 text-start hover:bg-white/[0.02] transition-colors">
                             <span className="flex-1 text-[14.5px] font-semibold">
                               {(mode as ChatMode) === "deep-research"
                                 ? "Depth"
@@ -688,7 +688,7 @@ export default function ComposerModelMenu({
                           </button>
                         ) : null}
                         {(mode === "images" ? orderedImageOptions.length : mode === "video" ? orderedVideoOptions.length : orderedChatOptions.length) > 4 ? (
-                          <button type="button" onClick={() => setView("more")} className="flex w-full items-center gap-3 px-4 py-3.5 text-start border-t border-white/[0.05] first:border-t-0 hover:bg-white/[0.03] transition-colors">
+                          <button type="button" onClick={() => setView("more")} className="flex w-full items-center gap-3 px-4 py-3.5 text-start hover:bg-white/[0.02] transition-colors">
                             <span className="flex-1 text-[14.5px] font-semibold">More models</span>
                             <ChevronRight className="h-4 w-4 text-foreground/40" />
                           </button>
@@ -732,7 +732,11 @@ export default function ComposerModelMenu({
                     ...(pos.bottom !== undefined ? { bottom: pos.bottom } : {}),
                     maxHeight: pos.maxHeight,
                     scrollBehavior: "smooth",
-                    ...glassModelMenuStyle,
+                    background: "var(--chat-claude-composer, #262627)",
+                    border: 0,
+                    backdropFilter: "none",
+                    WebkitBackdropFilter: "none",
+                    boxShadow: "none",
                   }}
                   className="z-[9999] rounded-2xl p-2 text-white overflow-y-auto overscroll-contain unified-menu-surface scrollbar-thin"
                 >
@@ -742,7 +746,7 @@ export default function ComposerModelMenu({
                       <button
                         type="button"
                         onClick={() => setView(view === "settings" ? "models" : "settings")}
-                        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11.5px] font-semibold text-white/90 bg-white/10 border border-white/15 hover:bg-white/15 transition-colors"
+                        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11.5px] font-semibold text-white/90 bg-white/[0.06] hover:bg-white/[0.09] transition-colors"
                         aria-label={view === "settings" ? "Back to models" : "Open model settings"}
                       >
                         {view === "settings" ? (
@@ -822,7 +826,7 @@ export default function ComposerModelMenu({
                                         toast.success(`Selected: ${choice.name}`);
                                         onOpenChange(false);
                                       }}
-                                      className="group relative flex w-full items-center gap-2.5 rounded-ios-md px-3 py-2.5 text-left transition-colors border border-transparent bg-transparent text-white/90 hover:bg-transparent hover:text-white"
+                                      className={`group relative flex w-full items-center gap-2.5 rounded-ios-md px-3 py-2.5 text-left transition-colors border border-transparent text-white/90 hover:text-white ${active ? "bg-white/[0.035]" : "bg-transparent hover:bg-white/[0.02]"}`}
                                     >
                                       <span className="relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-transparent">
                                         <BrandIcon name={choice.name} provider={choice.provider} size={28} />
@@ -875,7 +879,7 @@ export default function ComposerModelMenu({
                               toast.success(`Selected: ${item.label}`);
                               onOpenChange(false);
                             }}
-                            className="group relative flex w-full items-center gap-3 rounded-ios-md px-3 py-2.5 text-left transition-colors border border-transparent bg-transparent text-white/90 hover:bg-transparent hover:text-white"
+                            className={`group relative flex w-full items-center gap-3 rounded-ios-md px-3 py-2.5 text-left transition-colors border border-transparent text-white/90 hover:text-white ${active ? "bg-white/[0.035]" : "bg-transparent hover:bg-white/[0.02]"}`}
                           >
                             <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-transparent">
                               <ComposerModelIcon brand={item.brand} />
@@ -915,7 +919,7 @@ export default function ComposerModelMenu({
 
 function MediaModelTools({ mode }: { mode: "images" | "video" }) {
   return (
-    <div className="mb-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-1">
+    <div className="mb-3 rounded-2xl bg-white/[0.02] p-1">
       <Suspense fallback={null}>
         {mode === "video" ? (
           <VideoToolsBar />
