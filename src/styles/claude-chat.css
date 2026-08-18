@@ -708,3 +708,12 @@ body:has([data-shell="manus"][data-skin="claude"]) #root {
   background: var(--chat-claude-bg, #1a1a1a) !important;
   background-color: var(--chat-claude-bg, #1a1a1a) !important;
 }
+
+/* Fallback: shell present without the claude skin attribute. */
+html:has([data-shell="manus"]),
+body:has([data-shell="manus"]),
+body:has([data-shell="manus"]) #root,
+[data-shell="manus"] {
+  background: var(--chat-claude-bg, #1a1a1a) !important;
+  background-color: var(--chat-claude-bg, #1a1a1a) !important;
+}
