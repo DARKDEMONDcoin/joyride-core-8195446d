@@ -879,7 +879,7 @@ export default function ComposerModelMenu({
                               toast.success(`Selected: ${item.label}`);
                               onOpenChange(false);
                             }}
-                            className="group relative flex w-full items-center gap-3 rounded-ios-md px-3 py-2.5 text-left transition-colors border border-transparent bg-transparent text-white/90 hover:bg-transparent hover:text-white"
+                            className={`group relative flex w-full items-center gap-3 rounded-ios-md px-3 py-2.5 text-left transition-colors border border-transparent text-white/90 hover:text-white ${active ? "bg-white/[0.035]" : "bg-transparent hover:bg-white/[0.02]"}`}
                           >
                             <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-transparent">
                               <ComposerModelIcon brand={item.brand} />
