@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, animate } from "framer-motion";
 
 interface DraggablePlusSheetProps {
@@ -33,6 +33,8 @@ export const DraggablePlusSheet = ({
 }: DraggablePlusSheetProps) => {
   const y = useMotionValue(initialExpanded ? 0 : collapsedY);
   const [expanded, setExpanded] = useState(initialExpanded);
+  const touchStart = useRef(0);
+  const touchHandled = useRef(false);
 
   // Snap points: 0 = full, midY = half, collapsedY = collapsed (peek).
   const midY = collapsedY / 2;
