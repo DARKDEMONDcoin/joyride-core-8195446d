@@ -100,6 +100,7 @@ export const DraggablePlusSheet = ({
     active: false,
     decided: false,
     dragging: false,
+    startedExpanded: false,
     startY: 0,
     baseY: 0,
     lastY: 0,
@@ -119,6 +120,7 @@ export const DraggablePlusSheet = ({
         active: true,
         decided: false,
         dragging: false,
+        startedExpanded: expandedRef.current,
         startY: e.clientY,
         baseY: y.get(),
         lastY: e.clientY,
@@ -146,9 +148,9 @@ export const DraggablePlusSheet = ({
         if (Math.abs(dy) < 6) return;
         s.decided = true;
         const down = dy > 0;
-        // Down: drag only from the top of the list. Up: drag while collapsed
-        // (expanding) or while expanded and already at the top of the list
-        // (dismiss upward). Otherwise the list scrolls.
+        // Down: drag only from the top of the list. Up: dismiss the compact
+        // sheet, or dismiss an expanded sheet only when its list is at top.
+        // Otherwise the expanded list keeps its native scrolling.
         s.dragging = down ? atTop() : !expandedRef.current || atTop();
         if (s.dragging) {
           try {
@@ -181,12 +183,22 @@ export const DraggablePlusSheet = ({
 
       const v = s.velocity; // px/ms, + is downward
       const upFlick = -v;
+      const travel = e.clientY - s.startY;
 
       // Strong upward flick from the very top of an expanded sheet dismisses
       // it, reversing the opening animation.
       if (!s.dragging) {
         if (expandedRef.current && atTop() && upFlick > STRONG_FLICK)
           close("up", v * 1000);
+        return;
+      }
+
+      // An upward gesture from the compact snap is a close gesture, not an
+      // expand gesture. Using gesture travel rather than the absolute sheet Y
+      // makes it responsive even when collapsedY is large.
+      if (!s.startedExpanded && travel < 0) {
+        if (upFlick > FLICK || travel < -56) close("up", Math.min(v, -0.18) * 1000);
+        else snapTo("collapsed", v * 1000);
         return;
       }
 
@@ -208,8 +220,7 @@ export const DraggablePlusSheet = ({
         return;
       }
       if (upFlick > FLICK) {
-        if (collapsedY <= 0) close("up", v * 1000);
-        else snapTo("expanded", v * 1000);
+        close("up", v * 1000);
         return;
       }
       if (collapsedY <= 0) {
