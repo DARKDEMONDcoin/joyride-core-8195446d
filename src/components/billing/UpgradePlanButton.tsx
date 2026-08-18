@@ -153,7 +153,7 @@ export function UpgradePlanButton({ variant = "full", className, hideCredits = f
 
       {/* Star icon — hollow outline, emerald, no wrapper */}
       <MegsyStar
-        size={14}
+        size={variant === "compact" ? 16 : 14}
         static
         outline
         strokeWidth={6.5}
@@ -161,8 +161,10 @@ export function UpgradePlanButton({ variant = "full", className, hideCredits = f
         style={{ color: EMERALD }}
       />
 
-      {/* Label */}
-      <span className="relative z-10 whitespace-nowrap">{shortLabel}</span>
+      {/* Label (hidden in the icon-only compact variant) */}
+      {variant !== "compact" && (
+        <span className="relative z-10 whitespace-nowrap">{shortLabel}</span>
+      )}
 
       {/* Credits chip (full variant only) */}
       {variant === "full" && !hideCredits && credits != null && (
