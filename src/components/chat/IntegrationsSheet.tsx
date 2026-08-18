@@ -68,9 +68,10 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
     }
     void refresh();
     const vh = window.innerHeight;
-    const expandedH = Math.min(vh * 0.88, vh - 40);
-    const collapsedH = Math.max(400, Math.min(vh * 0.62, expandedH));
+    const expandedH = Math.min(vh * 0.8, vh - 72);
+    const collapsedH = Math.max(360, Math.min(vh * 0.55, expandedH));
     setSize({ height: expandedH, collapsedY: Math.max(0, expandedH - collapsedH) });
+
   }, [open]);
 
   const list = useMemo(() => {
@@ -122,7 +123,7 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
-            className="fixed inset-0 z-[55] bg-black/45"
+            className="fixed inset-0 z-[55] bg-black/25"
             onClick={() => onOpenChange(false)}
           />
           <Suspense fallback={null}>
