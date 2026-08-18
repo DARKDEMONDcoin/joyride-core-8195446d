@@ -109,8 +109,6 @@ export const DraggablePlusSheet = ({
     const el = sheetRef.current;
     if (!el) return;
 
-    const atTop = () => (scrollRef.current?.scrollTop ?? 0) <= 0;
-
     const onDown = (e: PointerEvent) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
       g.current = {
