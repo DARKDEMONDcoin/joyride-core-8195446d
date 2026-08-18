@@ -304,8 +304,8 @@ export default function ComposerModelMenu({
                   style={{
                     position: "fixed",
                     top: Math.max(10, (pos.top ?? 60) - 4),
-                    left: Math.max(10, Math.min((pos.left ?? 10) - 10, window.innerWidth - 300 - 10)),
-                    width: Math.min(300, window.innerWidth - 32),
+                    left: Math.max(12, Math.min(pos.left ?? 12, window.innerWidth - (pos.width ?? 260) - 12)),
+                    width: pos.width ?? 260,
                     maxHeight: `calc(100dvh - ${Math.max(10, pos.top ?? 60) + 24}px)`,
                     background: "var(--chat-claude-composer, #262627)",
                     border: 0,
@@ -313,7 +313,7 @@ export default function ComposerModelMenu({
                     WebkitBackdropFilter: "none",
                     boxShadow: "none",
                   }}
-                  className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[20px] p-1.5"
+                  className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[18px] p-1.5"
                 >
                   {[...CHAT_COMPOSER_MODEL_OPTIONS].reverse().map((item, idx) => {
                     const locked = item.premium && (userPlan === "free" || userPlan === "trial");
@@ -343,7 +343,7 @@ export default function ComposerModelMenu({
                           marginTop: idx === 0 ? 0 : 2,
                           opacity: locked ? 0.55 : 1,
                         }}
-                        className="flex w-full items-center gap-2.5 rounded-[15px] px-3 py-2.5 text-right transition-colors tier-row active:bg-white/[0.08]"
+                        className="flex min-h-14 w-full items-center gap-2.5 rounded-[14px] px-3 py-2 text-right transition-colors tier-row"
                       >
                         <span className="min-w-0 flex-1">
                           <span className="flex items-center gap-1.5">
