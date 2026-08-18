@@ -40,7 +40,7 @@ export const useConnectIntegration = ({
         const snap = await loadIntegrationConnections([integration]);
         if (snap.connectedApps?.[integration.app]) {
           setPlusMenuOpen(false);
-          navigate(`/settings/integrations?app=${encodeURIComponent(integration.id)}`);
+          navigate("/chat?integrations=1");
           return;
         }
       } catch {
@@ -72,7 +72,7 @@ export const useConnectIntegration = ({
         }
 
         setPlusMenuOpen(false);
-        navigate(`/settings/integrations?app=${encodeURIComponent(integration.id)}`);
+        navigate("/chat?integrations=1");
       } catch (e) {
         toast.error(e instanceof Error ? e.message : `${integration.name} failed`);
       } finally {

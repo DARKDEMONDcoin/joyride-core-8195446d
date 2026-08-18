@@ -76,7 +76,7 @@ export function DesktopSettingsHome() {
       rows: [
         { icon: AppearanceIcon, label: tx("Appearance"), path: "/settings/customization" },
         { icon: (p) => <Brain {...p} />, label: tx("Memory"), path: "/settings/memory" },
-        { icon: IntegrationsIcon, label: tx("Integrations"), path: "/settings/integrations" },
+        { icon: IntegrationsIcon, label: tx("Integrations"), path: "/chat?integrations=1" },
         { icon: IntegrationsIcon, label: tx("MCP Servers"), path: "/settings/mcp" },
         {
           icon: (p) => <Globe {...p} />,

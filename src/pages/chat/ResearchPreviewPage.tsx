@@ -396,7 +396,7 @@ const ResearchPreviewPage = () => {
       if (error) throw error;
       if ((res as any)?.needs_connect) {
         toast.info("Connect Google Drive first", { id: t });
-        navigate("/settings/integrations?connect=google_drive");
+        navigate("/chat?integrations=1");
         return;
       }
       toast.success("Uploaded to Drive", { id: t });

@@ -43,8 +43,6 @@ export const ReferralResourcesPage = lazy(() => import("@/pages/billing/Referral
 export const WithdrawPage = lazy(() => import("@/pages/billing/WithdrawPage"));
 
 /* ── Integrations (single animated hub) ───────────────────────── */
-export const IntegrationsPage = lazy(() => import("@/pages/integrations/IntegrationsPage"));
-export const IntegrationDetailPage = lazy(() => import("@/pages/integrations/IntegrationDetailPage"));
 
 /* ── Settings ─────────────────────────────────────────────────── */
 export const SettingsPage = lazy(() => import("@/pages/settings/SettingsPage"));

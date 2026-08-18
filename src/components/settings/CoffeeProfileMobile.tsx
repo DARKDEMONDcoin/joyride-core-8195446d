@@ -125,7 +125,7 @@ const CoffeeProfileMobile = () => {
     {
       title: "Connections",
       rows: [
-        { icon: ICONS.integrations, label: authT("rowIntegrations"), path: "/settings/integrations" },
+        { icon: ICONS.integrations, label: authT("rowIntegrations"), path: "/chat?integrations=1" },
       ],
     },
     {
