@@ -75,9 +75,6 @@ export const DraggablePlusSheet = ({
     snapTo("expanded");
   }, [snapTo]);
 
-  // Rubber-band the overshoot above the expanded snap point.
-  const transformY = (raw: number) => (raw < 0 ? raw * 0.22 : raw);
-
   const dragStartY = useRef(0);
   const canDrag = () => (scrollRef.current?.scrollTop ?? 0) <= 0;
 
@@ -123,8 +120,6 @@ export const DraggablePlusSheet = ({
         if (!canDrag() && info.offset.y < 0) y.set(dragStartY.current);
       }}
       onDragEnd={handleDragEnd}
-      onDragTransformTemplate={undefined as never}
-      transformTemplate={(_, generated) => generated}
       data-plus-menu
       onClick={(e) => e.stopPropagation()}
       onWheel={(e) => {
@@ -155,6 +150,3 @@ export const DraggablePlusSheet = ({
     </motion.div>
   );
 };
-
-// Keep the rubber-band helper referenced for future tuning without dead-code warnings.
-void 0;
