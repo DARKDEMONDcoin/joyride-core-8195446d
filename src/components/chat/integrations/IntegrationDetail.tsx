@@ -31,8 +31,8 @@ export default function IntegrationDetail({ item, connected, busy, onBack, onTog
       <div className="flex flex-col items-center pt-4 text-center">
         <IntegrationLogo item={item} size={72} />
         <h3 className="mt-3 text-[19px] font-semibold text-foreground">{item.name}</h3>
-        <p dir="auto" className="mt-2 max-w-[34ch] text-[13px] leading-[1.7] text-foreground/50">
-          {item.description}
+        <p className="mt-2 max-w-[34ch] text-[13px] leading-[1.7] text-foreground/50">
+          {`اربط حساب ${item.name} لاستخدامه بأمان وتنفيذ المهام من داخل المحادثة.`}
         </p>
       </div>
 
@@ -50,7 +50,7 @@ export default function IntegrationDetail({ item, connected, busy, onBack, onTog
           type="button"
           onClick={onToggle}
           disabled={busy}
-          className="inline-flex h-12 w-full items-center justify-center rounded-[16px] bg-[var(--chat-claude-control,#1f1f20)] text-[14.5px] font-semibold transition-opacity active:opacity-80"
+          className="inline-flex h-12 w-full items-center justify-center rounded-[16px] bg-transparent text-[14.5px] font-semibold transition-opacity active:opacity-80"
           style={{ border: 0, color: connected ? undefined : "hsl(var(--primary))" }}
         >
           {busy ? (
