@@ -18,8 +18,8 @@
   --amb-line-strong: hsl(var(--foreground) / 0.16);
   --amb-surface: hsl(var(--card));
   --amb-surface-soft: hsl(var(--foreground) / 0.03);
-  --amb-primary-grad: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #4f46e5 100%);
-  --amb-primary-shadow: 0 12px 28px -12px rgba(99, 102, 241, 0.6);
+  --amb-primary-grad: linear-gradient(135deg, hsl(162 72% 52%) 0%, hsl(158 68% 45%) 100%);
+  --amb-primary-shadow: 0 12px 28px -12px hsl(162 72% 52% / 0.45);
 
   /* Kept aliases (used by existing markup) */
   --amb-cream: hsl(var(--foreground));

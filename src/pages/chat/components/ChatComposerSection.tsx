@@ -5,8 +5,6 @@ import { RemoteAiBusyBanner } from "./RemoteAiBusyBanner";
 import { MentionDropdown } from "./MentionDropdown";
 import { ComposerMobileModeBar } from "./ComposerMobileModeBar";
 import { ComposerAnimatedInput } from "./ComposerAnimatedInput";
-import { MobileModeChips } from "./MobileModeChips";
-import { AnimatePresence } from "framer-motion";
 import { ActiveServicePill } from "./ActiveServicePill";
 
 import type { AttachedFile } from "../hooks/useAttachments";
@@ -84,15 +82,12 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
   const hasActiveService =
     d.selectedAgent?.id === "docs" ||
     (d.chatMode && d.chatMode !== "normal");
-  const showDesktopLandingChips = isDesktopLanding;
 
   // Hide chips whenever a service is active; also hide on mobile once the
   // conversation has started or the user is typing (input focused). They
   // auto-return when the service pill is cleared or the user opens a fresh
   // conversation on desktop.
-  const mobileShouldHide = messagesLength > 0;
   const effectiveModesShown = modesShown && !hasActiveService;
-  const effectiveMobileModesShown = effectiveModesShown && !mobileShouldHide;
 
 
 
@@ -133,20 +128,8 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
               <div className="hidden md:flex justify-center mb-8">{desktopGreeting}</div>
             ) : null}
 
-            <AnimatePresence initial={false}>
-              {effectiveMobileModesShown ? (
-                <div key="chips-mobile-above" className="md:hidden mb-2">
-                  <MobileModeChips
-                    chatMode={d.chatMode}
-                    selectedAgent={d.selectedAgent}
-                    handleModeChange={d.handleModeChange}
-                    setChatMode={d.setChatMode}
-                    setSelectedAgent={d.setSelectedAgent}
-                    onAgentSelect={d.onAgentSelect}
-                  />
-                </div>
-              ) : null}
-            </AnimatePresence>
+            {/* Mode chips row removed by design: modes live in the + menu. */}
+
 
             <div className="md:contents">
               <div ref={composerRef as any} className="relative z-[8] md:p-[1px] md:rounded-[28px]">
@@ -193,25 +176,8 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
                 </div>
               </div>
 
-              {/* Desktop chips: horizontal-scroll row BELOW the input, landing only.
-                  On landing we ALWAYS show chips (even if a mode is active) so the
-                  user can switch modes. hasActiveService only hides them inside an
-                  active conversation. */}
-              <AnimatePresence initial={false}>
-                {showDesktopLandingChips ? (
-                  <div key="chips-desktop-below" className="hidden md:block mt-4 w-full relative z-[12] pointer-events-auto">
-                    <MobileModeChips
-                      variant="desktop-chat"
-                      chatMode={d.chatMode}
-                      selectedAgent={d.selectedAgent}
-                      handleModeChange={d.handleModeChange}
-                      setChatMode={d.setChatMode}
-                      setSelectedAgent={d.setSelectedAgent}
-                      onAgentSelect={d.onAgentSelect}
-                    />
-                  </div>
-                ) : null}
-              </AnimatePresence>
+              {/* Desktop chips row removed by design: modes live in the + menu. */}
+
             </div>
 
           </div>

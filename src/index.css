@@ -777,45 +777,45 @@ button[data-slides-preview-button] svg,
     --font-arabic-ui-stack: "Readex Pro", "Cairo", "Tajawal", "Noto Naskh Arabic", system-ui, sans-serif;
   }
 
-  /* Noir & Gold — deep black with warm gold accents */
+  /* Onyx & Mint — pure black with a fresh mint-green accent */
   [data-theme="dark"] {
     --background: 0 0% 3%;              /* #080808 */
-    --foreground: 40 15% 94%;           /* warm off-white */
+    --foreground: 160 8% 95%;           /* cool off-white */
     --card: 0 0% 7%;                    /* #121212 */
-    --card-foreground: 40 15% 94%;
+    --card-foreground: 160 8% 95%;
     --popover: 0 0% 8%;                 /* #141414 */
-    --popover-foreground: 40 15% 94%;
-    --primary: 43 55% 55%;              /* #c9a84c gold */
-    --primary-foreground: 0 0% 6%;
+    --popover-foreground: 160 8% 95%;
+    --primary: 162 72% 52%;             /* #2ddba0 mint */
+    --primary-foreground: 0 0% 5%;
     --secondary: 0 0% 10%;              /* #1a1a1a */
-    --secondary-foreground: 40 15% 90%;
-    --muted: 0 0% 10%;                  /* #1a1a1a — darker to avoid grey wash */
-    --muted-foreground: 40 8% 62%;      /* readable warm grey */
-    --accent: 43 60% 70%;               /* #f0d78c soft gold */
-    --accent-foreground: 0 0% 6%;
+    --secondary-foreground: 160 8% 92%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 160 5% 63%;     /* readable cool grey */
+    --accent: 162 62% 70%;              /* soft mint */
+    --accent-foreground: 0 0% 5%;
     --destructive: 0 65% 52%;
     --destructive-foreground: 0 0% 98%;
-    --border: 43 15% 18%;               /* subtle warm border */
+    --border: 162 10% 17%;              /* subtle cool border */
     --input: 0 0% 12%;
-    --ring: 43 55% 55%;                 /* gold focus ring */
+    --ring: 162 72% 52%;                /* mint focus ring */
     --glass: 0 0% 6% / 0.78;
-    --glass-border: 43 20% 22%;
+    --glass-border: 162 14% 22%;
     --glass-blur: 24px;
-    --silver: 43 40% 70%;
-    --silver-bright: 43 60% 78%;
-    --silver-dark: 43 20% 45%;
-    --success: 142 55% 48%;
+    --silver: 162 20% 72%;
+    --silver-bright: 162 40% 82%;
+    --silver-dark: 162 12% 46%;
+    --success: 152 60% 48%;
     --warning: 43 85% 60%;
-    --value-yellow: 43 85% 60%;
+    --value-yellow: 162 72% 52%;
     --value-ink: 0 0% 0%;
     --sidebar-background: 0 0% 3%;
-    --sidebar-foreground: 40 12% 88%;
-    --sidebar-primary: 43 55% 55%;
-    --sidebar-primary-foreground: 0 0% 6%;
+    --sidebar-foreground: 160 6% 88%;
+    --sidebar-primary: 162 72% 52%;
+    --sidebar-primary-foreground: 0 0% 5%;
     --sidebar-accent: 0 0% 10%;
-    --sidebar-accent-foreground: 40 15% 94%;
-    --sidebar-border: 43 15% 18%;
-    --sidebar-ring: 43 55% 55%;
+    --sidebar-accent-foreground: 160 8% 95%;
+    --sidebar-border: 162 10% 17%;
+    --sidebar-ring: 162 72% 52%;
   }
 
 

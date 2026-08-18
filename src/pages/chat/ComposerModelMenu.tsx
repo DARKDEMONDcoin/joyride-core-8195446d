@@ -438,7 +438,7 @@ export default function ComposerModelMenu({
                                 <span className="block text-[14.5px] font-semibold leading-tight truncate tracking-tight">
                                   {item.label}
                                 </span>
-                                <span className="mt-0.5 block text-[11.5px] text-foreground/55 truncate">
+                                <span className="mt-0.5 block text-[11.5px] leading-snug text-foreground/55">
                                   {item.desc}
                                 </span>
                               </span>
@@ -446,7 +446,7 @@ export default function ComposerModelMenu({
                                 {locked ? (
                                   <Lock className="h-4 w-4 text-foreground/45" />
                                 ) : active ? (
-                                  <Check className="h-5 w-5" strokeWidth={2.75} style={{ color: "var(--megsy-blue)" }} />
+                                  <Check className="h-5 w-5" strokeWidth={2.75} style={{ color: "hsl(var(--primary))" }} />
                                 ) : null}
                               </span>
                             </button>
@@ -501,7 +501,7 @@ export default function ComposerModelMenu({
                                   {locked ? (
                                     <Lock className="h-4 w-4 text-foreground/45" />
                                   ) : active ? (
-                                    <Check className="h-5 w-5" strokeWidth={2.75} style={{ color: "var(--megsy-blue)" }} />
+                                    <Check className="h-5 w-5" strokeWidth={2.75} style={{ color: "hsl(var(--primary))" }} />
                                   ) : null}
                                 </span>
                               </button>
@@ -557,7 +557,7 @@ export default function ComposerModelMenu({
                                   {locked ? (
                                     <Lock className="h-4 w-4 text-foreground/45" />
                                   ) : active ? (
-                                    <Check className="h-5 w-5" strokeWidth={2.75} style={{ color: "var(--megsy-blue)" }} />
+                                    <Check className="h-5 w-5" strokeWidth={2.75} style={{ color: "hsl(var(--primary))" }} />
                                   ) : null}
                                 </span>
                               </button>
